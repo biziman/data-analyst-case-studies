@@ -8,8 +8,8 @@ The repository includes assessment-based analyses and synthetic demonstrations. 
 
 | Case | Question | Type |
 | --- | --- | --- |
-| [Mobile-game marketing analytics](1-marketing-analytics-for-mobile-game.ipynb) | How do campaign cost, payer conversion, and longer-term revenue compare? | Notebook; input files are external to this repository |
-| [Experiment tracking audit](2-product-experiment-tracking-audit.ipynb) | Why can a broken event join report zero conversions? | Synthetic demonstration |
+| [Mobile-game marketing analytics](1-marketing-analytics-for-mobile-game/README.md) | How do campaign cost, payer conversion, and longer-term revenue compare? | Notebook and local CSV inputs |
+| [Experiment tracking audit](2-product-experiment-tracking-audit/README.md) | Why can a broken event join report zero conversions? | Synthetic demonstration |
 | [Early player revenue forecast](3-player-ltv-forecast/README.md) | What can first-week behavior tell us about 120-day player revenue? | Synthetic assessment demonstration |
 | [Gameplay change evaluation](4-gameplay-change-evaluation/README.md) | How should a before-and-after comparison account for baseline differences and repeated battles? | Synthetic assessment demonstration |
 | [Donation checkout experiment](5-donation-checkout-ab-test/README.md) | Should a checkout variant be judged by conversion or revenue per visitor? | Synthetic assessment demonstration |
