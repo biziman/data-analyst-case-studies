@@ -8,7 +8,7 @@ A reproducible example of projecting day-360 in-app purchase revenue from a day-
 
 ## Result
 
-On this generated example, segment-specific median day-360/day-30 factors achieved **3.2% WAPE**, compared with **13.6%** for one global factor, on six held-out cohorts. The result illustrates this method on the generated data only. It is not an assessment finding, a Mobile Game B result, or a business-impact claim.
+On this generated example, segment-specific median day-360/day-30 factors achieved **3.2% WAPE**, compared with **13.6%** for one global factor, on six held-out cohorts. The result illustrates this method on the generated data only. It is not an assessment finding or a business-impact claim.
 
 ## Method
 

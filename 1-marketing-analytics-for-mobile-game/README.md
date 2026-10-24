@@ -1,8 +1,8 @@
-# Mobile-game marketing analytics
+# Mobile Game A: acquisition analytics
 
 This case compares eight acquisition campaigns using cost per day-7 payer, funnel measures, and revenue per registered player over several time windows. It also contains a proposed creative experiment and a cohort revenue query.
 
-> **Data note:** The four CSV files in `data/` were provided from the Mobile Game A assessment workspace. They are assessment data, not synthetic. The original assessment notebooks and PDF are not copied here. Confirm that these files may be shared publicly before committing this folder.
+> **Data note:** The four CSV files in `data/` are records from a mobile-game hiring assessment. They are real assessment data, not synthetic. The employer and game are anonymized in this case. Confirm that you have permission to publish these records; if permission is unclear, replace them with synthetic data before sharing.
 
 ## Files
 
