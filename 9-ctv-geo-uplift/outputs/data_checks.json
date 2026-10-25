@@ -1,0 +1,10 @@
+{
+  "rows":1120,
+  "geos":40,
+  "matched_pairs":20,
+  "pre_weeks":8,
+  "test_weeks":6,
+  "test_spend_usd":586093.5600000001,
+  "mean_matched_pre_install_correlation":0.6173490276,
+  "note":"Synthetic demonstration. Estimates use paired market changes; all markets have equal weight."
+}

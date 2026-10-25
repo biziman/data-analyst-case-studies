@@ -16,6 +16,7 @@ The repository includes assessment-based analyses and synthetic demonstrations. 
 | [Funnel-based attribution](6-funnel-channel-attribution/README.md) | How can a stated rule allocate purchase credit across sessions? | Synthetic assessment demonstration |
 | [Cohort LTV roll-forward](7-cohort-ltv-roll-forward/README.md) | How can day-360 revenue estimates be validated on later cohorts? | Synthetic demonstration |
 | [SDK incident and DAU measurement](8-mobile-sdk-metric-drop/README.md) | Did activity fall, or did event measurement degrade after an SDK rollout? | Synthetic incident simulation |
+| [CTV geo-uplift](9-ctv-geo-uplift/README.md) | Did CTV ads cause additional app installs and revenue, and did the return justify spend? | Synthetic geo experiment |
 
 ## How to read the cases
 
