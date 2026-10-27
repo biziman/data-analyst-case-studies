@@ -1,0 +1,46 @@
+{
+  "data_status": "synthetic; generated for this case; not client data",
+  "observations": 6240,
+  "geographies": 40,
+  "weeks": 156,
+  "steady_state_budget_per_month_usd_target": 130000,
+  "observed_pretest_budget_per_month_usd": 121360.38509375,
+  "primary_kpi": "new paid subscribers per geo-week",
+  "model": {
+    "type": "OLS benchmark with geography fixed effects, annual seasonality, promotion, and geometric adstock plus log saturation",
+    "r_squared_in_sample": 0.30912163780437973,
+    "design_matrix_rank": 48,
+    "design_matrix_columns": 48,
+    "channel_coefficients_new_subscribers_per_transformed_spend": {
+      "google_ads": 3.1038576347661215,
+      "meta_ads": 2.021608387765502,
+      "tiktok_ads": 1.4889834161731854,
+      "affiliate": 0.8627064683727566
+    },
+    "interpretation": "Associational model estimates on synthetic data; not causal proof or a production Meridian fit."
+  },
+  "experiment": {
+    "design": "matched-geo heavy-up; randomized 20 of 40 geographies to +50% TikTok spend for 8 weeks",
+    "pre_period_weeks": [
+      141,
+      148
+    ],
+    "test_period_weeks": [
+      149,
+      156
+    ],
+    "estimand": "difference-in-differences in new paid subscribers per treated geo-week",
+    "matched_pair_count": 20,
+    "estimated_lift_per_treated_geo_week": 0.0625,
+    "paired_t_95_percent_interval": [
+      -1.2174375925209613,
+      1.3424375925209613
+    ],
+    "sign_flip_randomization_p_value": 0.9268036598170092,
+    "randomization_draws": 20000,
+    "estimated_incremental_subscribers_in_test": 10.0,
+    "estimated_incremental_tiktok_spend_usd": 14613.656666666666,
+    "estimated_incremental_cac_usd": 1461.3656666666666,
+    "interpretation": "Synthetic controlled test; it does not represent a real campaign or client outcome."
+  }
+}

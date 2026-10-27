@@ -17,6 +17,8 @@ The repository includes assessment-based analyses and synthetic demonstrations. 
 | [Cohort LTV roll-forward](7-cohort-ltv-roll-forward/README.md) | How can day-360 revenue estimates be validated on later cohorts? | Synthetic demonstration |
 | [SDK incident and DAU measurement](8-mobile-sdk-metric-drop/README.md) | Did activity fall, or did event measurement degrade after an SDK rollout? | Synthetic incident simulation |
 | [CTV geo-uplift](9-ctv-geo-uplift/README.md) | Did CTV ads cause additional app installs and revenue, and did the return justify spend? | Synthetic geo experiment |
+| [Edtech subscription MMM](10-marketing-mix-modeling/README.md) | Does a synthetic TikTok budget increase add paid subscribers for an edtech subscription? | Synthetic MMM benchmark and geo test |
+| [Payment fraud investigation](11-payment-fraud-investigation/README.md) | Which synthetic payment patterns warrant review, and what losses are confirmed? | Synthetic SQL investigation |
 
 ## How to read the cases
 
