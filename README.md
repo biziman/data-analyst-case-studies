@@ -1,32 +1,61 @@
-# Analytics case studies
+# Product and marketing analytics case studies
 
-I use these projects to show how I approach marketing and product analytics: define the decision, check the data, choose a method that fits the question, and explain what the result can support.
+SQL and Python analyses of product experiments, marketing effectiveness, revenue forecasting, and measurement reliability. I focus on defining the business decision, validating the data, and explaining what the evidence supports.
 
-The repository includes assessment-based analyses and synthetic demonstrations. Each case should identify its data source and limits. Synthetic results are examples only; they are not business outcomes.
+These are portfolio demonstrations and assessment-based analyses. Synthetic results demonstrate methods; they are not client outcomes or evidence of professional tenure.
 
-## Selected cases
+## Start here
 
-| Case | Question | Type |
-| --- | --- | --- |
-| [Mobile-game marketing analytics](1-marketing-analytics-for-mobile-game/README.md) | How do campaign cost, payer conversion, and longer-term revenue compare? | Notebook and local CSV inputs |
-| [Experiment tracking audit](2-product-experiment-tracking-audit/README.md) | Why can a broken event join report zero conversions? | Synthetic demonstration |
-| [Early player revenue forecast](3-player-ltv-forecast/README.md) | What can first-week behavior tell us about 120-day player revenue? | Synthetic assessment demonstration |
-| [Gameplay change evaluation](4-gameplay-change-evaluation/README.md) | How should a before-and-after comparison account for baseline differences and repeated battles? | Synthetic assessment demonstration |
-| [Donation checkout experiment](5-donation-checkout-ab-test/README.md) | Should a checkout variant be judged by conversion or revenue per visitor? | Synthetic assessment demonstration |
-| [Funnel-based attribution](6-funnel-channel-attribution/README.md) | How can a stated rule allocate purchase credit across sessions? | Synthetic assessment demonstration |
-| [Cohort LTV roll-forward](7-cohort-ltv-roll-forward/README.md) | How can day-360 revenue estimates be validated on later cohorts? | Synthetic demonstration |
-| [SDK incident and DAU measurement](8-mobile-sdk-metric-drop/README.md) | Did activity fall, or did event measurement degrade after an SDK rollout? | Synthetic incident simulation |
-| [CTV geo-uplift](9-ctv-geo-uplift/README.md) | Did CTV ads cause additional app installs and revenue, and did the return justify spend? | Synthetic geo experiment |
-| [Edtech subscription MMM](10-marketing-mix-modeling/README.md) | Does a synthetic TikTok budget increase add paid subscribers for an edtech subscription? | Synthetic MMM benchmark and geo test |
-| [Payment fraud investigation](11-payment-fraud-investigation/README.md) | Which synthetic payment patterns warrant review, and what losses are confirmed? | Synthetic SQL investigation |
+### Product experimentation: donation checkout
 
-## How to read the cases
+**Decision:** Does removing a preset gift amount improve money raised per visitor?
 
-- Check each case's data provenance before interpreting its numbers.
-- Synthetic datasets and generated results are labeled in their case README and notebook.
-- Assessment demonstrations do not reproduce the original assessment data or results unless a case explicitly says otherwise.
-- A model-based attribution rule is not a causal estimate. A pre/post comparison is not causal on its own. Experiment conclusions depend on valid assignment, logging, and analysis.
+[Read the case](5-donation-checkout-ab-test/README.md) · [Review the Python notebook](5-donation-checkout-ab-test/5-donation-checkout-ab-test.ipynb)
 
-## Methods and writing guide
+The synthetic example retains non-donors as zero-revenue visitors and resamples at visitor level. Conversion improves, while the revenue-per-visitor interval includes zero. It shows why a conversion win alone does not settle a revenue decision.
 
-See [`PORTFOLIO_GUIDE.md`](PORTFOLIO_GUIDE.md) for conventions on metric definitions, data checks, statistical interpretation, notebook structure, writing, and charts.
+### Marketing incrementality: CTV geo experiment
+
+**Decision:** Does additional app revenue justify CTV spend?
+
+[Read the case](9-ctv-geo-uplift/README.md) · [Review the analysis](9-ctv-geo-uplift/analyze.py)
+
+A synthetic experiment randomizes markets within 20 matched pairs. Estimated incremental revenue is positive, but iROAS is about 0.23, below the case's stated direct-revenue threshold. The case separates causal lift from financial sufficiency.
+
+### SQL investigation: payment review and loss accounting
+
+**Decision:** Which payment patterns need investigation, and which losses are confirmed?
+
+[Read the case](11-payment-fraud-investigation/README.md) · [Review the SQL](11-payment-fraud-investigation/analysis.sql)
+
+The synthetic ledger separates payment attempts, captures, refunds, pending disputes, and final lost disputes. Rules create review leads; a separate label check exposes missed cases and false alarms.
+
+## Explore by question
+
+- **Measurement reliability:** [SDK incident and DAU](8-mobile-sdk-metric-drop/README.md) diagnoses missing identity, retries, and event delay. Its simulation truth is an evaluation aid; an independent operational diagnosis remains an extension.
+- **Experiment data quality:** [Tracking audit](2-product-experiment-tracking-audit/README.md) reconstructs assignment-to-outcome joins when payment events lack treatment fields.
+- **SQL attribution:** [Funnel-based credit allocation](6-funnel-channel-attribution/README.md) allocates purchase revenue and reconciles credit. It is descriptive attribution, not incrementality.
+- **Feature evaluation:** [Gameplay change](4-gameplay-change-evaluation/README.md) compares player-level changes and reports uncertainty around a synthetic difference-in-differences estimate.
+- **Early revenue forecasting:** [D120 player revenue](3-player-ltv-forecast/README.md) compares a segment benchmark with a global mean. It needs calendar-based validation before acquisition use.
+- **Cohort forecasting:** [D360 roll-forward](7-cohort-ltv-roll-forward/README.md) compares synthetic curve factors. Calendar-valid label maturity is not yet enforced.
+- **Marketing modeling:** [Edtech subscription benchmark](10-marketing-mix-modeling/README.md) combines an OLS MMM benchmark with an inconclusive synthetic geo test. It is not a production Meridian model.
+- **Assessment analysis under technical review:** [Mobile-game campaign analysis](1-marketing-analytics-for-mobile-game/README.md) contains local assessment CSVs and exploratory outputs. Metric windows, cohort SQL, output freshness, and publication permission need resolution before using its numbers as decision evidence.
+
+## Reproduce and inspect
+
+Each case README identifies its inputs, method, limitations, and available run steps. Cases 2–7 generate their examples inside the notebook with Python's standard library; a notebook environment is still required. Cases 8–10 list their additional packages. Case 11 runs with Python and SQLite.
+
+Read the [analysis and writing conventions](PORTFOLIO_GUIDE.md). A forecast is not a profitability result, attributed revenue is not incremental revenue, and synthetic outcomes are not client impact.
+
+The optional published figures can be regenerated after producing the case 9 and case 11 result files:
+
+```bash
+python -m pip install matplotlib==3.10.8
+python render_portfolio_figures.py
+```
+
+Run the payment-window boundary checks from the repository root with:
+
+```bash
+python -m unittest discover -s 11-payment-fraud-investigation -p test_time_windows.py -v
+```

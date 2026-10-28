@@ -118,7 +118,7 @@ Use extra care with its current implementation before treating it as a template:
 - The ARPU calculation uses whole-day truncation and does not visibly exclude immature users from longer windows.
 - The Campaign E/H comparison is observational, follows campaign selection on the same data, and does not by itself establish that a campaign caused better monetization.
 - The SQL cohort query groups by day but applies a windowed sum to `payment` without first summing all payments for each day. SQLite may select a bare payment value from each group, so the plotted cumulative revenue is not reliably calculated. Aggregate daily revenue first, then apply a cumulative sum; also validate the elapsed-day calculation.
-- The notebook mounts Google Drive and assumes preconfigured file paths, so it is not currently portable without setup instructions.
+- The notebook now reads local CSV paths from its case folder or repository root. Its setup cell still contains a stale Google Drive mount output; clear and regenerate outputs in a tested environment and record dependency versions.
 - Several narrative claims use stronger causal or promotional language than the analysis design warrants.
 
 Treat these as review items, not as proof that every reported number is wrong. Re-run the analysis with verified data and corrected definitions before reusing its results.

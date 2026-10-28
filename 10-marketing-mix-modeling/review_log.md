@@ -1,5 +1,7 @@
 # Case workflow and review log
 
+**Simulated stakeholder self-review:** The roles and dialogue below are a fictional editorial exercise, not feedback from an independent CMO or CDO.
+
 This file records decisions and role-based feedback. It is a concise audit trail, not a transcript of private internal reasoning. The company and all project data are fictional or simulated.
 
 ## Scenario plot

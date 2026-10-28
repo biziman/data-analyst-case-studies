@@ -43,6 +43,10 @@ The investigation flow is: data-quality checks pass; the outcome query establish
 
 Do not deploy these thresholds as production controls. Review the flagged records alongside authorization, device, customer, fulfillment, and dispute evidence. Measure review yield, customer friction, false declines, and loss outcomes over a time period long enough for disputes to mature. A real loss report also needs processor settlement and fee records, dispute resolution status, and explicit reconciliation of refunds and chargebacks.
 
+![SQL rule validation against hidden synthetic labels](outputs/rule_validation.png)
+
+This figure is a post-analysis simulation check. It does not estimate real merchant performance.
+
 ## Caveats and mitigations
 
 1. **Synthetic fraud patterns are simplified.** They do not represent the full range of attacker behavior. Test on authorized historical labels before operational use. This case remains illustrative.

@@ -38,11 +38,11 @@ The test does not show that TikTok is ineffective. It is too imprecise to distin
 
 The MMM channel coefficients are not channel ROI. The model has no validated subscriber lifetime value, churn, refund, or gross-margin data. The available synthetic model also does not include confidence intervals for the channel coefficients. It does not support a precise budget ranking.
 
-## CDO review and changes
+## Simulated CDO self-review and changes
 
-The CDO review rejected three overclaims: calling the OLS benchmark a production MMM, calling the geo test evidence that TikTok failed, and treating a point-estimated incremental CAC as reliable. The final result labels the model as an OLS benchmark, reports the wide interval beside the point estimate, and withholds ROI and budget-shift claims.
+A simulated CDO perspective in the author's review exercise identified three overclaims: calling the OLS benchmark a production MMM, calling the geo test evidence that TikTok failed, and treating a point-estimated incremental CAC as reliable. The final result labels the model as an OLS benchmark, reports the wide interval beside the point estimate, and withholds ROI and budget-shift claims.
 
-The CDO also flagged fixed adstock assumptions, limited power, market spillover, missing platform attribution windows, and the simplified affiliate definition. These limits must remain visible. The generated affiliate variable represents fixed placement costs, not CPA commissions.
+The same simulated review also flagged fixed adstock assumptions, limited power, market spillover, missing platform attribution windows, and the simplified affiliate definition. These limits must remain visible. The generated affiliate variable represents fixed placement costs, not CPA commissions.
 
 ## CMO questions and final decision
 

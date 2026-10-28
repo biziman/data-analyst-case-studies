@@ -39,6 +39,10 @@ Test spend was **$586,094**. Estimated cost per incremental install was **$24.28
 
 Platform breakdowns are secondary and exploratory. The estimated iOS install lift is +9.0% (95% interval +6.9% to +11.1%); Android is +9.9% (+7.2% to +12.5%). Revenue lifts are +9.2% for iOS and +15.7% for Android. These comparisons do not establish that CTV performs differently by platform; the study was not powered for that question.
 
+![Synthetic incremental ROAS estimate and interval against the case decision threshold](outputs/iroas_decision.png)
+
+The figure uses the generated revenue result; the line at 1 is the case's direct-revenue threshold, not a universal profit threshold.
+
 ## Recommendation and limitations
 
 Do not recommend scaling this campaign for direct revenue payback based on this simulated result. If the business values longer-term revenue, subscriptions, or cross-device brand effects, define those outcomes and their observation windows, then run a properly powered test. A real test should validate market-level outcome coverage, keep other marketing and promotions balanced, prevent campaign spillover into controls, lock assignments, and allow enough time for delayed revenue to mature.

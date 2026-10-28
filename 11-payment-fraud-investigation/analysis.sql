@@ -8,14 +8,15 @@ WITH ordered AS (
         p.*,
         COUNT(*) OVER (
             PARTITION BY account_id
-            ORDER BY julianday(event_ts_utc)
-            RANGE BETWEEN 0.003472222 PRECEDING AND CURRENT ROW
+            ORDER BY CAST(strftime('%s', event_ts_utc) AS INTEGER)
+            RANGE BETWEEN 300 PRECEDING AND CURRENT ROW
         ) AS account_attempts_5m,
         (SELECT COUNT(DISTINCT p2.country)
          FROM payments AS p2
          WHERE p2.card_token = p.card_token
-           AND julianday(p2.event_ts_utc) BETWEEN julianday(p.event_ts_utc) - 1
-                                                  AND julianday(p.event_ts_utc)) AS countries_24h
+           AND CAST(strftime('%s', p2.event_ts_utc) AS INTEGER)
+             BETWEEN CAST(strftime('%s', p.event_ts_utc) AS INTEGER) - 86400
+                 AND CAST(strftime('%s', p.event_ts_utc) AS INTEGER)) AS countries_24h
     FROM payments AS p
 )
 SELECT *,

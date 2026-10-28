@@ -1,6 +1,6 @@
 # Cohort LTV roll-forward
 
-A reproducible example of projecting day-360 in-app purchase revenue from a day-30 cohort result. It focuses on two practical safeguards: normalize keys before joining coefficient tables, and validate forecast factors on later cohorts.
+A reproducible example of projecting day-360 in-app purchase revenue from a day-30 cohort result. It focuses on two practical safeguards: normalize keys before joining coefficient tables, and compare forecast factors on held-out synthetic curves. This is not yet a calendar-valid historical backtest.
 
 ## Contents
 
@@ -10,10 +10,12 @@ A reproducible example of projecting day-360 in-app purchase revenue from a day-
 
 On this generated example, segment-specific median day-360/day-30 factors achieved **3.2% WAPE**, compared with **13.6%** for one global factor, on six held-out cohorts. The result illustrates this method on the generated data only. It is not an assessment finding or a business-impact claim.
 
+**Historical validation limit:** The example has cohort sequence numbers, not actual cohort-start and forecast dates. For weekly cohorts 0–29, a D30 forecast for cohort 24 occurs on day 198, before even cohort 0 has a mature D360 outcome. The reported WAPE therefore demonstrates a held-out curve comparison only. Before using the result as historical forecasting evidence, add dates and admit training labels only when `training_cohort_start + 360 days <= forecast_as_of`. Generate sufficient prior history and repeat over rolling cutoffs.
+
 ## Method
 
 1. Generate 30 synthetic cohort curves with campaign and geo-tier differences.
-2. Estimate segment multipliers from the first 24 cohorts, using only mature day-30 and day-360 values.
+2. Estimate segment multipliers from the first 24 cohorts, using their generated day-30 and day-360 values. Calendar availability is not enforced in this demonstration.
 3. Forecast the last six cohorts using their day-30 values, then compare predictions with their hidden day-360 results.
 4. Demonstrate explicit normalization of a coefficient-table key named `tier` to match the revenue table's `tier_inapp` key.
 
