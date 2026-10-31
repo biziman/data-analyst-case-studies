@@ -47,7 +47,7 @@ Each case README identifies its inputs, method, limitations, and available run s
 
 Read the [analysis and writing conventions](PORTFOLIO_GUIDE.md). A forecast is not a profitability result, attributed revenue is not incremental revenue, and synthetic outcomes are not client impact.
 
-The optional published figures can be regenerated after producing the case 9 and case 11 result files:
+The optional published figures can be regenerated after producing the case 9 and case 11 result files. The case 5 figure runs the case 5 notebook code cells directly:
 
 ```bash
 python -m pip install matplotlib==3.10.8
