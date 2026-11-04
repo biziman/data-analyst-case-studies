@@ -39,15 +39,15 @@ The synthetic ledger separates payment attempts, captures, refunds, pending disp
 - **Early revenue forecasting:** [D120 player revenue](3-player-ltv-forecast/README.md) compares a segment benchmark with a global mean. It needs calendar-based validation before acquisition use.
 - **Cohort forecasting:** [D360 roll-forward](7-cohort-ltv-roll-forward/README.md) compares synthetic curve factors. Calendar-valid label maturity is not yet enforced.
 - **Marketing modeling:** [Edtech subscription benchmark](10-marketing-mix-modeling/README.md) combines an OLS MMM benchmark with an inconclusive synthetic geo test. It is not a production Meridian model.
-- **Assessment analysis under technical review:** [Mobile-game campaign analysis](1-marketing-analytics-for-mobile-game/README.md) contains local assessment CSVs and exploratory outputs. Metric windows, cohort SQL, output freshness, and publication permission need resolution before using its numbers as decision evidence.
+- **Assessment analysis under technical review:** [Mobile-game campaign analysis](1-marketing-analytics-for-mobile-game/README.md) contains local assessment CSVs and freshly regenerated exploratory outputs. Metric windows, cohort SQL, and publication permission need resolution before using its numbers as decision evidence.
 
 ## Reproduce and inspect
 
 Each case README identifies its inputs, method, limitations, and available run steps. Cases 2–7 generate their examples inside the notebook with Python's standard library; a notebook environment is still required. Cases 8–10 list their additional packages. Case 11 runs with Python and SQLite.
 
-Read the [analysis and writing conventions](PORTFOLIO_GUIDE.md). A forecast is not a profitability result, attributed revenue is not incremental revenue, and synthetic outcomes are not client impact.
+Read the [analysis and writing conventions](PORTFOLIO_GUIDE.md). A forecast is not a profitability result, attributed revenue is not incremental revenue, and synthetic outcomes are not client impact. Case revisions are recorded in [CHANGELOG.md](CHANGELOG.md), and the remaining review plan lives in [TODO.md](TODO.md).
 
-The optional published figures can be regenerated after producing the case 9 and case 11 result files. The case 5 figure runs the case 5 notebook code cells directly:
+The optional published figures can be regenerated after producing the case 9 and case 11 result files. The case 2, 3, and 5 figures run those notebooks' code cells directly:
 
 ```bash
 python -m pip install matplotlib==3.10.8

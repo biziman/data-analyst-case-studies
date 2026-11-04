@@ -5,6 +5,7 @@ from pathlib import Path
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
+from matplotlib.ticker import PercentFormatter
 
 ROOT=Path(__file__).resolve().parent
 plt.rcParams.update({'font.family':'DejaVu Sans','font.size':11,'axes.spines.top':False,'axes.spines.right':False})
@@ -27,6 +28,70 @@ for bar,value in zip(bars,values[::-1]):ax.text(value+.7,bar.get_y()+bar.get_hei
 ax.set(xlim=(0,max(values)*1.2),xlabel='Synthetic payment attempts',title='Review rules find 38 injected fraud attempts and miss 50')
 fig.text(.02,.02,f'Post-analysis hidden-label check only. Precision {r["precision"]:.1%}; recall {r["recall"]:.1%}. Not real merchant performance.',fontsize=9)
 fig.tight_layout(rect=(0,.07,1,1));fig.savefig(ROOT/'11-payment-fraud-investigation/outputs/rule_validation.png',dpi=160);plt.close(fig)
+# Case 2: run the notebook's code cells to keep one source of truth for the simulation.
+nb=json.loads((ROOT/'2-product-experiment-tracking-audit/2-product-experiment-tracking-audit.ipynb').read_text())
+ns={}
+for cell in nb['cells']:
+    if cell['cell_type']=='code':
+        exec(''.join(cell['source']),ns)
+res=ns['results']
+groups=['control','test']
+assigned=[res[g]['assigned_users'] for g in groups]
+payers=[res[g]['payers'] for g in groups]
+rates=[p/a for p,a in zip(payers,assigned)]
+fig,(ax1,ax2)=plt.subplots(1,2,figsize=(10,3.8),gridspec_kw={'width_ratios':[1,1.15]})
+x=[0,1];w=.32
+ax1.bar([i-w/2 for i in x],[0,0],width=w,color='#dda944',label='Reported by broken event grouping')
+ax1.bar([i+w/2 for i in x],payers,width=w,color='#176b8c',label='Payers found by user-level join')
+for i,p in enumerate(payers):
+    ax1.text(i+w/2,p+10,str(p),ha='center',fontsize=10)
+    ax1.text(i-w/2,10,'0',ha='center',fontsize=10)
+ax1.set(xticks=x,xticklabels=[f'{g.capitalize()}\n({a:,} exposed)' for g,a in zip(groups,assigned)],
+        ylabel='Users',title='Payments attributed per group:\nbroken grouping vs user-level join',ylim=(0,max(payers)*1.3))
+ax1.legend(frameon=False,fontsize=9,loc='upper left')
+bars=ax2.bar([g.capitalize() for g in groups],rates,color=['#176b8c','#b14632'],width=.5)
+for bar,rate,p,a in zip(bars,rates,payers,assigned):
+    ax2.text(bar.get_x()+bar.get_width()/2,rate*1.03,f'{rate:.2%}\n({p:,}/{a:,})',ha='center',fontsize=10)
+ax2.set(ylim=(0,max(rates)*1.4),ylabel='Payers / assigned users',title='Conversion per assigned user\nafter the user-level join')
+ax2.yaxis.set_major_formatter(PercentFormatter(1.0))
+fig.text(.02,.02,'Synthetic events generated in the notebook (seed 17); payment probability set to 8% control / 10% test as a simulation input. Not an experiment result.',fontsize=9)
+fig.tight_layout(rect=(0,.10,1,1))
+out_dir=ROOT/'2-product-experiment-tracking-audit/outputs';out_dir.mkdir(exist_ok=True)
+fig.savefig(out_dir/'tracking_audit.png',dpi=160);plt.close(fig)
+# Case 3: run the notebook's code cells to keep one source of truth for the simulation.
+nb=json.loads((ROOT/'3-player-ltv-forecast/3-player-ltv-forecast.ipynb').read_text())
+ns={}
+for cell in nb['cells']:
+    if cell['cell_type']=='code':
+        exec(''.join(cell['source']),ns)
+bands={}
+for row in ns['test']:
+    band='zero' if row['d7_revenue']==0 else ('low' if row['d7_revenue']<1 else 'high')
+    predicted=ns['predicted_mean'].get(ns['segment'](row),ns['global_mean'])
+    totals=bands.setdefault(band,[0.0,0.0,0])
+    totals[0]+=row['revenue_120'];totals[1]+=predicted;totals[2]+=1
+fig,(ax1,ax2)=plt.subplots(1,2,figsize=(11,4.1),gridspec_kw={'width_ratios':[1,1.05]})
+labels=['Global-average\nbaseline','Segment\nforecast'];maes=[ns['baseline_mae'],ns['forecast_mae']]
+bars=ax1.bar(labels,maes,color=['#dda944','#176b8c'],width=.5)
+for bar,value in zip(bars,maes):ax1.text(bar.get_x()+bar.get_width()/2,value+.04,f'${value:.2f}',ha='center',fontsize=10)
+ax1.set(ylim=(0,max(maes)*1.25),ylabel='Mean absolute error, 120-day revenue (USD)',
+        title=f'Forecast error on {len(ns["test"]):,} held-out players:\nsegment forecast is {1-ns["forecast_mae"]/ns["baseline_mae"]:.1%} lower')
+names={'zero':'Zero first-week revenue','low':'Low first-week revenue','high':'High first-week revenue'}
+y=range(len(bands))
+for i,band in enumerate(['high','low','zero']):
+    actual,predicted,n=bands[band]
+    ax2.plot([actual/n,predicted/n],[i,i],color='#999999',linewidth=1.5,zorder=1)
+    ax2.scatter([actual/n],[i],color='#176b8c',marker='D',s=55,zorder=2,label='Observed' if i==0 else None)
+    ax2.scatter([predicted/n],[i],color='#b14632',marker='o',s=55,zorder=2,label='Forecast' if i==0 else None)
+ax2.set(yticks=list(y),yticklabels=[f'{names[b]}\n(n={bands[b][2]:,})' for b in ['high','low','zero']],xscale='log',
+        xlabel='Mean 120-day revenue per player (USD, log scale)',
+        title='Predicted versus observed mean revenue,\nby first-week revenue band')
+ax2.legend(frameon=False,fontsize=9,loc='lower right')
+ax2.invert_yaxis()
+fig.text(.02,.02,f'Synthetic players (seed 2026); {len(ns["train"]):,} train / {len(ns["test"]):,} test split by player ID. Band means are dominated by rare large payers.\nSimulation result only, not assessment data or a marketing outcome.',fontsize=9)
+fig.tight_layout(rect=(0,.12,1,1))
+out_dir=ROOT/'3-player-ltv-forecast/outputs';out_dir.mkdir(exist_ok=True)
+fig.savefig(out_dir/'forecast_benchmark.png',dpi=160);plt.close(fig)
 # Case 5: run the notebook's code cells to keep one source of truth for the simulation.
 nb=json.loads((ROOT/'5-donation-checkout-ab-test/5-donation-checkout-ab-test.ipynb').read_text())
 ns={}
