@@ -1,0 +1,11 @@
+{
+  "slug": "10-marketing-mix-modeling",
+  "number": 10,
+  "title": "MMM benchmark",
+  "decision": "What does an OLS MMM benchmark say about channel contribution — and does the geo test confirm it?",
+  "repo_path": "10-marketing-mix-modeling",
+  "provenance": "Synthetic data",
+  "reviewed": null,
+  "publish_date": "2026-12-21",
+  "status": "scheduled"
+}

@@ -1,0 +1,11 @@
+{
+  "slug": "02-experiment-tracking-audit",
+  "number": 2,
+  "title": "Experiment data quality",
+  "decision": "Should a team ship a checkout variant when its tracking pipeline reports zero conversions in both groups?",
+  "repo_path": "2-product-experiment-tracking-audit",
+  "provenance": "Synthetic data",
+  "reviewed": "2026-11-04",
+  "publish_date": "2026-11-11",
+  "status": "scheduled"
+}

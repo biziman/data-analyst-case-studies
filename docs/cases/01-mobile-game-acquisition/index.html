@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Case 01: Mobile Game A: acquisition analytics — interactive case study</title>
+  <meta name="description" content="A mobile-game team must decide whether to shift acquisition spend across its eight campaigns (A–H) after one month of cost and player-activity data.">
+  <link rel="stylesheet" href="../../assets/style.css">
+  <script src="../../assets/plotly.min.js"></script>
+  <script src="../../assets/widgets.js" defer></script>
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="../../index.html">Case studies</a>
+  <nav>
+    <a href="../../index.html">All cases</a>
+    <a href="https://github.com/biziman/data-analyst-case-studies">Code on GitHub</a>
+  </nav>
+</header>
+  <div class="hero">
+    <div class="wrap">
+      <div class="casenum">Case 01</div>
+      <h1>Mobile Game A: acquisition analytics</h1>
+      <div class="decision">A mobile-game team must decide whether to shift acquisition spend across its eight campaigns (A–H) after one month of cost and player-activity data.</div>
+      <div class="badges"><span class="badge">Assessment data · anonymized · real, not synthetic</span><span class="badge reviewed">Reviewed 2026-11-04</span><span class="badge">Published 2026-11-06</span></div>
+    </div>
+  </div>
+<section class="band"><div class="wrap prose"><h2>What this page shows</h2><p>The notebook compares eight acquisition campaigns on cost per day-7 payer, funnel rates, and revenue per registered player, then sizes a follow-up experiment. Every number below is computed from the four files in the repository — drag the controls and the answers change with them.</p><p>The data is real: records from a mobile-game hiring assessment, employer and game anonymized. This is a portfolio demonstration, not a client outcome.</p></div></section>
+<section class="band"><div class="wrap"><h2 class="prose">The four datasets</h2><table class="data"><thead><tr><th>File</th><th>One row per</th><th>Size and coverage</th></tr></thead><tbody><tr><td>registration.csv</td><td class="num">registration</td><td class="num">43,830 rows; 6,686 without a campaign value</td></tr><tr><td>payment.csv</td><td class="num">payment</td><td class="num">29,444 rows; through 2020-12-31</td></tr><tr><td>tutorial.csv</td><td class="num">tutorial completion</td><td class="num">21,299 rows</td></tr><tr><td>ad_data.csv</td><td class="num">campaign-day</td><td class="num">41 rows; May 2020</td></tr></tbody></table></div></section>
+<section class="band alt"><div class="wrap"><div class="prose"><h2>Which campaigns clear the $50 screen?</h2><p>CPP divides a campaign&#x27;s May cost by its day-7 payers — a payer is a registered user with at least one payment within 168 hours of registration. The screen labels CPP ≤ $50 as meets target and CPP &gt; $50 as above target.</p><p>Drag the threshold. Campaign membership, both pooled funnel charts, and the caption recompute together. At the default $50, three campaigns meet the screen: B at $40.00, E at $43.70, G at $44.80. The pooled gap in tutorial completion (53.85% vs 47.17%) describes the groups; it does not show that cheap campaigns produce better players.</p></div>
+  <div class="card">
+    <h3>Which campaigns clear the $50 screen?</h3>
+    <div class="controls">
+      <label for="cpp-threshold">Screening threshold</label>
+      <input type="range" id="cpp-threshold" min="20" max="80" step="1" value="50">
+      <span class="value" id="cpp-threshold-value">$50</span>
+    </div>
+    <div id="cpp-chart" class="chart"></div>
+    <div id="cpp-caption" class="live">Loading…</div>
+    <div id="cpp-funnel" class="chart"></div>
+    <div class="caption">Assessment data (anonymized): 41 daily cost rows, May 2020;
+      registrations 2020-05-01 to 2020-05-31. Cost rows and payer cohorts are not aligned
+      to the same dates. Screening metric only, not a budget result. Each rate pools counts
+      across the campaigns in its group and is not a causal comparison.</div>
+  </div></div></section>
+<section class="band alt"><div class="wrap"><div class="prose"><h2>Does the ranking hold across observation windows?</h2><p>ARPU divides in-window payment revenue by registered users in the campaign, with non-payers kept at zero. Switch the window from 7 to 180 days: values move, and longer windows silently include registrants who never had a full follow-up period — which understates their ARPU.</p><p>There is also a definitional trap in the source notebook: two window rules disagree for the same metric (see the note under the chart). The rule, not the data, explains the difference — so any ARPU number in a report is meaningless without its window contract.</p></div>
+  <div class="card">
+    <h3>Does the ranking hold across observation windows?</h3>
+    <div class="controls">
+      <label>Observation window</label>
+      <div class="btnrow" id="arpu-buttons">
+        <button data-window="7" class="active">7 days</button>
+        <button data-window="14">14 days</button>
+        <button data-window="30">30 days</button>
+        <button data-window="90">90 days</button>
+        <button data-window="180">180 days</button>
+      </div>
+    </div>
+    <div id="arpu-chart" class="chart"></div>
+    <div class="callout"><b>Same metric, two rules:</b> campaign E reads
+      <b>$0.75</b> under whole-day truncation and <b>$0.68</b> under a strict
+      168-hour window. The window rule — not the data — explains the gap.</div>
+    <div id="arpu-caption" class="live">Loading…</div>
+    <div class="caption">Assessment data (anonymized). ARPU denominators are registered users
+      per campaign with non-payers at zero; teal = meets the $50 screen, brick = above it.</div>
+  </div></div></section>
+<section class="band alt"><div class="wrap"><div class="prose"><h2>Campaign E vs H: what the test actually saw</h2><p>Campaign E&#x27;s strict 168-hour ARPU is $0.68; campaign H&#x27;s is $0.29. A Mann–Whitney U test on user-level payment totals reports p ≈ 0.0007. Both distributions are skewed with a large mass of zeros — switch the scale and look at them before believing any single number.</p><p>Two caveats travel with that p-value: no effect size or confidence interval is reported, and the E/H pair was selected after inspecting the data. Treat it as a lead worth a clean experiment, not as a finding.</p></div>
+  <div class="card">
+    <h3>Campaign E vs H: what the test actually saw</h3>
+    <div class="controls">
+      <label>Scale</label>
+      <div class="btnrow" id="eh-buttons">
+        <button data-mode="log" class="active">Log-spaced bins</button>
+        <button data-mode="linear">Linear (0–p99)</button>
+      </div>
+    </div>
+    <div id="eh-chart" class="chart tall"></div>
+    <div id="eh-caption" class="live">Loading…</div>
+    <div class="caption">Assessment data (anonymized). Payments within 168 h of registration,
+      summed per user; non-payers kept at 0. Descriptive panels — the rank test is exploratory
+      because the campaign pair was selected after inspecting the data.</div>
+  </div></div></section>
+<section class="band alt"><div class="wrap"><div class="prose"><h2>Design the next test</h2><p>Campaign E&#x27;s baseline day-3 payer conversion is 4.17%. The notebook sizes a follow-up experiment for a 20% relative improvement: about 7,764 users per arm for a one-sided test at α = 0.05 with 80% power — roughly 15.5 days at 1,000 daily registrations.</p><p>Move the sliders to price other targets. The formula behind the readout is the one the notebook uses; eligibility rules, exposure logging, guardrails and a stopping rule still have to be defined before this becomes a real test.</p></div>
+  <div class="card">
+    <h3>Design the next test</h3>
+    <div class="controls">
+      <label for="calc-lift">Relative uplift</label>
+      <input type="range" id="calc-lift" min="5" max="50" step="1" value="20">
+      <span class="value" id="calc-lift-value">20%</span>
+      <label for="calc-daily">Daily registrations</label>
+      <input type="range" id="calc-daily" min="250" max="3000" step="250" value="1000">
+      <span class="value" id="calc-daily-value">1,000</span>
+    </div>
+    <div class="readout">
+      <div class="stat"><div class="num" id="calc-n">–</div><div class="lbl">users per arm</div></div>
+      <div class="stat"><div class="num" id="calc-total">–</div><div class="lbl">total, both arms</div></div>
+      <div class="stat"><div class="num" id="calc-days">–</div><div class="lbl">days at current traffic</div></div>
+    </div>
+    <div id="calc-caption" class="live">Loading…</div>
+    <div class="caption">Sketch only: sample size follows the normal approximation for a
+      one-sided two-sample z-test on proportions. Eligibility, exposure logging, guardrails
+      and a stopping rule are not part of this calculation.</div>
+  </div></div></section>
+<section class="band"><div class="wrap prose"><h2>What this cannot show</h2><ol class='limits'><li>Campaign comparisons are observational. Nothing here shows that a campaign caused higher-value players.</li><li>The day-7 payer filter accepts payments logged before registration, and cost dates are not aligned to registration cohorts.</li><li>The two ARPU window rules disagree ($0.75 vs $0.68 for campaign E at 7 days), and longer windows include registrants without full follow-up.</li><li>The cohort SQL in the notebook does not aggregate daily revenue before its cumulative sum and truncates elapsed days — its curve is not a validated LTV estimate.</li><li>The E/H test reports a p-value without an effect size or confidence interval, and the pair was selected on the same data.</li><li>The 6,686 registrations without a campaign value drop out of all campaign-level denominators.</li><li>Publication permission for the assessment CSVs is not confirmed.</li></ol></div></section>
+<section class="band"><div class="wrap prose"><h2>Run it yourself</h2><p>The notebook regenerates every number and figure on this page in one clean run; the four CSVs ship with the repository. In Google Colab, clone the repository in the first cell (!git clone https://github.com/biziman/data-analyst-case-studies followed by %cd data-analyst-case-studies), then run all.</p><p>Metric definitions, tested package versions and the full list of open review items live in the case README.</p><pre class='code'>git clone https://github.com/biziman/data-analyst-case-studies
+cd data-analyst-case-studies
+jupyter notebook 1-marketing-analytics-for-mobile-game/1-marketing-analytics-for-mobile-game.ipynb</pre><p><a href="https://github.com/biziman/data-analyst-case-studies/blob/main/1-marketing-analytics-for-mobile-game/README.md">Case README — metric contracts, verified numbers, limits →</a></p><p><a href="https://colab.research.google.com/github/biziman/data-analyst-case-studies/blob/main/1-marketing-analytics-for-mobile-game/1-marketing-analytics-for-mobile-game.ipynb">Open the notebook in Google Colab →</a></p></div></section>
+<footer class="site">
+  <div class="wrap">
+    <div>Synthetic and assessment data, labeled per case — not client outcomes, not evidence of professional tenure.</div>
+    <div>Numbers verified against a clean notebook run; see the case README for metric contracts and limits.
+      <a href="https://github.com/biziman/data-analyst-case-studies">github.com/biziman/data-analyst-case-studies</a></div>
+  </div>
+</footer>
+</body>
+</html>

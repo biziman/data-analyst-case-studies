@@ -1,0 +1,11 @@
+{
+  "slug": "03-player-ltv-forecast",
+  "number": 3,
+  "title": "Player revenue forecast (D120)",
+  "decision": "Can a segment-level benchmark forecast new-player revenue better than a global mean after 120 days?",
+  "repo_path": "3-player-ltv-forecast",
+  "provenance": "Synthetic data",
+  "reviewed": "2026-11-04",
+  "publish_date": "2026-11-17",
+  "status": "scheduled"
+}

@@ -1,0 +1,11 @@
+{
+  "slug": "09-ctv-geo-uplift",
+  "number": 9,
+  "title": "CTV geo uplift experiment",
+  "decision": "Does additional app revenue justify CTV spend?",
+  "repo_path": "9-ctv-geo-uplift",
+  "provenance": "Synthetic data",
+  "reviewed": null,
+  "publish_date": "2026-12-16",
+  "status": "scheduled"
+}

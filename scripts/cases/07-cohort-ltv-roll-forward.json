@@ -1,0 +1,11 @@
+{
+  "slug": "07-cohort-ltv-roll-forward",
+  "number": 7,
+  "title": "Cohort LTV roll-forward",
+  "decision": "Do synthetic curve factors forecast cohort revenue as it matures?",
+  "repo_path": "7-cohort-ltv-roll-forward",
+  "provenance": "Synthetic data",
+  "reviewed": null,
+  "publish_date": "2026-12-07",
+  "status": "scheduled"
+}

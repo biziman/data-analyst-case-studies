@@ -1,0 +1,11 @@
+{
+  "slug": "11-payment-fraud-investigation",
+  "number": 11,
+  "title": "Payment fraud investigation",
+  "decision": "Which payment patterns need investigation, and which losses are confirmed?",
+  "repo_path": "11-payment-fraud-investigation",
+  "provenance": "Synthetic ledger",
+  "reviewed": null,
+  "publish_date": "2026-12-28",
+  "status": "scheduled"
+}

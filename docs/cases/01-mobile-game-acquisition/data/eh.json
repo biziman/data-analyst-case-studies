@@ -1,0 +1,14 @@
+{
+ "E": {
+  "rule_a_d7": 0.75,
+  "rule_b_d7": 0.68,
+  "users": 9447,
+  "zeros": 8984
+ },
+ "H": {
+  "rule_b_d7": 0.29,
+  "users": 13920,
+  "zeros": 13365
+ },
+ "mann_whitney_p": 0.0007
+}

@@ -1,0 +1,100 @@
+{
+  "slug": "01-mobile-game-acquisition",
+  "number": 1,
+  "title": "Mobile Game A: acquisition analytics",
+  "decision": "A mobile-game team must decide whether to shift acquisition spend across its eight campaigns (A–H) after one month of cost and player-activity data.",
+  "repo_path": "1-marketing-analytics-for-mobile-game",
+  "provenance": "Assessment data · anonymized · real, not synthetic",
+  "reviewed": "2026-11-04",
+  "publish_date": "2026-11-06",
+  "status": "live",
+  "sections": [
+    {
+      "type": "prose",
+      "heading": "What this page shows",
+      "paragraphs": [
+        "The notebook compares eight acquisition campaigns on cost per day-7 payer, funnel rates, and revenue per registered player, then sizes a follow-up experiment. Every number below is computed from the four files in the repository — drag the controls and the answers change with them.",
+        "The data is real: records from a mobile-game hiring assessment, employer and game anonymized. This is a portfolio demonstration, not a client outcome."
+      ]
+    },
+    {
+      "type": "table",
+      "heading": "The four datasets",
+      "headers": ["File", "One row per", "Size and coverage"],
+      "rows": [
+        ["registration.csv", "registration", "43,830 rows; 6,686 without a campaign value"],
+        ["payment.csv", "payment", "29,444 rows; through 2020-12-31"],
+        ["tutorial.csv", "tutorial completion", "21,299 rows"],
+        ["ad_data.csv", "campaign-day", "41 rows; May 2020"]
+      ]
+    },
+    {
+      "type": "widget",
+      "widget": "cpp_explorer",
+      "heading": "Which campaigns clear the $50 screen?",
+      "paragraphs": [
+        "CPP divides a campaign's May cost by its day-7 payers — a payer is a registered user with at least one payment within 168 hours of registration. The screen labels CPP ≤ $50 as meets target and CPP > $50 as above target.",
+        "Drag the threshold. Campaign membership, both pooled funnel charts, and the caption recompute together. At the default $50, three campaigns meet the screen: B at $40.00, E at $43.70, G at $44.80. The pooled gap in tutorial completion (53.85% vs 47.17%) describes the groups; it does not show that cheap campaigns produce better players."
+      ]
+    },
+    {
+      "type": "widget",
+      "widget": "arpu_windows",
+      "heading": "Does the ranking hold across observation windows?",
+      "paragraphs": [
+        "ARPU divides in-window payment revenue by registered users in the campaign, with non-payers kept at zero. Switch the window from 7 to 180 days: values move, and longer windows silently include registrants who never had a full follow-up period — which understates their ARPU.",
+        "There is also a definitional trap in the source notebook: two window rules disagree for the same metric (see the note under the chart). The rule, not the data, explains the difference — so any ARPU number in a report is meaningless without its window contract."
+      ]
+    },
+    {
+      "type": "widget",
+      "widget": "eh_distribution",
+      "heading": "Campaign E vs H: what the test actually saw",
+      "paragraphs": [
+        "Campaign E's strict 168-hour ARPU is $0.68; campaign H's is $0.29. A Mann–Whitney U test on user-level payment totals reports p ≈ 0.0007. Both distributions are skewed with a large mass of zeros — switch the scale and look at them before believing any single number.",
+        "Two caveats travel with that p-value: no effect size or confidence interval is reported, and the E/H pair was selected after inspecting the data. Treat it as a lead worth a clean experiment, not as a finding."
+      ]
+    },
+    {
+      "type": "widget",
+      "widget": "sample_calculator",
+      "heading": "Design the next test",
+      "paragraphs": [
+        "Campaign E's baseline day-3 payer conversion is 4.17%. The notebook sizes a follow-up experiment for a 20% relative improvement: about 7,764 users per arm for a one-sided test at α = 0.05 with 80% power — roughly 15.5 days at 1,000 daily registrations.",
+        "Move the sliders to price other targets. The formula behind the readout is the one the notebook uses; eligibility rules, exposure logging, guardrails and a stopping rule still have to be defined before this becomes a real test."
+      ]
+    },
+    {
+      "type": "prose",
+      "heading": "What this cannot show",
+      "items": [
+        "Campaign comparisons are observational. Nothing here shows that a campaign caused higher-value players.",
+        "The day-7 payer filter accepts payments logged before registration, and cost dates are not aligned to registration cohorts.",
+        "The two ARPU window rules disagree ($0.75 vs $0.68 for campaign E at 7 days), and longer windows include registrants without full follow-up.",
+        "The cohort SQL in the notebook does not aggregate daily revenue before its cumulative sum and truncates elapsed days — its curve is not a validated LTV estimate.",
+        "The E/H test reports a p-value without an effect size or confidence interval, and the pair was selected on the same data.",
+        "The 6,686 registrations without a campaign value drop out of all campaign-level denominators.",
+        "Publication permission for the assessment CSVs is not confirmed."
+      ]
+    },
+    {
+      "type": "prose",
+      "heading": "Run it yourself",
+      "paragraphs": [
+        "The notebook regenerates every number and figure on this page in one clean run; the four CSVs ship with the repository. In Google Colab, clone the repository in the first cell (!git clone https://github.com/biziman/data-analyst-case-studies followed by %cd data-analyst-case-studies), then run all.",
+        "Metric definitions, tested package versions and the full list of open review items live in the case README."
+      ],
+      "code": "git clone https://github.com/biziman/data-analyst-case-studies\ncd data-analyst-case-studies\njupyter notebook 1-marketing-analytics-for-mobile-game/1-marketing-analytics-for-mobile-game.ipynb",
+      "links": [
+        {
+          "label": "Case README — metric contracts, verified numbers, limits",
+          "url": "https://github.com/biziman/data-analyst-case-studies/blob/main/1-marketing-analytics-for-mobile-game/README.md"
+        },
+        {
+          "label": "Open the notebook in Google Colab",
+          "url": "https://colab.research.google.com/github/biziman/data-analyst-case-studies/blob/main/1-marketing-analytics-for-mobile-game/1-marketing-analytics-for-mobile-game.ipynb"
+        }
+      ]
+    }
+  ]
+}

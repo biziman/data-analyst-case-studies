@@ -1,0 +1,15 @@
+{
+ "rows": {
+  "registration": 43830,
+  "payment": 29444,
+  "tutorial": 21299,
+  "ad_data": 41
+ },
+ "no_campaign_regs": 6686,
+ "meets": [
+  "B",
+  "E",
+  "G"
+ ],
+ "p_value_mw": 0.0007
+}

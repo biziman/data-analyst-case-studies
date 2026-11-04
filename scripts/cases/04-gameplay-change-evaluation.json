@@ -1,0 +1,11 @@
+{
+  "slug": "04-gameplay-change-evaluation",
+  "number": 4,
+  "title": "Gameplay change evaluation",
+  "decision": "Did a gameplay change raise player damage — and did it move the guardrail metrics?",
+  "repo_path": "4-gameplay-change-evaluation",
+  "provenance": "Synthetic data",
+  "reviewed": "2026-11-04",
+  "publish_date": "2026-11-20",
+  "status": "scheduled"
+}

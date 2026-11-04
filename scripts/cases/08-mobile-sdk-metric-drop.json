@@ -1,0 +1,11 @@
+{
+  "slug": "08-mobile-sdk-metric-drop",
+  "number": 8,
+  "title": "Mobile SDK metric drop",
+  "decision": "Why did DAU drop — an SDK defect or a real change in engagement?",
+  "repo_path": "8-mobile-sdk-metric-drop",
+  "provenance": "Synthetic data",
+  "reviewed": null,
+  "publish_date": "2026-12-11",
+  "status": "scheduled"
+}

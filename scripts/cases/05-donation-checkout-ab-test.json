@@ -1,0 +1,11 @@
+{
+  "slug": "05-donation-checkout-ab-test",
+  "number": 5,
+  "title": "Donation checkout A/B test",
+  "decision": "Does removing a preset gift amount improve money raised per visitor?",
+  "repo_path": "5-donation-checkout-ab-test",
+  "provenance": "Assessment data · anonymized",
+  "reviewed": null,
+  "publish_date": "2026-11-25",
+  "status": "scheduled"
+}

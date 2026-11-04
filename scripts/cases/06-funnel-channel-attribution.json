@@ -1,0 +1,11 @@
+{
+  "slug": "06-funnel-channel-attribution",
+  "number": 6,
+  "title": "Funnel channel attribution",
+  "decision": "How should purchase revenue be credited across channels — and does the credit reconcile?",
+  "repo_path": "6-funnel-channel-attribution",
+  "provenance": "Synthetic data",
+  "reviewed": null,
+  "publish_date": "2026-12-01",
+  "status": "scheduled"
+}
