@@ -2,6 +2,8 @@
 
 Proofreading and diagram review of all 11 cases (see `CHANGELOG.md` for the finished work). Cases 1–4 are done (2026-11-04). Process: one case per run, waiting for approval between cases.
 
+Publishing is gated on this review pass: a case's LinkedIn post goes out only after its review is done. Post dates and todos: `~/projects/job-search/LINKEDIN_PUBLISHING.md`; plan: `LINKEDIN_PLAN.md`.
+
 ## Per-case checklist
 
 1. **Proofread** the README and notebook prose: grammar, terminology consistency, decision-first structure, synthetic/assessment labeling, no causal or fraud overclaiming.

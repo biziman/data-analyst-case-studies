@@ -2,6 +2,26 @@
 
 Notable changes to the portfolio cases. Newest entries first. Dates are commit dates.
 
+## 2026-11-05 — Interactive site and LinkedIn publishing setup
+
+- GitHub Pages site scaffold: `docs/` (landing page + case 1 narrative page,
+  seeing-theory-inspired theme, bundled Plotly 2.35.2), served from the
+  `linkedin-site` branch: https://biziman.github.io/data-analyst-case-studies/
+- Case 1 widgets: $50 CPP threshold slider with live funnel repooling, ARPU
+  window toggle (with the $0.75/$0.68 rule callout), E vs H distribution with
+  log-spaced/linear bins, sample-size calculator (reproduces 7,764 per arm at
+  +20%, matching the notebook).
+- `scripts/extract_case_data.py`: stdlib replication of the notebook's metric
+  rules; asserts the verified README headline numbers (11/11 pass); writes
+  `docs/cases/*/data/*.json` and the post preview figure from the notebook.
+- `scripts/build_site.py` + `scripts/cases/*.json`: config-driven page
+  generator; stub configs for cases 2–11 carry the publishing calendar.
+- `LINKEDIN_PLAN.md` (calendar, conventions, tracking) and
+  `linkedin/01-mobile-game-acquisition.md` (post 1 draft). Open todos live in
+  `~/projects/job-search/LINKEDIN_PUBLISHING.md`.
+- Publishing cadence: 1 case / 5 days, 2026-11-06 → 2026-12-28, gated on this
+  repo's `TODO.md` review pass.
+
 ## 2026-11-04 — Case review pass, cases 1–4
 
 Proofreading and diagram review of every case, one case per run. Each finished case was re-executed in a clean Jupyter kernel, and every number quoted in prose was verified against the fresh outputs.
