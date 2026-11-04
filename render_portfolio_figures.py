@@ -92,6 +92,32 @@ fig.text(.02,.02,f'Synthetic players (seed 2026); {len(ns["train"]):,} train / {
 fig.tight_layout(rect=(0,.12,1,1))
 out_dir=ROOT/'3-player-ltv-forecast/outputs';out_dir.mkdir(exist_ok=True)
 fig.savefig(out_dir/'forecast_benchmark.png',dpi=160);plt.close(fig)
+# Case 4: run the notebook's code cells to keep one source of truth for the simulation.
+nb=json.loads((ROOT/'4-gameplay-change-evaluation/4-gameplay-change-evaluation.ipynb').read_text())
+ns={}
+for cell in nb['cells']:
+    if cell['cell_type']=='code':
+        exec(''.join(cell['source']),ns)
+est,lo,hi=ns['did']('damage')
+change_a=ns['mean'](ns['player_change']('A','damage'));change_b=ns['mean'](ns['player_change']('B','damage'))
+fig,(ax1,ax2)=plt.subplots(1,2,figsize=(10,4.0),gridspec_kw={'width_ratios':[1.15,1]})
+ax1.errorbar(est,0,xerr=[[est-lo],[hi-est]],fmt='o',color='#176b8c',capsize=6,markersize=8)
+ax1.axvline(0,color='#555555',linestyle='--',label='No change: 0')
+ax1.axvline(25,color='#b14632',linestyle=':',label='Planted effect in generator: +25')
+ax1.set(xlim=(lo-6,31),ylim=(-.6,.6),yticks=[],xlabel='Damage points per battle',
+        title='Damage difference-in-differences\n(post − pre, Group A − Group B)')
+ax1.text(est,.16,f'{est:.1f} (95% interval {lo:.1f} to {hi:.1f})',ha='center')
+ax1.legend(loc='lower right',frameon=False,fontsize=9)
+bars=ax2.bar(['Group A','Group B'],[change_a,change_b],color=['#176b8c','#b14632'],width=.5)
+for bar,value in zip(bars,[change_a,change_b]):
+    ax2.text(bar.get_x()+bar.get_width()/2,value+(1 if value>=0 else -2.6),f'{value:+.1f}',ha='center',fontsize=10)
+ax2.axhline(0,color='#555555',linewidth=.8)
+ax2.set(ylim=(min(change_a,change_b)*1.45,max(change_a,change_b)*2.2),ylabel='Change in mean damage (points)',
+        title=f'Pre-to-post change in mean damage, by group\n(DiD = A − B = {est:.1f})')
+fig.text(.02,.02,'Synthetic battle records (seed 420); 800 players, 8 battles per player per period;\nplayer-level bootstrap (1,000 resamples, fixed seed). Simulation only, not assessment findings.',fontsize=9)
+fig.tight_layout(rect=(0,.12,1,1))
+out_dir=ROOT/'4-gameplay-change-evaluation/outputs';out_dir.mkdir(exist_ok=True)
+fig.savefig(out_dir/'did_damage.png',dpi=160);plt.close(fig)
 # Case 5: run the notebook's code cells to keep one source of truth for the simulation.
 nb=json.loads((ROOT/'5-donation-checkout-ab-test/5-donation-checkout-ab-test.ipynb').read_text())
 ns={}

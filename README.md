@@ -47,7 +47,7 @@ Each case README identifies its inputs, method, limitations, and available run s
 
 Read the [analysis and writing conventions](PORTFOLIO_GUIDE.md). A forecast is not a profitability result, attributed revenue is not incremental revenue, and synthetic outcomes are not client impact. Case revisions are recorded in [CHANGELOG.md](CHANGELOG.md), and the remaining review plan lives in [TODO.md](TODO.md).
 
-The optional published figures can be regenerated after producing the case 9 and case 11 result files. The case 2, 3, and 5 figures run those notebooks' code cells directly:
+The optional published figures can be regenerated after producing the case 9 and case 11 result files. The case 2, 3, 4, and 5 figures run those notebooks' code cells directly:
 
 ```bash
 python -m pip install matplotlib==3.10.8

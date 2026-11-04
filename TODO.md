@@ -1,6 +1,6 @@
 # Review TODO — cases 4–11
 
-Proofreading and diagram review of all 11 cases (see `CHANGELOG.md` for the finished work). Cases 1–3 are done (2026-11-04). Process: one case per run, waiting for approval between cases.
+Proofreading and diagram review of all 11 cases (see `CHANGELOG.md` for the finished work). Cases 1–4 are done (2026-11-04). Process: one case per run, waiting for approval between cases.
 
 ## Per-case checklist
 
@@ -12,10 +12,8 @@ Proofreading and diagram review of all 11 cases (see `CHANGELOG.md` for the fini
 
 ## Remaining cases
 
-### Case 4 — `4-gameplay-change-evaluation`
-- Notebook only (3 code cells, 5 md cells), no figures.
-- Verify the synthetic difference-in-differences estimate and its interval against fresh outputs.
-- Figure: effect estimate with interval against a no-change line (same chart language as the case 9 decision figure); optionally pre/post group means beside it. Keep the synthetic-DiD caveats next to the estimate.
+### Case 4 — `4-gameplay-change-evaluation` — done 2026-11-04
+Bootstrap made reproducible with a fixed per-metric seed; guardrail results added; `outputs/did_damage.png` figure; README rewritten with metric contract and relative links.
 
 ### Case 5 — `5-donation-checkout-ab-test`
 - `outputs/revenue_per_visitor.png` exists but the README never references it — add the embed and caption.

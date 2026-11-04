@@ -2,7 +2,7 @@
 
 Notable changes to the portfolio cases. Newest entries first. Dates are commit dates.
 
-## 2026-11-04 — Case review pass, cases 1–3
+## 2026-11-04 — Case review pass, cases 1–4
 
 Proofreading and diagram review of every case, one case per run. Each finished case was re-executed in a clean Jupyter kernel, and every number quoted in prose was verified against the fresh outputs.
 
@@ -35,8 +35,15 @@ Proofreading and diagram review of every case, one case per run. Each finished c
 
 ### Tooling and repository
 
-- `render_portfolio_figures.py` now also builds the case 2 and case 3 figures by executing those notebooks' code cells (same single-source-of-truth pattern as case 5). It needs only matplotlib; run it from the repository root.
-- Root README: figure-regeneration note now lists cases 2, 3, and 5.
+- `render_portfolio_figures.py` now also builds the case 2, 3, and 4 figures by executing those notebooks' code cells (same single-source-of-truth pattern as case 5). It needs only matplotlib; run it from the repository root.
+- Root README: figure-regeneration note now lists cases 2, 3, 4, and 5.
+
+### Case 4 — `4-gameplay-change-evaluation`
+
+- Made the player-level bootstrap reproducible: `did()` drew from the global RNG, so repeated calls returned different intervals (which would let the figure drift from the notebook). It now uses a fixed per-metric seed; all estimates are unchanged (damage DiD 12.193) and the intervals are stable: damage −1.359 to 25.733, kills −0.030 to 0.032, battle duration −7.794 to 2.052.
+- Updated the findings to the stable intervals and added the guardrail results (kills and battle duration differences near zero with intervals spanning zero).
+- Added `outputs/did_damage.png`: the damage DiD with its player-bootstrap interval against the no-change reference and the planted +25 effect, plus the per-group pre-to-post changes that show why a pooled comparison misleads.
+- Rewrote the README with the verified numbers, a metric contract (player as unit of analysis, damage primary, kills and battle duration guardrails), figure caption, limits (single run, parallel-trends assumption), and reproduction with seed 420 and expected outputs. Absolute GitHub links replaced with relative links.
 
 ## Earlier history
 
