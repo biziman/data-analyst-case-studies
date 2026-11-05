@@ -1,6 +1,6 @@
 # Review TODO — cases 4–11
 
-Proofreading and diagram review of all 11 cases (see `CHANGELOG.md` for the finished work). Cases 1–6 are done (2026-11-04 to 2026-11-05). Process: one case per run, waiting for approval between cases.
+Proofreading and diagram review of all 11 cases (see `CHANGELOG.md` for the finished work). Cases 1–7 are done (2026-11-04 to 2026-11-05). Process: one case per run, waiting for approval between cases.
 
 Publishing is gated on this review pass: a case's LinkedIn post goes out only after its review is done. Post dates and todos: `~/projects/job-search/LINKEDIN_PUBLISHING.md`; plan: `LINKEDIN_PLAN.md`.
 
@@ -23,10 +23,8 @@ Executed and stored outputs; every number matches the renderer exactly (6,000 pe
 ### Case 6 — `6-funnel-channel-attribution` — done 2026-11-05
 Executed and stored outputs; allocation totals and the reconciliation verified (300/300 purchase paths conserve credit; $19,640.10 allocated = $19,640.10 source; fractional credit sums to 300.00). New figure `outputs/credit_by_channel.png` (credited revenue by channel + reconciliation check, labeled descriptive attribution, not incrementality). README rewritten with the attribution rule as a metric contract, verified findings with denominators, figure caption, and limits — including that the even channel spread reflects the generator's uniform channel assignment.
 
-### Case 7 — `7-cohort-ltv-roll-forward`
-- Notebook only (4 code cells), no figures.
-- Verify the synthetic curve factors; the root README states calendar-valid label maturity is not yet enforced — keep that caveat beside any curve.
-- Figure: cumulative revenue curves by cohort/curve factor with maturity status annotated.
+### Case 7 — `7-cohort-ltv-roll-forward` — done 2026-11-05
+Executed and stored outputs; the synthetic curve factors verified against the generator's analytic D360/D30 ratios (estimated medians 2.157×/2.724×/1.737×/1.976× per segment vs analytic 2.151/2.663/1.706/1.991 at each segment's tau; global factor 2.076×) and the README's WAPE headline reproduced (3.2% segment vs 13.6% global). Factors are now printed in the notebook so every cited number is in the stored outputs. New figure `outputs/curve_factors.png` (cumulative curves by segment with D30 read points and maturity status annotated, held-out WAPE comparison); the calendar-valid label-maturity caveat sits beside the curves and in Limits.
 
 ### Case 8 — `8-mobile-sdk-metric-drop`
 - 9 code cells including 4 chart cells, but no rendered outputs are stored; the README tells readers to "check notebook outputs".

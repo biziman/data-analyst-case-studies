@@ -163,3 +163,35 @@ fig.text(.02,.02,'Synthetic sessions (seed 601); 400 users, 1,209 sessions, 300 
 fig.tight_layout(rect=(0,.14,1,1))
 out_dir=ROOT/'6-funnel-channel-attribution/outputs';out_dir.mkdir(exist_ok=True)
 fig.savefig(out_dir/'credit_by_channel.png',dpi=160);plt.close(fig)
+# Case 7: run the notebook's code cells to keep one source of truth for the simulation.
+nb=json.loads((ROOT/'7-cohort-ltv-roll-forward/7-cohort-ltv-roll-forward.ipynb').read_text())
+ns={}
+for cell in nb['cells']:
+    if cell['cell_type']=='code':
+        exec(''.join(cell['source']),ns)
+statistics=ns['statistics'];curves=ns['curves'];factors=ns['factors']
+CAMPAIGNS=ns['CAMPAIGNS'];TIERS=ns['TIERS'];N=ns['N_COHORTS']
+days=list(range(ns['MAX_DAY']+1))
+seg_style={('prospecting',1):('#176b8c','-'),('prospecting',2):('#176b8c','--'),
+           ('retargeting',1):('#b14632','-'),('retargeting',2):('#b14632','--')}
+fig,(ax1,ax2)=plt.subplots(1,2,figsize=(9,3.8),gridspec_kw={'width_ratios':[1.5,1]})
+for campaign in CAMPAIGNS:
+    for tier in TIERS:
+        seg=(campaign,tier);color,ls=seg_style[seg]
+        for cohort in range(N):
+            ax1.plot(days,curves[(cohort,campaign,tier)],color=color,linestyle=ls,alpha=.12,linewidth=.8)
+        med=[statistics.median([curves[(c,campaign,tier)][d] for c in range(N)]) for d in days]
+        ax1.plot(days,med,color=color,linestyle=ls,linewidth=2,label=f'{campaign} \u00b7 tier {tier} ({factors[seg]:.2f}\u00d7)')
+        ax1.plot(30,med[30],'o',color=color,markersize=5)
+ax1.set(xlim=(0,360),xlabel='Cohort age (days)',ylabel='Cumulative IAP revenue (USD)',title='Curve factors differ by segment')
+ax1.legend(frameon=False,fontsize=8,loc='lower right')
+ax1.text(.02,.97,'Dots: D30 read point; curves end at the D360 target.\nMaturity status: cohorts 24\u201329 held out, D360 hidden\nat forecast time. Calendar-valid label maturity is not\nenforced \u2014 the simulation has no cohort dates.',transform=ax1.transAxes,va='top',fontsize=8,bbox=dict(facecolor='white',alpha=.85,edgecolor='none'))
+w_seg=100*ns['wape']('segment_forecast_d360');w_glob=100*ns['wape']('global_forecast_d360')
+bars=ax2.bar(['Segment factors','One global factor'],[w_seg,w_glob],color=['#176b8c','#b14632'],width=.55)
+for bar,value in zip(bars,[w_seg,w_glob]):ax2.text(bar.get_x()+bar.get_width()/2,value+.35,f'{value:.1f}%',ha='center')
+ax2.set(ylim=(0,w_glob*1.25),ylabel='WAPE on held-out D360 (%)',title='Segment factors beat\nthe global factor')
+ax2.text(.5,-.22,'24 held-out forecasts (6 cohorts \u00d7 4 segments)',transform=ax2.transAxes,ha='center',fontsize=8)
+fig.text(.02,.02,'Synthetic cohort curves (seed 41); 30 weekly cohorts \u00d7 4 segments; cohort curves faint, segment medians bold.\nSimulation only, not a client outcome.',fontsize=9)
+fig.tight_layout(rect=(0,.12,1,1))
+out_dir=ROOT/'7-cohort-ltv-roll-forward/outputs';out_dir.mkdir(exist_ok=True)
+fig.savefig(out_dir/'curve_factors.png',dpi=160);plt.close(fig)

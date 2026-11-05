@@ -2,7 +2,24 @@
 
 Notable changes to the portfolio cases. Newest entries first. Dates are commit dates.
 
-## 2026-11-05 — Case review pass, cases 5–6
+## 2026-11-05 — Case review pass, cases 5–7
+
+### Case 7 — `7-cohort-ltv-roll-forward`
+
+- Notebook executed in a clean kernel and outputs stored. The synthetic curve
+  factors were verified against the generator's analytic D360/D30 ratios, and
+  the WAPE headline reproduced exactly (3.2% segment vs 13.6% global on six
+  held-out cohorts; signed bias +1.7% vs −2.9%). The notebook now prints its
+  factors (2.157× / 2.724× / 1.737× / 1.976×; global 2.076×) so every cited
+  number is backed by the stored outputs.
+- New figure `outputs/curve_factors.png`: cumulative revenue curves by segment
+  (curve factor) with D30 read points and maturity status annotated, plus the
+  held-out WAPE comparison. The calendar-valid label-maturity caveat is placed
+  beside the curves, matching the root README.
+- README rewritten in the reviewed template: metric contract, verified findings
+  with denominators, figure caption, limits (historical validation limit kept
+  verbatim in substance), recommendation, and reproduction with tested versions
+  and run date.
 
 ### Case 6 — `6-funnel-channel-attribution`
 
