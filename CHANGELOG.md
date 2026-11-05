@@ -2,6 +2,23 @@
 
 Notable changes to the portfolio cases. Newest entries first. Dates are commit dates.
 
+## 2026-11-05 — Case review pass, case 5
+
+### Case 5 — `5-donation-checkout-ab-test`
+
+- Notebook executed in a clean kernel and outputs stored; every cited number
+  verified against the fresh run (6,000 visitors per arm; conversion 11.50% →
+  13.52%, p = 0.0008; revenue per visitor $5.75 → $6.53; difference +$0.78,
+  95% visitor-bootstrap interval −$0.10 to $1.72, includes zero).
+- The bootstrap interval is now idempotent: the resampling checkpoints and
+  restores the generator state, so re-running the cell always returns the same
+  interval (same bug class as case 4). No estimate changed.
+- `outputs/revenue_per_visitor.png` re-rendered: proper minus sign in the
+  currency interval and a units-bearing conversion axis label. The README now
+  embeds the figure with a caption.
+- README rewritten with metric contract, verified findings with denominators,
+  limits, and a reproduction section (tested versions and run date).
+
 ## 2026-11-05 — Interactive site and LinkedIn publishing setup
 
 - GitHub Pages site scaffold: `docs/` (landing page + case 1 narrative page,

@@ -1,6 +1,6 @@
 # Review TODO — cases 4–11
 
-Proofreading and diagram review of all 11 cases (see `CHANGELOG.md` for the finished work). Cases 1–4 are done (2026-11-04). Process: one case per run, waiting for approval between cases.
+Proofreading and diagram review of all 11 cases (see `CHANGELOG.md` for the finished work). Cases 1–5 are done (2026-11-04 to 2026-11-05). Process: one case per run, waiting for approval between cases.
 
 Publishing is gated on this review pass: a case's LinkedIn post goes out only after its review is done. Post dates and todos: `~/projects/job-search/LINKEDIN_PUBLISHING.md`; plan: `LINKEDIN_PLAN.md`.
 
@@ -17,10 +17,8 @@ Publishing is gated on this review pass: a case's LinkedIn post goes out only af
 ### Case 4 — `4-gameplay-change-evaluation` — done 2026-11-04
 Bootstrap made reproducible with a fixed per-metric seed; guardrail results added; `outputs/did_damage.png` figure; README rewritten with metric contract and relative links.
 
-### Case 5 — `5-donation-checkout-ab-test`
-- `outputs/revenue_per_visitor.png` exists but the README never references it — add the embed and caption.
-- Execute the notebook (currently unexecuted) and store outputs; they must agree with the renderer's numbers: 6,000 visitors per arm, conversion 11.50% control vs 13.52% variant (p = 0.0008), revenue per visitor $5.75 vs $6.53, difference $0.78 with 95% bootstrap interval (−$0.10, $1.72).
-- Keep the core framing: a conversion win alone does not settle the revenue decision.
+### Case 5 — `5-donation-checkout-ab-test` — done 2026-11-05
+Executed and stored outputs; every number matches the renderer exactly (6,000 per arm; conversion 11.50% vs 13.52%, p = 0.0008; RPV $5.75 vs $6.53; difference $0.78, interval −$0.10 to $1.72). Bootstrap interval made idempotent via an RNG checkpoint/restore around the resampling (the case-4 bug class; no number changed). Figure re-rendered with a proper minus sign and units-bearing axis label; README rewritten with metric contract, verified findings, figure embed and caption, and a reproduction section.
 
 ### Case 6 — `6-funnel-channel-attribution`
 - Notebook only (4 code cells), no figures.

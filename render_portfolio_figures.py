@@ -128,13 +128,15 @@ fig,(ax1,ax2)=plt.subplots(1,2,figsize=(8,3.4),gridspec_kw={'width_ratios':[1,1.
 groups=['control','variant'];conv=[100*sum(v>0 for v in ns['outcomes'][g])/len(ns['outcomes'][g]) for g in groups]
 bars=ax1.bar(['Control','Variant'],conv,color=['#176b8c','#dda944'],width=.55)
 for bar,value in zip(bars,conv):ax1.text(bar.get_x()+bar.get_width()/2,value+.15,f'{value:.2f}%',ha='center')
-ax1.set(ylim=(0,max(conv)*1.25),ylabel='Donation conversion',title='Conversion improves significantly')
+ax1.set(ylim=(0,max(conv)*1.25),title='Conversion improves significantly')
+ax1.set_ylabel('Donation conversion (% of visitors)',fontsize=9)
 ax1.text(.5,-.30,f"+{100*(ns['p_v']-ns['p_c']):.2f} pp (two-proportion z-test p={ns['p_value_conversion']:.4f})",transform=ax1.transAxes,ha='center',fontsize=9)
 est=ns['rpv_difference'];lo=ns['low'];hi=ns['high']
 ax2.errorbar(est,0,xerr=[[est-lo],[hi-est]],fmt='o',color='#b14632',capsize=6,markersize=8)
 ax2.axvline(0,color='#555555',linestyle='--',label='No revenue change: 0')
 ax2.set(xlim=(lo-.4,hi+.4),ylim=(-.6,.6),yticks=[],xlabel='Revenue per randomized visitor (USD)',title='Revenue-per-visitor interval includes zero')
-ax2.text(est,.18,f'${est:.2f} (95% interval ${lo:.2f} to ${hi:.2f})',ha='center')
+usd=lambda v:('\u2212' if v<0 else '')+'$'+f'{abs(v):.2f}'
+ax2.text(est,.18,f'{usd(est)} (95% interval {usd(lo)} to {usd(hi)})',ha='center')
 ax2.legend(loc='lower right',frameon=False)
 fig.text(.02,.02,'Synthetic experiment, 6,000 visitors per arm; visitors resampled 1,000 times. Simulation result only, not a client outcome.',fontsize=9)
 fig.tight_layout(rect=(0,.10,1,1))
