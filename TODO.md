@@ -1,6 +1,6 @@
 # Review TODO — cases 4–11
 
-Proofreading and diagram review of all 11 cases (see `CHANGELOG.md` for the finished work). Cases 1–5 are done (2026-11-04 to 2026-11-05). Process: one case per run, waiting for approval between cases.
+Proofreading and diagram review of all 11 cases (see `CHANGELOG.md` for the finished work). Cases 1–6 are done (2026-11-04 to 2026-11-05). Process: one case per run, waiting for approval between cases.
 
 Publishing is gated on this review pass: a case's LinkedIn post goes out only after its review is done. Post dates and todos: `~/projects/job-search/LINKEDIN_PUBLISHING.md`; plan: `LINKEDIN_PLAN.md`.
 
@@ -20,10 +20,8 @@ Bootstrap made reproducible with a fixed per-metric seed; guardrail results adde
 ### Case 5 — `5-donation-checkout-ab-test` — done 2026-11-05
 Executed and stored outputs; every number matches the renderer exactly (6,000 per arm; conversion 11.50% vs 13.52%, p = 0.0008; RPV $5.75 vs $6.53; difference $0.78, interval −$0.10 to $1.72). Bootstrap interval made idempotent via an RNG checkpoint/restore around the resampling (the case-4 bug class; no number changed). Figure re-rendered with a proper minus sign and units-bearing axis label; README rewritten with metric contract, verified findings, figure embed and caption, and a reproduction section.
 
-### Case 6 — `6-funnel-channel-attribution`
-- Notebook only (4 code cells), no figures.
-- Verify credit allocation totals and the reconciliation (allocated credit equals total purchase revenue).
-- Figure: credited revenue by channel plus the reconciliation check, labeled as descriptive attribution, not incrementality.
+### Case 6 — `6-funnel-channel-attribution` — done 2026-11-05
+Executed and stored outputs; allocation totals and the reconciliation verified (300/300 purchase paths conserve credit; $19,640.10 allocated = $19,640.10 source; fractional credit sums to 300.00). New figure `outputs/credit_by_channel.png` (credited revenue by channel + reconciliation check, labeled descriptive attribution, not incrementality). README rewritten with the attribution rule as a metric contract, verified findings with denominators, figure caption, and limits — including that the even channel spread reflects the generator's uniform channel assignment.
 
 ### Case 7 — `7-cohort-ltv-roll-forward`
 - Notebook only (4 code cells), no figures.

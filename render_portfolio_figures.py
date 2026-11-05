@@ -142,3 +142,24 @@ fig.text(.02,.02,'Synthetic experiment, 6,000 visitors per arm; visitors resampl
 fig.tight_layout(rect=(0,.10,1,1))
 out_dir=ROOT/'5-donation-checkout-ab-test/outputs';out_dir.mkdir(exist_ok=True)
 fig.savefig(out_dir/'revenue_per_visitor.png',dpi=160);plt.close(fig)
+# Case 6: run the notebook's code cells to keep one source of truth for the simulation.
+nb=json.loads((ROOT/'6-funnel-channel-attribution/6-funnel-channel-attribution.ipynb').read_text())
+ns={}
+for cell in nb['cells']:
+    if cell['cell_type']=='code':
+        exec(''.join(cell['source']),ns)
+channels=[r[0] for r in ns['channel_summary']];credit=[r[1] for r in ns['channel_summary']]
+src=ns['source_revenue'];alloc=ns['attributed_revenue'];paths=len(ns['purchase_checks'])
+fig,(ax1,ax2)=plt.subplots(1,2,figsize=(9,3.6),gridspec_kw={'width_ratios':[1.35,1]})
+bars=ax1.bar(channels,credit,color='#176b8c',width=.55)
+for bar,value in zip(bars,credit):ax1.text(bar.get_x()+bar.get_width()/2,value+90,f'${value:,.0f}',ha='center',fontsize=9)
+ax1.set(ylim=(0,max(credit)*1.22),ylabel='Credited revenue (USD)',title='Credit spreads evenly across channels')
+ax1.text(.5,-.28,'Descriptive rule-based credit — not incremental lift',transform=ax1.transAxes,ha='center',fontsize=9)
+bars2=ax2.bar(['Purchase revenue','Allocated credit'],[src,alloc],color=['#176b8c','#dda944'],width=.5)
+for bar,value in zip(bars2,[src,alloc]):ax2.text(bar.get_x()+bar.get_width()/2,value+320,f'${value:,.0f}',ha='center',fontsize=9)
+ax2.set(ylim=(0,src*1.25),ylabel='USD (all purchases)',title='Credit equals purchase revenue')
+ax2.text(.5,-.28,f'Difference ${alloc-src:,.2f}; {paths}/{paths} purchase shares sum to 100%',transform=ax2.transAxes,ha='center',fontsize=9)
+fig.text(.02,.02,'Synthetic sessions (seed 601); 400 users, 1,209 sessions, 300 purchases; depth-weighted 30-day lookback rule.\nSimulation only, not a client outcome.',fontsize=9)
+fig.tight_layout(rect=(0,.14,1,1))
+out_dir=ROOT/'6-funnel-channel-attribution/outputs';out_dir.mkdir(exist_ok=True)
+fig.savefig(out_dir/'credit_by_channel.png',dpi=160);plt.close(fig)

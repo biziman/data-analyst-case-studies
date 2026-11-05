@@ -2,7 +2,21 @@
 
 Notable changes to the portfolio cases. Newest entries first. Dates are commit dates.
 
-## 2026-11-05 — Case review pass, case 5
+## 2026-11-05 — Case review pass, cases 5–6
+
+### Case 6 — `6-funnel-channel-attribution`
+
+- Notebook executed in a clean kernel and outputs stored; allocation totals and
+  the reconciliation verified (300/300 purchase paths conserve credit;
+  $19,640.10 allocated equals $19,640.10 source revenue; channel credits
+  SEO $5,353.52, Email $5,193.39, Direct $4,617.79, PPC $4,475.41; fractional
+  credit sums to 300.00 purchases).
+- New figure `outputs/credit_by_channel.png`: credited revenue by channel plus
+  the reconciliation check, labeled as descriptive attribution, not
+  incrementality.
+- README rewritten with the attribution rule as a metric contract, verified
+  findings with denominators, the figure caption, and limits — including that
+  the even channel spread reflects the generator's uniform channel assignment.
 
 ### Case 5 — `5-donation-checkout-ab-test`
 
