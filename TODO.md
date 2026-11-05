@@ -1,6 +1,6 @@
 # Review TODO — cases 4–11
 
-Proofreading and diagram review of all 11 cases (see `CHANGELOG.md` for the finished work). Cases 1–8 are done (2026-11-04 to 2026-11-05). Process: one case per run, waiting for approval between cases.
+Proofreading and diagram review of all 11 cases (see `CHANGELOG.md` for the finished work). Cases 1–8 are done (2026-11-04 to 2026-11-05). Process: one case per run or a user-approved batch (last batch: cases 5–8 on 2026-11-05), with wrap-off committing and pushing at day end. **Resume point: cases 9–11 below.**
 
 Publishing is gated on this review pass: a case's LinkedIn post goes out only after its review is done. Post dates and todos: `~/projects/job-search/LINKEDIN_PUBLISHING.md`; plan: `LINKEDIN_PLAN.md`.
 
@@ -68,3 +68,5 @@ Executed and stored outputs; the three chart cells restyled to the figure rules 
   ```
 - Figures: `/tmp/portfolio-venv/bin/python render_portfolio_figures.py` from the repository root, then restore `5-*/outputs/revenue_per_visitor.png`, `9-*/outputs/iroas_decision.png`, `11-*/outputs/rule_validation.png` with `git checkout --` unless intentionally changed.
 - System `python3` (3.14) runs the stdlib-only notebooks (cases 2–7) for quick number checks without the venv.
+- Case 8 needs pandas in the venv (`/tmp/portfolio-venv/bin/pip install pandas`; its `requirements.txt` also lists matplotlib). Its charts save themselves to `8-mobile-sdk-metric-drop/outputs/` when the notebook runs; the renderer does not touch case 8.
+- Work happens on the `linkedin-site` branch (user decision, 2026-11-05); `main` is behind it.
