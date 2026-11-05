@@ -2,7 +2,29 @@
 
 Notable changes to the portfolio cases. Newest entries first. Dates are commit dates.
 
-## 2026-11-05 — Case review pass, cases 5–7
+## 2026-11-05 — Case review pass, cases 5–8
+
+### Case 8 — `8-mobile-sdk-metric-drop`
+
+- Notebook executed in a clean kernel and outputs stored. Verified findings:
+  coverage falls from 100% to 92.1% after both rollouts while true simulated
+  DAU stays near baseline (741.2 → 736.2); version 4.8.0 shows 8.0% missing-ID
+  share, 1.2% retry share, and 5.0–5.2h p95 delivery delay (pre-rollout:
+  0.5% / 0% / 0.5h); 855 retry rows add event volume but not distinct-user
+  DAU. The data generator was verified byte-deterministic (seed 481516).
+- Fixed an overclaim found during verification: the 24-hour snapshot equals
+  the final event-time count on every day of this sample (maximum delay
+  9.0 hours). The notebook and README now report the honest latency result —
+  day-end counts are short on 27 of 45 days (40 user-days, worst day 5 users)
+  — and state that the freshness risk shows at shorter horizons.
+- The three chart cells were restyled to the portfolio figure rules (house
+  palette, finding-stating titles, axes with units and windows, provenance
+  footnotes) and now save themselves to `outputs/` so the figures cannot drift
+  from the notebook's numbers: `observed_vs_true_dau.png` (decision figure,
+  embedded in the README), `event_quality_diagnostics.png`, and
+  `observed_dau_by_platform.png`.
+- Simulation truth kept separate from the operational diagnosis; the README
+  states the independent operational diagnosis remains an extension.
 
 ### Case 7 — `7-cohort-ltv-roll-forward`
 
