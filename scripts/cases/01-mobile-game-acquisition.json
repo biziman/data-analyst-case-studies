@@ -30,11 +30,20 @@
     },
     {
       "type": "widget",
-      "widget": "cpp_explorer",
+      "widget": "cpp_chart",
       "heading": "Which campaigns clear the $50 screen?",
       "paragraphs": [
         "CPP divides a campaign's May cost by its day-7 payers — a payer is a registered user with at least one payment within 168 hours of registration. The screen labels CPP ≤ $50 as meets target and CPP > $50 as above target.",
-        "Drag the threshold. Campaign membership, the funnel below, and the caption recompute together. At the default $50, three campaigns meet the screen: B at $40.00, E at $43.70, G at $44.80. The pooled gap in tutorial completion (53.85% vs 47.17%) describes the groups; it does not show that cheap campaigns produce better players."
+        "Three campaigns clear the screen: B at $40.00, E at $43.70, G at $44.80. The $50 line is a decision rule from the case, not a property of the data — move it in a report and the group membership changes with it."
+      ]
+    },
+    {
+      "type": "widget",
+      "widget": "funnel_pooled",
+      "heading": "How do the two groups move through the funnel?",
+      "paragraphs": [
+        "The two screening groups are pooled across their campaigns and followed through the same five stages, from ad impressions to day-7 payers. Hover any bar for the exact count, its share of impressions, and the conversion from the previous stage.",
+        "The pooled gap in tutorial completion (53.85% for meets vs 47.17% for above) describes the groups; it does not show that cheap campaigns produce better players."
       ]
     },
     {
@@ -42,7 +51,7 @@
       "widget": "arpu_windows",
       "heading": "Does the ranking hold across observation windows?",
       "paragraphs": [
-        "ARPU divides in-window payment revenue by registered users in the campaign, with non-payers kept at zero. Each line follows one campaign across the observation windows: values rise, lines cross, and longer windows silently include registrants who never had a full follow-up period — which understates their ARPU.",
+        "ARPU divides in-window payment revenue by registered users in the campaign, with non-payers kept at zero. Each line follows one campaign across the observation windows — the letter at each end marks it — and the bold line is the median across the eight campaigns: values rise, lines cross, and longer windows silently include registrants who never had a full follow-up period, which understates their ARPU.",
         "There is also a definitional trap in the source notebook: two window rules disagree for the same metric (see the note under the chart). The rule, not the data, explains the difference — so any ARPU number in a report is meaningless without its window contract."
       ]
     },
@@ -51,7 +60,7 @@
       "widget": "eh_distribution",
       "heading": "Campaign E vs H: what the test actually saw",
       "paragraphs": [
-        "Campaign E's strict 168-hour ARPU is $0.68; campaign H's is $0.29. A Mann–Whitney U test on user-level payment totals reports p ≈ 0.0007. Both distributions are skewed with a large mass of zeros — the curve below shows the full distribution at once: at any $x, the share of users whose 7-day total reaches it.",
+        "Campaign E's strict 168-hour ARPU is $0.68; campaign H's is $0.29. A Mann–Whitney U test on user-level payment totals reports p ≈ 0.0007. The chart shows the paying minority — one dot per payer, with the box marking the median and quartiles — while the non-payer majority, the real story of both distributions, is stated under the chart.",
         "Two caveats travel with that p-value: no effect size or confidence interval is reported, and the E/H pair was selected after inspecting the data. Treat it as a lead worth a clean experiment, not as a finding."
       ]
     },

@@ -36,27 +36,32 @@ THEME_INIT = """  <script>
   </script>"""
 
 WIDGETS = {
-    "cpp_explorer": """
+    "cpp_chart": """
   <div class="card">
     <h3>{heading}</h3>
     <div class="key">
       <span class="item"><span class="swatch" style="--c: var(--teal)"></span> Meets the $50 screen</span>
       <span class="item"><span class="swatch" style="--c: var(--brick)"></span> Above the $50 screen</span>
     </div>
-    <div class="controls">
-      <label for="cpp-threshold">Screening threshold</label>
-      <input type="range" id="cpp-threshold" min="20" max="80" step="1" value="50">
-      <span class="value" id="cpp-threshold-value">$50</span>
-    </div>
     <div id="cpp-chart" class="chart"></div>
     <div id="cpp-caption" class="live">Loading…</div>
-    <div id="cpp-funnel" class="chart"></div>
     <div class="caption">Assessment data (anonymized): 41 daily cost rows, May 2020;
       registrations 2020-05-01 to 2020-05-31. Cost rows and payer cohorts are not aligned
-      to the same dates. Screening metric only, not a budget result. Funnel bars pool counts
-      across the campaigns in their group: bar width uses a log10 scale so the small stages
-      stay visible, and the labels give the exact pooled counts. Descriptive — not a causal
-      comparison.</div>
+      to the same dates. Screening metric only, not a budget result.</div>
+  </div>""",
+
+    "funnel_pooled": """
+  <div class="card">
+    <h3>{heading}</h3>
+    <div class="key">
+      <span class="item"><span class="swatch" style="--c: var(--teal)"></span> Meets the $50 screen</span>
+      <span class="item"><span class="swatch" style="--c: var(--brick)"></span> Above the $50 screen</span>
+    </div>
+    <div id="cpp-funnel" class="chart"></div>
+    <div id="funnel-caption" class="live">Loading…</div>
+    <div class="caption">Assessment data (anonymized). Funnel bars pool counts across the
+      campaigns in their group: bar width uses a log10 scale so the small stages stay visible,
+      and the labels give the exact pooled counts. Descriptive — not a causal comparison.</div>
   </div>""",
 
     "arpu_windows": """
@@ -65,7 +70,8 @@ WIDGETS = {
     <div class="key">
       <span class="item"><span class="line" style="--c: var(--teal)"></span> Meets the $50 screen (B, E, G)</span>
       <span class="item"><span class="line" style="--c: var(--brick)"></span> Above the screen (A, C, D, F, H)</span>
-      <span class="item">a letter at each line's end marks the campaign</span>
+      <span class="item"><span class="line" style="--c: var(--ink)"></span> Median across the eight campaigns</span>
+      <span class="item">letters at the line ends mark the campaign; dashes separate lines of the same color</span>
     </div>
     <div id="arpu-chart" class="chart"></div>
     <div class="callout"><b>Same metric, two rules:</b> campaign E reads

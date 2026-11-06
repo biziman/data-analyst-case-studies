@@ -48,38 +48,18 @@
   };
 
   const fmtCount = (n) => (n >= 1e6 ? (n / 1e6).toFixed(1) + "M" : n >= 1e4 ? Math.round(n / 1e3) + "K" : n.toLocaleString());
+  const median = (vals) => {
+    const s = vals.slice().sort((a, b) => a - b);
+    const m = s.length >> 1;
+    return s.length % 2 ? s[m] : (s[m - 1] + s[m]) / 2;
+  };
 
-  /* Shade families: one hue per screen group (teal = meets, brick = above);
-     lightness varies per campaign so the ARPU lines stay apart in both themes. */
-  function hexToHsl(hex) {
-    const m = hex.replace("#", "");
-    const r = parseInt(m.slice(0, 2), 16) / 255, g = parseInt(m.slice(2, 4), 16) / 255, b = parseInt(m.slice(4, 6), 16) / 255;
-    const max = Math.max(r, g, b), min = Math.min(r, g, b), d = max - min;
-    const l = (max + min) / 2;
-    let h = 0, s = 0;
-    if (d !== 0) {
-      s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
-      if (max === r) h = ((g - b) / d + (g < b ? 6 : 0)) * 60;
-      else if (max === g) h = ((b - r) / d + 2) * 60;
-      else h = ((r - g) / d + 4) * 60;
-    }
-    return [h, s * 100, l * 100];
-  }
-  function shadeFamily(baseHex, index, count) {
-    const hsl = hexToHsl(baseHex);
-    const dark = document.documentElement.dataset.theme === "dark";
-    const lo = dark ? 52 : 34, hi = dark ? 88 : 72;
-    const l = count > 1 ? hi - (index * (hi - lo)) / (count - 1) : (hi + lo) / 2;
-    return "hsl(" + hsl[0].toFixed(0) + ", " + hsl[1].toFixed(0) + "%, " + l.toFixed(0) + "%)";
-  }
-
-  /* ------------------------------------------------ 1. CPP threshold explorer */
-  async function cppExplorer() {
+  /* ------------------------------------------------ 1. CPP screen chart + pooled funnel */
+  async function cppWidgets() {
     const chart = document.getElementById("cpp-chart");
     const funnelEl = document.getElementById("cpp-funnel");
-    const slider = document.getElementById("cpp-threshold");
-    const valueEl = document.getElementById("cpp-threshold-value");
     const caption = document.getElementById("cpp-caption");
+    const funnelCaption = document.getElementById("funnel-caption");
     if (!chart) return;
 
     const data = await load("data/campaigns.json").catch((e) => { fail("cpp-caption", e.message); return null; });
@@ -140,13 +120,12 @@
     }
 
     function update() {
-      const t = Number(slider.value);
+      const t = 50; // the case's screening threshold, fixed
       const xaxis = {
         title: { text: "Campaign cost / day-7 payers (USD; payer = payment within 168 h of registration)", font: { size: 12, color: PALETTE.muted } },
         gridcolor: PALETTE.line, zeroline: false,
       };
       const yaxis = { title: { text: "Campaign", font: { size: 12, color: PALETTE.muted } }, gridcolor: PALETTE.line };
-      valueEl.textContent = "$" + t;
       const meets = rows.filter((r) => r.cpp <= t);
       const above = rows.filter((r) => r.cpp > t);
 
@@ -177,13 +156,13 @@
       const names = meets.map((r) => r.label).join(", ") || "none";
       const gap = fm[2] - fa[2];
       caption.innerHTML =
-        "<b>At the $" + t + " screen:</b> " + meets.length + " of " + rows.length + " campaigns meet the target (" + names + "). " +
+        "<b>At the $50 screen:</b> " + meets.length + " of " + rows.length + " campaigns meet the target (" + names + ").";
+      funnelCaption.innerHTML =
         "Pooled tutorial completion: <b>" + pct(fm[2]) + "</b> for meets vs <b>" + pct(fa[2]) + "</b> for above" +
         (meets.length && above.length ? " — a gap of " + (Math.abs(gap) * 100).toFixed(2) + " points." : ". ") +
-        " Each rate pools counts across the campaigns in its group; groups change as you drag. Not a causal comparison.";
+        " Each stage pools counts across the campaigns in its group. Not a causal comparison.";
     }
 
-    slider.addEventListener("input", update);
     REDRAWS.push(update);
     update();
   }
@@ -200,34 +179,53 @@
     const windows = [7, 14, 30, 90, 180];
 
     function update() {
-      // Hue = screen group, lightness = campaign within the group.
+      // Two hues only (teal = meets, brick = above), one dash pattern per
+      // campaign; the bold ink line is the median across the eight campaigns.
+      const DASH = ["solid", "dash", "dot", "dashdot", "longdash"];
       const meetsRows = rows.filter((x) => x.cpp <= 50);
       const aboveRows = rows.filter((x) => x.cpp > 50);
-      const shade = (r) => {
-        const g = r.cpp <= 50 ? meetsRows : aboveRows;
-        return shadeFamily(r.cpp <= 50 ? PALETTE.meets : PALETTE.above, g.indexOf(r), g.length);
-      };
 
-      const traces = rows.map((r) => ({
+      const traces = rows.map((r) => {
+        const g = r.cpp <= 50 ? meetsRows : aboveRows;
+        const color = r.cpp <= 50 ? PALETTE.meets : PALETTE.above;
+        return {
+          type: "scatter", mode: "lines+markers+text",
+          x: windows,
+          y: windows.map((w) => r.arpu_rule_a[String(w)]),
+          line: { color: color, width: 2, dash: DASH[g.indexOf(r) % DASH.length] },
+          marker: { color: color, size: 5 },
+          text: [r.label, null, null, null, r.label],
+          textposition: ["middle left", "top center", "top center", "top center", "middle right"],
+          textfont: { family: FONT, size: 12, color: color },
+          hovertemplate: "Campaign " + r.label + ": %{y:$,.2f} at %{x} days<extra></extra>",
+        };
+      });
+
+      const medY = windows.map((w) => median(rows.map((r) => r.arpu_rule_a[String(w)])));
+      traces.push({
         type: "scatter", mode: "lines+text",
-        x: windows,
-        y: windows.map((w) => r.arpu_rule_a[String(w)]),
-        line: { color: shade(r), width: 2.5 },
-        text: [null, null, null, null, r.label],
+        x: windows, y: medY,
+        line: { color: PALETTE.ink, width: 3.5 },
+        text: [null, null, null, null, "median"],
         textposition: "middle right",
-        textfont: { family: FONT, size: 12, color: shade(r) },
-        hovertemplate: "Campaign " + r.label + ": %{y:$,.2f} at %{x} days<extra></extra>",
-      }));
+        textfont: { family: FONT, size: 12, color: PALETTE.ink },
+        hovertemplate: "Median campaign: %{y:$,.2f} at %{x} days<extra></extra>",
+      });
 
       Plotly.react(chart, traces, Object.assign({}, baseLayout(), {
-        margin: { l: 60, r: 56, t: 36, b: 56 },
+        margin: { l: 60, r: 66, t: 36, b: 56 },
         xaxis: {
           type: "log", range: [Math.log10(5.5), Math.log10(380)],
           tickvals: windows, ticktext: windows.map((w) => w + " d"),
           title: { text: "Observation window (days, log scale)", font: { size: 12, color: PALETTE.muted } },
           gridcolor: PALETTE.line, zeroline: false,
+          linecolor: PALETTE.line, linewidth: 1, mirror: true,
         },
-        yaxis: { title: { text: "Revenue per registered user (USD, whole-day rule)", font: { size: 12, color: PALETTE.muted } }, gridcolor: PALETTE.line, rangemode: "tozero" },
+        yaxis: {
+          title: { text: "Revenue per registered user (USD, whole-day rule)", font: { size: 12, color: PALETTE.muted } },
+          gridcolor: PALETTE.line, rangemode: "tozero",
+          linecolor: PALETTE.line, linewidth: 1, mirror: true,
+        },
         showlegend: false,
         title: { text: "ARPU by observation window (whole-day rule)", font: { size: 14 } },
       }), CFG);
@@ -235,6 +233,7 @@
       const byWindow = (w) => rows.slice().sort((a, b) => b.arpu_rule_a[w] - a.arpu_rule_a[w]);
       const top7 = byWindow("7")[0], top180 = byWindow("180")[0], last180 = byWindow("180").slice(-1)[0];
       caption.innerHTML =
+        "<b>The bold line is the median across the eight campaigns</b> (" + usd(medY[0]) + " at 7 days, " + usd(medY[4]) + " at 180). " +
         "<b>Ranking is not stable:</b> campaign " + top7.label + " leads at 7 days (" + usd(top7.arpu_rule_a["7"]) + ") but campaign " + top180.label + " leads at 180 days (" + usd(top180.arpu_rule_a["180"]) + "), while campaign " + last180.label + " stays last. " +
         "ARPU = in-window payment revenue / registered users in the campaign; non-payers stay at zero. " +
         "Windows are whole-day truncations, and longer windows include registrants without a full observation window — that understates their ARPU. " +
@@ -258,34 +257,42 @@
 
     const zeroShare = (vals) => vals.filter((v) => v === 0).length / vals.length;
 
-    // Empirical survival curve: at each dollar amount x, the share of ALL
-    // campaign users (non-payers included) whose 7-day total reaches x.
-    function survival(vals) {
-      const n = vals.length;
-      const sorted = vals.filter((v) => v > 0).sort((a, b) => a - b);
-      return { xs: sorted, ys: sorted.map((_, i) => (sorted.length - i) / n) };
-    }
-
     function update() {
-      const se = survival(eVals), sh = survival(hVals);
+      const ePay = eVals.filter((v) => v > 0);
+      const hPay = hVals.filter((v) => v > 0);
+      const medE = median(ePay), medH = median(hPay);
+
+      // One dot per paying user, transparent box so the strip stays visible.
+      const make = (vals, name, color) => ({
+        type: "box", orientation: "h", name: name,
+        y: vals.map(() => name), x: vals,
+        boxpoints: "all", jitter: 0.45, pointpos: 0,
+        marker: { color: color, size: 3, opacity: 0.35 },
+        fillcolor: "rgba(0,0,0,0)",
+        line: { color: color, width: 2 },
+        hovertemplate: name + ": $%{x:.2f}<extra></extra>",
+      });
+
       Plotly.react(chart, [
-        { type: "scatter", mode: "lines", x: se.xs, y: se.ys,
-          line: { color: PALETTE.meets, width: 2.5, shape: "hv" },
-          hovertemplate: "E · %{y:.2%} of users reach $%{x:.2f}<extra></extra>" },
-        { type: "scatter", mode: "lines", x: sh.xs, y: sh.ys,
-          line: { color: PALETTE.above, width: 2.5, shape: "hv" },
-          hovertemplate: "H · %{y:.2%} of users reach $%{x:.2f}<extra></extra>" },
+        make(ePay, "Campaign E", PALETTE.meets),
+        make(hPay, "Campaign H", PALETTE.above),
       ], Object.assign({}, baseLayout(), {
-        xaxis: { type: "log", title: { text: "7-day payment total per user (USD, log scale; payers only)", font: { size: 12, color: PALETTE.muted } }, gridcolor: PALETTE.line, zeroline: false },
-        yaxis: { type: "log", title: { text: "Share of campaign users reaching $x (log scale)", font: { size: 12, color: PALETTE.muted } }, tickformat: ".2%", gridcolor: PALETTE.line },
+        margin: { l: 110, r: 30, t: 44, b: 56 },
+        xaxis: { type: "log", title: { text: "7-day payment total per paying user (USD, log scale)", font: { size: 12, color: PALETTE.muted } }, gridcolor: PALETTE.line, zeroline: false, linecolor: PALETTE.line, linewidth: 1, mirror: true },
+        yaxis: { title: { text: "Campaign", font: { size: 12, color: PALETTE.muted } }, gridcolor: PALETTE.line, linecolor: PALETTE.line, linewidth: 1, mirror: true },
+        annotations: [
+          { x: medE, y: "Campaign E", text: "median " + usd(medE), showarrow: false, xanchor: "left", yanchor: "bottom", font: { size: 12, color: PALETTE.meets } },
+          { x: medH, y: "Campaign H", text: "median " + usd(medH), showarrow: false, xanchor: "left", yanchor: "bottom", font: { size: 12, color: PALETTE.above } },
+        ],
         showlegend: false,
-        title: { text: "Share of users reaching $x — campaign E vs H", font: { size: 14 } },
+        title: { text: "What paying users spent in 7 days — campaign E vs H", font: { size: 14 } },
       }), CFG);
 
       caption.innerHTML =
-        "<b>Read the curve top-down:</b> at any $x, the share of users whose 7-day total reaches it. The drop at the left edge is the zero mass — non-payers are " +
-        pct(zeroShare(eVals)) + " of campaign E and " + pct(zeroShare(hVals)) + " of campaign H. " +
-        "<b>" + meta.E.users.toLocaleString() + " users in E, " + meta.H.users.toLocaleString() + " in H</b>; Mann–Whitney on the user-level totals: p ≈ " + meta.mann_whitney_p +
+        "<b>Each dot is one paying user's 7-day total</b>; the box shows the median and quartiles. " +
+        "Paying users are the minority — non-payers are " + pct(zeroShare(eVals)) + " of campaign E and " + pct(zeroShare(hVals)) + " of campaign H, and they are not on this axis. " +
+        "Among payers, the median total is " + usd(medE) + " for E and " + usd(medH) + " for H. " +
+        "<b>" + meta.E.users.toLocaleString() + " users in E, " + meta.H.users.toLocaleString() + " in H</b>; Mann–Whitney on all user-level totals (zeros included): p ≈ " + meta.mann_whitney_p +
         ". The pair (E vs H) was chosen after inspecting the data and no effect size or confidence interval is reported — this comparison is exploratory, not a result to ship on.";
     }
 
@@ -364,7 +371,7 @@
       applyChartTheme();
       REDRAWS.forEach((fn) => fn());
     });
-    [cppExplorer, arpuWindows, ehDistribution, cohortCumulative, sampleCalculator].forEach((fn) =>
+    [cppWidgets, arpuWindows, ehDistribution, cohortCumulative, sampleCalculator].forEach((fn) =>
       fn().catch((e) => console.error(fn.name, e))
     );
   });

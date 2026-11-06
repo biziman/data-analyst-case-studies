@@ -2,6 +2,21 @@
 
 Notable changes to the portfolio cases. Newest entries first. Dates are commit dates.
 
+## 2026-11-06 — Chart clarity pass (review feedback)
+
+- "Which campaigns clear the $50 screen?" split into two independent cards:
+  the CPP screen chart and the pooled funnel. The interactive threshold slider
+  is gone (overkill) — the screen is fixed at the case's $50 rule and the
+  prose notes the threshold is a decision rule, not a property of the data.
+- ARPU windows chart reworked for clarity: only the two key colors (teal =
+  meets, brick = above) instead of eight shades, one dash pattern per
+  campaign, letters at both line ends, dots at points, a bold median line
+  across the eight campaigns (the trend), and a bordered plot frame.
+- Campaign E vs H chart reworked again: the survival curve read as unclear.
+  Replaced by a box + strip plot of paying users' 7-day totals (one dot per
+  payer, log USD axis, medians labeled), with the non-payer majority stated
+  under the chart — where the Mann–Whitney actually gets its signal.
+
 ## 2026-11-06 — Interactive charts: redesign pass
 
 - Landing hero: the lede paragraph now shares the title's left edge (it was
