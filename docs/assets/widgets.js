@@ -126,36 +126,26 @@
       const fm = pooled(meets), fa = pooled(above);
       const cm = funnelCurve(poolCounts(meets)), ca = funnelCurve(poolCounts(above));
       const mk = (pts, color) => ({
-        type: "scatter", mode: "lines+markers",
+        type: "bar",
         x: stages,
         y: pts.map((p) => p.share),
-        line: { color: color, width: 2.5 },
-        marker: { color: color, size: 7 },
+        marker: { color: color },
+        text: pts.map((p) => pct1(p.share)),
+        textposition: "outside", cliponaxis: false,
+        textfont: { family: FONT, size: 11, color: color },
         customdata: pts.map((p) =>
           pct1(p.share) + " of impressions · " + fmtCount(p.count) + " · " +
           (p.step === 1 ? "funnel top" : pct1(p.step) + " of previous stage")),
         hovertemplate: "%{x}: %{customdata}<extra></extra>",
       });
-      // Value labels ride slightly above/below their own curve so the two
-      // label sets never collide where the groups convert almost the same.
-      const lbl = (pts, color, up) => ({
-        type: "scatter", mode: "text",
-        x: stages,
-        y: pts.map((p) => (up ? p.share * 1.2 : p.share / 1.2)),
-        text: pts.map((p) => pct1(p.share)),
-        textposition: "middle center",
-        textfont: { family: FONT, size: 11, color: color },
-        hoverinfo: "skip",
-      });
       Plotly.react(funnelEl, [
         mk(cm, PALETTE.meets),
         mk(ca, PALETTE.above),
-        lbl(cm, PALETTE.meets, true),
-        lbl(ca, PALETTE.above, false),
       ], Object.assign({}, baseLayout(), {
         margin: { l: 66, r: 30, t: 64, b: 44 },
+        barmode: "group", bargap: 0.35, bargroupgap: 0.15,
         xaxis: { title: { text: "Funnel stage", font: { size: 12, color: PALETTE.muted } }, gridcolor: PALETTE.line, zeroline: false, linecolor: PALETTE.line, linewidth: 1, mirror: true },
-        yaxis: { type: "log", title: { text: "% of impressions (log scale)", font: { size: 12, color: PALETTE.muted } }, tickformat: ".2%", gridcolor: PALETTE.line, zeroline: false, linecolor: PALETTE.line, linewidth: 1, mirror: true },
+        yaxis: { title: { text: "% of impressions", font: { size: 12, color: PALETTE.muted } }, tickformat: ".0%", gridcolor: PALETTE.line, range: [0, 1.15], zeroline: false, linecolor: PALETTE.line, linewidth: 1, mirror: true },
         showlegend: false,
         title: { text: "Pooled funnel conversion, top to bottom", font: { size: 14 } },
       }), CFG);

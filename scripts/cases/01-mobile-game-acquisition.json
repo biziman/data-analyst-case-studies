@@ -44,8 +44,8 @@
       "widget": "funnel_pooled",
       "heading": "How do the two groups move through the funnel?",
       "paragraphs": [
-        "The two screening groups are followed through the same five stages, from ad impressions to day-7 payers. Each point is labeled with the share of the group's impressions that still converts at that stage — the conversion from top to bottom.",
-        "Hover any point for the exact pooled count and its conversion from the previous stage. The pooled gap in tutorial completion (53.85% for meets vs 47.17% for above) describes the groups; it does not show that cheap campaigns produce better players."
+        "The two screening groups are followed through the same five stages, from ad impressions to day-7 payers. Each bar is labeled with the share of the group's impressions that still converts at that stage — the conversion from top to bottom.",
+        "Hover any bar for the exact pooled count and its conversion from the previous stage. The pooled gap in tutorial completion (53.85% for meets vs 47.17% for above) describes the groups; it does not show that cheap campaigns produce better players."
       ]
     },
     {

@@ -2,6 +2,15 @@
 
 Notable changes to the portfolio cases. Newest entries first. Dates are commit dates.
 
+## 2026-11-06 — Funnel chart: bars on a linear scale
+
+- The funnel conversion chart now uses grouped bars (meets vs above) on a
+  linear "% of impressions" axis instead of lines on a log scale. The
+  smallest stages are barely visible at this scale — every bar keeps its
+  cumulative-% label, and hover still shows pooled counts and stage-to-stage
+  conversion. Caption and copy updated to say so; the notebook's funnel figure
+  re-drawn the same way to keep the sync.
+
 ## 2026-11-06 — Fact-proof pass, notebook sync, chart fixes
 
 - ARPU chart: the median line is replaced by blended ARPU across the eight

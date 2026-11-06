@@ -62,10 +62,10 @@ WIDGETS = {
     </div>
     <div id="cpp-funnel" class="chart"></div>
     <div id="funnel-caption" class="live">Loading…</div>
-    <div class="caption">Assessment data (anonymized). Curves pool counts across the campaigns
-      in their group; each point is labeled with the cumulative share of the group's impressions
-      that still converts at that stage. The share axis is log-scaled so the small stages stay
-      visible. Descriptive — not a causal comparison.</div>
+    <div class="caption">Assessment data (anonymized). Bars pool counts across the campaigns
+      in their group; each bar is labeled with the cumulative share of the group's impressions
+      that still converts at that stage. The smallest stages are barely visible at this scale —
+      the labels carry the numbers. Descriptive — not a causal comparison.</div>
   </div>""",
 
     "arpu_windows": """
