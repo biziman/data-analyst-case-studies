@@ -8,7 +8,7 @@
 
   const PALETTE = { meets: "#176b8c", above: "#b14632", amber: "#dda944", ink: "#20242a", muted: "#5c6570", line: "#e5e1d8", paper: "#ffffff" };
   const CFG = { displayModeBar: false, responsive: true };
-  const FONT = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+  const FONT = '"Inter Tight", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
 
   /* Chart colors are read from the style.css variables so charts follow the
      light/dark switcher. REDRAWS collects each widget's update() so a theme

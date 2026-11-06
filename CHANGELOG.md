@@ -2,6 +2,17 @@
 
 Notable changes to the portfolio cases. Newest entries first. Dates are commit dates.
 
+## 2026-11-06 — Typography refresh: Noto Serif + Inter Tight
+
+- Headings and the site brand/figure numbers now use Noto Serif; body text
+  uses Inter Tight. Variable woff2 files (weights 400–700, latin + latin-ext
+  subsets) are self-hosted in `docs/assets/fonts/` and committed to the repo,
+  matching the bundled-assets approach (no font CDN dependency).
+- Modern typographic touches: balanced heading wraps (`text-wrap: balance`),
+  pretty paragraph wraps, tighter heading tracking, a 42px hero title, 14px
+  card radii, and a themed text-selection color. Plotly chart text follows
+  Inter Tight via the shared font stack in `widgets.js`.
+
 ## 2026-11-06 — Dark theme switcher for the interactive site
 
 - Top-bar toggle (moon/sun) on the landing page and every case page of the

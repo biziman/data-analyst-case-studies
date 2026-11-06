@@ -24,7 +24,7 @@ free, served from this repository, one click from the code.
 LINKEDIN_PLAN.md            ← this file (plan + tracking)
 linkedin/<nn>-<slug>.md     ← post drafts (one per case, human-approved)
 docs/                       ← GitHub Pages site (landing + case pages)
-  assets/                   ← style.css, widgets.js, theme.js, plotly.min.js
+  assets/                   ← style.css, widgets.js, theme.js, plotly.min.js, fonts/
   cases/<slug>/index.html   ← narrative + widgets (generated)
   cases/<slug>/data/*.json  ← extracted aggregates (generated)
   cases/<slug>/preview.png  ← in-feed post image
