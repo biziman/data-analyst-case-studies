@@ -52,7 +52,8 @@
   --on-teal: #ffffff;
   --shadow: rgba(32, 36, 42, 0.05);
   --maxprose: 760px;
-  --maxfig: 1120px;
+  --prose-indent: 64px;
+  --maxfig: 960px;
 }
 
 /* Dark theme: set on <html data-theme="dark"> by the head snippet in the
@@ -141,7 +142,9 @@ html[data-theme="dark"] .theme-toggle .icon-sun { display: block; }
 
 /* ---------- layout ---------- */
 .wrap { max-width: var(--maxfig); margin: 0 auto; padding: 0 20px; }
-.prose { max-width: var(--maxprose); margin-left: 0; margin-right: 0; }
+/* Text blocks sit slightly right of the block/graph left edge — halfway to
+   centering the prose measure inside the content column. */
+.prose { max-width: var(--maxprose); margin-left: var(--prose-indent); margin-right: 0; }
 
 section.band { padding: 44px 0; }
 section.band.alt { background: var(--sand); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
@@ -236,7 +239,7 @@ table.data {
   font-size: 15px; margin: 18px 0;
 }
 
-details.spoiler { margin: 18px 0; }
+details.spoiler { margin: 18px 0 18px var(--prose-indent); }
 details.spoiler summary {
   display: flex; align-items: center; gap: 10px; cursor: pointer; list-style: none;
   font-family: "Noto Serif", Georgia, "Iowan Old Style", "Times New Roman", serif;
@@ -294,4 +297,5 @@ footer.site .wrap { display: flex; flex-direction: column; gap: 6px; }
   .hero .decision { font-size: 18px; }
   .readout .stat .num { font-size: 24px; }
   .controls input[type="range"] { width: 160px; }
+  .prose, details.spoiler { margin-left: 0; }
 }

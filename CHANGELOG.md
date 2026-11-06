@@ -2,6 +2,18 @@
 
 Notable changes to the portfolio cases. Newest entries first. Dates are commit dates.
 
+## 2026-11-06 — Layout tune: title wrapping, prose indent, smaller canvas
+
+- Landing title no longer breaks awkwardly: non-breaking spaces bind
+  "analytics — interactive" and "case studies" so the em dash can't hang at a
+  line start and "case studies" never splits. The browser-tab title stays plain.
+- Fixed a layout regression: prose sections combined `.wrap` and `.prose` on
+  one element, so the centered-column margin was lost and text blocks stuck to
+  the viewport edge. Prose now nests inside `.wrap` again.
+- Text blocks sit slightly right of the graph blocks (`--prose-indent: 64px`,
+  halfway between left edge and centering the 760px measure), and the figure
+  canvas shrank (`--maxfig: 960px`). Indent collapses to 0 on narrow screens.
+
 ## 2026-11-06 — Layout and chart clarity pass, permission confirmed
 
 - Left-aligned layout: text blocks, cards, tables, code and lists now all hang

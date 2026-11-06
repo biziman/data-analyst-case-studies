@@ -18,6 +18,9 @@ CASES_DIR = ROOT / "scripts" / "cases"
 DOCS = ROOT / "docs"
 REPO_URL = "https://github.com/biziman/data-analyst-case-studies"
 SITE_TITLE = "Product & marketing analytics — interactive case studies"
+# Same title with non-breaking spaces so the wrap never splits "analytics —
+# interactive" or "case studies" across lines.
+SITE_TITLE_HTML = "Product &amp; marketing analytics&nbsp;—&nbsp;interactive case&nbsp;studies"
 
 # Runs in <head> before first paint: pick the saved theme, else the system
 # preference. The toggle itself lives in TOPBAR and is wired by assets/theme.js.
@@ -187,7 +190,7 @@ def render_sections(sections):
                 body += f"<pre class='code'>{esc(section['code'])}</pre>"
             for link in section.get("links", []):
                 body += f'<p><a href="{esc(link["url"])}">{esc(link["label"])} →</a></p>'
-            out.append(f'<section class="band"><div class="wrap prose"><h2>{heading}</h2>{body}</div></section>')
+            out.append(f'<section class="band"><div class="wrap"><div class="prose"><h2>{heading}</h2>{body}</div></div></section>')
         elif stype == "table":
             head = "".join(f"<th>{esc(h)}</th>" for h in section["headers"])
             left = section.get("left")
@@ -294,7 +297,7 @@ def render_index(configs):
   <div class="hero">
     <div class="wrap">
       <div class="casenum">Interactive portfolio</div>
-      <h1>{esc(SITE_TITLE)}</h1>
+      <h1>{SITE_TITLE_HTML}</h1>
       <p class="lede prose">Eleven case studies of product experiments, marketing measurement,
       forecasting and data quality. Each page walks through the decision, the data and the
       verified numbers — with charts you can manipulate. Synthetic and assessment data,
