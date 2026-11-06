@@ -6,7 +6,7 @@ A mobile-game team must decide whether to shift acquisition spend across its eig
 
 ## Data
 
-> **Data note:** The four CSV files in `data/` are records from a mobile-game hiring assessment. They are real assessment data, not synthetic. The employer and game are anonymized in this case. Confirm that you have permission to publish these records; if permission is unclear, replace them with synthetic data before sharing.
+> **Data note:** The four CSV files in `data/` are records from a mobile-game hiring assessment. They are real assessment data, not synthetic. The employer and game are anonymized in this case. Publication permission for these records is confirmed (2026-11-06).
 
 - `data/registration.csv` — one row per registration: date, epoch seconds, player ID, campaign, channel, country. 43,830 rows; 6,686 rows have no campaign value.
 - `data/payment.csv` — one row per payment: date, epoch seconds, player ID, amount. 29,444 rows, through 2020-12-31.
@@ -39,7 +39,6 @@ Six figures are embedded in the notebook: CPP by campaign against the $50 thresh
 4. The cohort SQL in section 5 does not aggregate daily revenue before its cumulative sum and truncates elapsed days. Its curve is not a validated LTV estimate.
 5. The Campaign E/H test reports a p-value without an effect size or confidence interval, and the pair was selected on the same data.
 6. The 6,686 registrations without a campaign value drop out of campaign-level denominators.
-7. Publication permission for the assessment CSVs is not confirmed.
 
 ## Reproduction
 

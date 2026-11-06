@@ -39,7 +39,7 @@ The synthetic ledger separates payment attempts, captures, refunds, pending disp
 - **Early revenue forecasting:** [D120 player revenue](3-player-ltv-forecast/README.md) compares a segment benchmark with a global mean. It needs calendar-based validation before acquisition use.
 - **Cohort forecasting:** [D360 roll-forward](7-cohort-ltv-roll-forward/README.md) compares synthetic curve factors. Calendar-valid label maturity is not yet enforced.
 - **Marketing modeling:** [Edtech subscription benchmark](10-marketing-mix-modeling/README.md) combines an OLS MMM benchmark with an inconclusive synthetic geo test. It is not a production Meridian model.
-- **Assessment analysis under technical review:** [Mobile-game campaign analysis](1-marketing-analytics-for-mobile-game/README.md) contains local assessment CSVs and freshly regenerated exploratory outputs. Metric windows, cohort SQL, and publication permission need resolution before using its numbers as decision evidence.
+- **Assessment analysis under technical review:** [Mobile-game campaign analysis](1-marketing-analytics-for-mobile-game/README.md) contains local assessment CSVs and freshly regenerated exploratory outputs. Metric windows and cohort SQL need resolution before using its numbers as decision evidence.
 
 ## Reproduce and inspect
 

@@ -44,7 +44,7 @@
     </div>
   </div>
 <section class="band"><div class="wrap prose"><h2>What this page shows</h2><p>The notebook compares eight acquisition campaigns on cost per day-7 payer, funnel rates, and revenue per registered player, then sizes a follow-up experiment. Every number below is computed from the four files in the repository — drag the controls and the answers change with them.</p><p>The data is real: records from a mobile-game hiring assessment, employer and game anonymized. This is a portfolio demonstration, not a client outcome.</p></div></section>
-<section class="band"><div class="wrap"><h2 class="prose">The four datasets</h2><table class="data"><thead><tr><th>File</th><th>One row per</th><th>Size and coverage</th></tr></thead><tbody><tr><td>registration.csv</td><td class="num">registration</td><td class="num">43,830 rows; 6,686 without a campaign value</td></tr><tr><td>payment.csv</td><td class="num">payment</td><td class="num">29,444 rows; through 2020-12-31</td></tr><tr><td>tutorial.csv</td><td class="num">tutorial completion</td><td class="num">21,299 rows</td></tr><tr><td>ad_data.csv</td><td class="num">campaign-day</td><td class="num">41 rows; May 2020</td></tr></tbody></table></div></section>
+<section class="band"><div class="wrap"><details class="spoiler"><summary>The four datasets</summary><table class="data"><thead><tr><th>File</th><th>One row per</th><th>Size and coverage</th></tr></thead><tbody><tr><td>registration.csv</td><td>registration</td><td>43,830 rows; 6,686 without a campaign value</td></tr><tr><td>payment.csv</td><td>payment</td><td>29,444 rows; through 2020-12-31</td></tr><tr><td>tutorial.csv</td><td>tutorial completion</td><td>21,299 rows</td></tr><tr><td>ad_data.csv</td><td>campaign-day</td><td>41 rows; May 2020</td></tr></tbody></table></details></div></section>
 <section class="band alt"><div class="wrap"><div class="prose"><h2>Which campaigns clear the $50 screen?</h2><p>CPP divides a campaign&#x27;s May cost by its day-7 payers — a payer is a registered user with at least one payment within 168 hours of registration. The screen labels CPP ≤ $50 as meets target and CPP &gt; $50 as above target.</p><p>Three campaigns clear the screen: B at $40.00, E at $43.70, G at $44.80. The $50 line is a decision rule from the case, not a property of the data — move it in a report and the group membership changes with it.</p></div>
   <div class="card">
     <h3>Which campaigns clear the $50 screen?</h3>
@@ -58,7 +58,7 @@
       registrations 2020-05-01 to 2020-05-31. Cost rows and payer cohorts are not aligned
       to the same dates. Screening metric only, not a budget result.</div>
   </div></div></section>
-<section class="band alt"><div class="wrap"><div class="prose"><h2>How do the two groups move through the funnel?</h2><p>The two screening groups are pooled across their campaigns and followed through the same five stages, from ad impressions to day-7 payers. Hover any bar for the exact count, its share of impressions, and the conversion from the previous stage.</p><p>The pooled gap in tutorial completion (53.85% for meets vs 47.17% for above) describes the groups; it does not show that cheap campaigns produce better players.</p></div>
+<section class="band alt"><div class="wrap"><div class="prose"><h2>How do the two groups move through the funnel?</h2><p>The two screening groups are followed through the same five stages, from ad impressions to day-7 payers. Each point is labeled with the share of the group&#x27;s impressions that still converts at that stage — the conversion from top to bottom.</p><p>Hover any point for the exact pooled count and its conversion from the previous stage. The pooled gap in tutorial completion (53.85% for meets vs 47.17% for above) describes the groups; it does not show that cheap campaigns produce better players.</p></div>
   <div class="card">
     <h3>How do the two groups move through the funnel?</h3>
     <div class="key">
@@ -67,9 +67,10 @@
     </div>
     <div id="cpp-funnel" class="chart"></div>
     <div id="funnel-caption" class="live">Loading…</div>
-    <div class="caption">Assessment data (anonymized). Funnel bars pool counts across the
-      campaigns in their group: bar width uses a log10 scale so the small stages stay visible,
-      and the labels give the exact pooled counts. Descriptive — not a causal comparison.</div>
+    <div class="caption">Assessment data (anonymized). Curves pool counts across the campaigns
+      in their group; each point is labeled with the cumulative share of the group's impressions
+      that still converts at that stage. The share axis is log-scaled so the small stages stay
+      visible. Descriptive — not a causal comparison.</div>
   </div></div></section>
 <section class="band alt"><div class="wrap"><div class="prose"><h2>Does the ranking hold across observation windows?</h2><p>ARPU divides in-window payment revenue by registered users in the campaign, with non-payers kept at zero. Each line follows one campaign across the observation windows — the letter at each end marks it — and the bold line is the median across the eight campaigns: values rise, lines cross, and longer windows silently include registrants who never had a full follow-up period, which understates their ARPU.</p><p>There is also a definitional trap in the source notebook: two window rules disagree for the same metric (see the note under the chart). The rule, not the data, explains the difference — so any ARPU number in a report is meaningless without its window contract.</p></div>
   <div class="card">
@@ -78,7 +79,7 @@
       <span class="item"><span class="line" style="--c: var(--teal)"></span> Meets the $50 screen (B, E, G)</span>
       <span class="item"><span class="line" style="--c: var(--brick)"></span> Above the screen (A, C, D, F, H)</span>
       <span class="item"><span class="line" style="--c: var(--ink)"></span> Median across the eight campaigns</span>
-      <span class="item">letters at the line ends mark the campaign; dashes separate lines of the same color</span>
+      <span class="item">letters at the line ends mark the campaign</span>
     </div>
     <div id="arpu-chart" class="chart"></div>
     <div class="callout"><b>Same metric, two rules:</b> campaign E reads
@@ -100,6 +101,21 @@
     <div class="caption">Assessment data (anonymized). Payments within 168 h of registration,
       summed per user; non-payers kept at 0. The curve is descriptive — the rank test is
       exploratory because the campaign pair was selected after inspecting the data.</div>
+  </div></div></section>
+<section class="band alt"><div class="wrap"><div class="prose"><h2>How much do the two distributions overlap?</h2><p>The same user-level totals, drawn as smoothed distributions of the paying minority. The amber band is where the two shapes sit on top of each other — most of both curves.</p><p>Overlap is the honest companion to the p-value: Mann–Whitney reports p ≈ 0.0007 on all 23,367 user totals, and with that sample size it registers the small payer-share gap (4.90% vs 3.99%) even though the distribution shapes overlap heavily. Statistical significance is not separation.</p></div>
+  <div class="card">
+    <h3>How much do the two distributions overlap?</h3>
+    <div class="key">
+      <span class="item"><span class="line" style="--c: var(--teal)"></span> Campaign E</span>
+      <span class="item"><span class="line" style="--c: var(--brick)"></span> Campaign H</span>
+      <span class="item"><span class="swatch" style="--c: var(--amber)"></span> Overlap of the two shapes</span>
+    </div>
+    <div id="ov-chart" class="chart"></div>
+    <div id="ov-caption" class="live">Loading…</div>
+    <div class="caption">Assessment data (anonymized). Densities are Gaussian kernel estimates
+      over log10 payment totals of paying users; the overlap is the area shared by the two
+      curves. Descriptive — the rank test is exploratory because the campaign pair was
+      selected after inspecting the data.</div>
   </div></div></section>
 <section class="band alt"><div class="wrap"><div class="prose"><h2>Exploratory cohort revenue curve</h2><p>The notebook&#x27;s last figure follows 5,421 users who registered between May 10 and May 20 (the query&#x27;s date filter) and completed the tutorial within 168 hours, then plots their cumulative payment revenue over the first 100 whole-day steps after registration. The curve ends near $467.</p><p>It renders the notebook&#x27;s SQL exactly as written, defects and all: daily revenue is not aggregated before the cumulative sum, and elapsed days are truncated to whole days. Read it as a map of the cohort method and its traps — not as an LTV estimate.</p></div>
   <div class="card">
@@ -134,7 +150,7 @@
       one-sided two-sample z-test on proportions. Eligibility, exposure logging, guardrails
       and a stopping rule are not part of this calculation.</div>
   </div></div></section>
-<section class="band"><div class="wrap prose"><h2>What this cannot show</h2><ol class='limits'><li>Campaign comparisons are observational. Nothing here shows that a campaign caused higher-value players.</li><li>The day-7 payer filter accepts payments logged before registration, and cost dates are not aligned to registration cohorts.</li><li>The two ARPU window rules disagree ($0.75 vs $0.68 for campaign E at 7 days), and longer windows include registrants without full follow-up.</li><li>The cohort SQL in the notebook does not aggregate daily revenue before its cumulative sum and truncates elapsed days — its curve is not a validated LTV estimate.</li><li>The E/H test reports a p-value without an effect size or confidence interval, and the pair was selected on the same data.</li><li>The 6,686 registrations without a campaign value drop out of all campaign-level denominators.</li><li>Publication permission for the assessment CSVs is not confirmed.</li></ol></div></section>
+<section class="band"><div class="wrap prose"><h2>What this cannot show</h2><ol class='limits'><li>Campaign comparisons are observational. Nothing here shows that a campaign caused higher-value players.</li><li>The day-7 payer filter accepts payments logged before registration, and cost dates are not aligned to registration cohorts.</li><li>The two ARPU window rules disagree ($0.75 vs $0.68 for campaign E at 7 days), and longer windows include registrants without full follow-up.</li><li>The cohort SQL in the notebook does not aggregate daily revenue before its cumulative sum and truncates elapsed days — its curve is not a validated LTV estimate.</li><li>The E/H test reports a p-value without an effect size or confidence interval, and the pair was selected on the same data.</li><li>The 6,686 registrations without a campaign value drop out of all campaign-level denominators.</li></ol></div></section>
 <section class="band"><div class="wrap prose"><h2>Run it yourself</h2><p>The notebook regenerates every number and figure on this page in one clean run; the four CSVs ship with the repository. In Google Colab, clone the repository in the first cell (!git clone https://github.com/biziman/data-analyst-case-studies followed by %cd data-analyst-case-studies), then run all.</p><p>Metric definitions, tested package versions and the full list of open review items live in the case README.</p><pre class='code'>git clone https://github.com/biziman/data-analyst-case-studies
 cd data-analyst-case-studies
 jupyter notebook 1-marketing-analytics-for-mobile-game/1-marketing-analytics-for-mobile-game.ipynb</pre><p><a href="https://github.com/biziman/data-analyst-case-studies/blob/main/1-marketing-analytics-for-mobile-game/README.md">Case README — metric contracts, verified numbers, limits →</a></p><p><a href="https://colab.research.google.com/github/biziman/data-analyst-case-studies/blob/main/1-marketing-analytics-for-mobile-game/1-marketing-analytics-for-mobile-game.ipynb">Open the notebook in Google Colab →</a></p></div></section>

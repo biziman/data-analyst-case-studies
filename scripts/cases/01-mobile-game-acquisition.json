@@ -20,6 +20,8 @@
     {
       "type": "table",
       "heading": "The four datasets",
+      "spoiler": true,
+      "left": true,
       "headers": ["File", "One row per", "Size and coverage"],
       "rows": [
         ["registration.csv", "registration", "43,830 rows; 6,686 without a campaign value"],
@@ -42,8 +44,8 @@
       "widget": "funnel_pooled",
       "heading": "How do the two groups move through the funnel?",
       "paragraphs": [
-        "The two screening groups are pooled across their campaigns and followed through the same five stages, from ad impressions to day-7 payers. Hover any bar for the exact count, its share of impressions, and the conversion from the previous stage.",
-        "The pooled gap in tutorial completion (53.85% for meets vs 47.17% for above) describes the groups; it does not show that cheap campaigns produce better players."
+        "The two screening groups are followed through the same five stages, from ad impressions to day-7 payers. Each point is labeled with the share of the group's impressions that still converts at that stage — the conversion from top to bottom.",
+        "Hover any point for the exact pooled count and its conversion from the previous stage. The pooled gap in tutorial completion (53.85% for meets vs 47.17% for above) describes the groups; it does not show that cheap campaigns produce better players."
       ]
     },
     {
@@ -62,6 +64,15 @@
       "paragraphs": [
         "Campaign E's strict 168-hour ARPU is $0.68; campaign H's is $0.29. A Mann–Whitney U test on user-level payment totals reports p ≈ 0.0007. The chart shows the paying minority — one dot per payer, with the box marking the median and quartiles — while the non-payer majority, the real story of both distributions, is stated under the chart.",
         "Two caveats travel with that p-value: no effect size or confidence interval is reported, and the E/H pair was selected after inspecting the data. Treat it as a lead worth a clean experiment, not as a finding."
+      ]
+    },
+    {
+      "type": "widget",
+      "widget": "eh_overlap",
+      "heading": "How much do the two distributions overlap?",
+      "paragraphs": [
+        "The same user-level totals, drawn as smoothed distributions of the paying minority. The amber band is where the two shapes sit on top of each other — most of both curves.",
+        "Overlap is the honest companion to the p-value: Mann–Whitney reports p ≈ 0.0007 on all 23,367 user totals, and with that sample size it registers the small payer-share gap (4.90% vs 3.99%) even though the distribution shapes overlap heavily. Statistical significance is not separation."
       ]
     },
     {
@@ -91,8 +102,7 @@
         "The two ARPU window rules disagree ($0.75 vs $0.68 for campaign E at 7 days), and longer windows include registrants without full follow-up.",
         "The cohort SQL in the notebook does not aggregate daily revenue before its cumulative sum and truncates elapsed days — its curve is not a validated LTV estimate.",
         "The E/H test reports a p-value without an effect size or confidence interval, and the pair was selected on the same data.",
-        "The 6,686 registrations without a campaign value drop out of all campaign-level denominators.",
-        "Publication permission for the assessment CSVs is not confirmed."
+        "The 6,686 registrations without a campaign value drop out of all campaign-level denominators."
       ]
     },
     {

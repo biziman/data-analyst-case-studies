@@ -37,6 +37,7 @@
 
   const usd = (v) => "$" + Number(v).toFixed(2);
   const pct = (v) => (v * 100).toFixed(2) + "%";
+  const pct1 = (v) => (v * 100).toFixed(1) + "%";
   const load = async (path) => {
     const r = await fetch(path);
     if (!r.ok) throw new Error(path + " -> " + r.status);
@@ -83,40 +84,15 @@
       return [sum("impressions"), sum("clicks"), sum("registrations"), sum("tutorial_completers"), sum("day7_payers")];
     }
 
-    // Funnel panel: centered bars whose width is log10 of the pooled count — a
-    // linear scale would hide the small stages. Labels carry the exact counts.
-    function funnelTrace(counts, color, axis) {
-      const widths = counts.map((c) => (c > 0 ? Math.log10(c) : 0));
+    // Conversion curve: each stage as the share of the group's own impressions
+    // that still converts — the "% conversion from top to bottom".
+    function funnelCurve(counts) {
       const top = counts[0] || 1;
-      return {
-        type: "bar", orientation: "h", xaxis: axis,
-        y: stages, x: widths, base: widths.map((w) => -w / 2),
-        marker: { color: color },
-        text: counts.map(fmtCount),
-        textposition: "outside", cliponaxis: false,
-        customdata: counts.map((c, i) =>
-          fmtCount(c) + " · " + ((c / top) * 100).toFixed(2) + "% of impressions · " +
-          (i === 0 ? "funnel top" : ((c / (counts[i - 1] || 1)) * 100).toFixed(1) + "% of previous stage")),
-        hovertemplate: "%{y}: %{customdata}<extra></extra>",
-      };
-    }
-
-    function funnelLayout(nMeets, nAbove, threshold) {
-      return Object.assign({}, baseLayout(), {
-        margin: { l: 120, r: 70, t: 64, b: 24 },
-        xaxis: { domain: [0, 0.45], visible: false, showgrid: false, zeroline: false },
-        xaxis2: { domain: [0.55, 1], visible: false, showgrid: false, zeroline: false },
-        yaxis: { autorange: "reversed", showgrid: false, zeroline: false, tickfont: { family: FONT, size: 12, color: PALETTE.muted } },
-        yaxis2: { anchor: "x2", autorange: "reversed", showticklabels: false, showgrid: false, zeroline: false },
-        annotations: [
-          { xref: "paper", yref: "paper", x: 0, y: 1.13, xanchor: "left", showarrow: false,
-            text: "Meets $" + threshold + " screen (" + nMeets + " campaigns)", font: { size: 13, color: PALETTE.meets } },
-          { xref: "paper", yref: "paper", x: 0.55, y: 1.13, xanchor: "left", showarrow: false,
-            text: "Above $" + threshold + " screen (" + nAbove + " campaigns)", font: { size: 13, color: PALETTE.above } },
-        ],
-        showlegend: false,
-        title: { text: "Pooled funnel counts by screening group", font: { size: 14 } },
-      });
+      return counts.map((c, i) => ({
+        share: c / top,
+        count: c,
+        step: i === 0 ? 1 : c / (counts[i - 1] || 1),
+      }));
     }
 
     function update() {
@@ -148,17 +124,40 @@
       Plotly.react(chart, [bar], layout, CFG);
 
       const fm = pooled(meets), fa = pooled(above);
+      const cm = funnelCurve(poolCounts(meets)), ca = funnelCurve(poolCounts(above));
+      const mk = (pts, color, pos) => ({
+        type: "scatter", mode: "lines+markers+text",
+        x: stages,
+        y: pts.map((p) => p.share),
+        line: { color: color, width: 2.5 },
+        marker: { color: color, size: 7 },
+        text: pts.map((p) => pct1(p.share)),
+        textposition: pos,
+        textfont: { family: FONT, size: 11, color: color },
+        customdata: pts.map((p) =>
+          pct1(p.share) + " of impressions · " + fmtCount(p.count) + " · " +
+          (p.step === 1 ? "funnel top" : pct1(p.step) + " of previous stage")),
+        hovertemplate: "%{x}: %{customdata}<extra></extra>",
+      });
       Plotly.react(funnelEl, [
-        funnelTrace(poolCounts(meets), PALETTE.meets, "x"),
-        funnelTrace(poolCounts(above), PALETTE.above, "x2"),
-      ], funnelLayout(meets.length, above.length, t), CFG);
+        mk(cm, PALETTE.meets, "top center"),
+        mk(ca, PALETTE.above, "bottom center"),
+      ], Object.assign({}, baseLayout(), {
+        margin: { l: 66, r: 30, t: 52, b: 44 },
+        xaxis: { title: { text: "Funnel stage", font: { size: 12, color: PALETTE.muted } }, gridcolor: PALETTE.line, zeroline: false, linecolor: PALETTE.line, linewidth: 1, mirror: true },
+        yaxis: { type: "log", title: { text: "Share of the group's impressions still converting (log scale)", font: { size: 12, color: PALETTE.muted } }, tickformat: ".2%", gridcolor: PALETTE.line, zeroline: false, linecolor: PALETTE.line, linewidth: 1, mirror: true },
+        showlegend: false,
+        title: { text: "Pooled funnel conversion, top to bottom", font: { size: 14 } },
+      }), CFG);
 
       const names = meets.map((r) => r.label).join(", ") || "none";
       const gap = fm[2] - fa[2];
       caption.innerHTML =
         "<b>At the $50 screen:</b> " + meets.length + " of " + rows.length + " campaigns meet the target (" + names + ").";
       funnelCaption.innerHTML =
-        "Pooled tutorial completion: <b>" + pct(fm[2]) + "</b> for meets vs <b>" + pct(fa[2]) + "</b> for above" +
+        "<b>Stage conversions (meets vs above):</b> " +
+        stages.slice(1).map((s, i) => s.toLowerCase() + " " + pct1(fm[i]) + " vs " + pct1(fa[i])).join(", ") +
+        ". Pooled tutorial completion: <b>" + pct(fm[2]) + "</b> for meets vs <b>" + pct(fa[2]) + "</b> for above" +
         (meets.length && above.length ? " — a gap of " + (Math.abs(gap) * 100).toFixed(2) + " points." : ". ") +
         " Each stage pools counts across the campaigns in its group. Not a causal comparison.";
     }
@@ -179,20 +178,15 @@
     const windows = [7, 14, 30, 90, 180];
 
     function update() {
-      // Two hues only (teal = meets, brick = above), one dash pattern per
-      // campaign; the bold ink line is the median across the eight campaigns.
-      const DASH = ["solid", "dash", "dot", "dashdot", "longdash"];
-      const meetsRows = rows.filter((x) => x.cpp <= 50);
-      const aboveRows = rows.filter((x) => x.cpp > 50);
-
+      // Two group colors only (teal = meets, brick = above), uniform solid
+      // lines; the bold ink line is the median across the eight campaigns.
       const traces = rows.map((r) => {
-        const g = r.cpp <= 50 ? meetsRows : aboveRows;
         const color = r.cpp <= 50 ? PALETTE.meets : PALETTE.above;
         return {
           type: "scatter", mode: "lines+markers+text",
           x: windows,
           y: windows.map((w) => r.arpu_rule_a[String(w)]),
-          line: { color: color, width: 2, dash: DASH[g.indexOf(r) % DASH.length] },
+          line: { color: color, width: 2 },
           marker: { color: color, size: 5 },
           text: [r.label, null, null, null, r.label],
           textposition: ["middle left", "top center", "top center", "top center", "middle right"],
@@ -300,7 +294,87 @@
     update();
   }
 
-  /* ------------------------------------------------ 4. Exploratory cohort curve */
+  /* ------------------------------------------------ 4. E vs H distribution overlap */
+  async function ehOverlap() {
+    const chart = document.getElementById("ov-chart");
+    const caption = document.getElementById("ov-caption");
+    if (!chart) return;
+
+    const res = await Promise.all([load("data/users_e.json"), load("data/users_h.json"), load("data/eh.json")])
+      .catch((e) => { fail("ov-caption", e.message); return null; });
+    if (!res) return;
+    const [eVals, hVals, meta] = res;
+
+    const zeroShare = (vals) => vals.filter((v) => v === 0).length / vals.length;
+
+    // Gaussian kernel density over log10 payment totals; area under it = 1.
+    function kde(vals, grid) {
+      const lx = vals.map((v) => Math.log10(v));
+      const n = lx.length;
+      const mean = lx.reduce((a, b) => a + b, 0) / n;
+      const sd = Math.sqrt(lx.reduce((a, b) => a + (b - mean) * (b - mean), 0) / (n - 1)) || 0.1;
+      const bw = 1.06 * sd * Math.pow(n, -0.2);
+      return grid.map((g) => {
+        let s = 0;
+        for (let i = 0; i < n; i++) {
+          const z = (g - lx[i]) / bw;
+          s += Math.exp(-0.5 * z * z);
+        }
+        return s / (n * bw * Math.sqrt(2 * Math.PI));
+      });
+    }
+
+    function update() {
+      const ePay = eVals.filter((v) => v > 0), hPay = hVals.filter((v) => v > 0);
+      const all = ePay.concat(hPay);
+      const lo = Math.log10(Math.min.apply(null, all)) - 0.15;
+      const hi = Math.log10(Math.max.apply(null, all)) + 0.15;
+      const N = 120;
+      const grid = [];
+      for (let i = 0; i <= N; i++) grid.push(lo + ((hi - lo) * i) / N);
+      const fe = kde(ePay, grid), fh = kde(hPay, grid);
+      const x = grid.map((g) => Math.pow(10, g));
+      const inter = fe.map((v, i) => Math.min(v, fh[i]));
+      const d = (hi - lo) / N;
+      const ovlPayers = inter.reduce((a, v) => a + v, 0) * d;
+
+      // Full distributions also carry the non-payer mass at zero.
+      const pe = ePay.length / eVals.length, ph = hPay.length / hVals.length;
+      const scaled = fe.map((v, i) => Math.min(pe * v, ph * fh[i]));
+      const ovlAll = Math.min(zeroShare(eVals), zeroShare(hVals)) + scaled.reduce((a, v) => a + v, 0) * d;
+
+      Plotly.react(chart, [
+        { type: "scatter", mode: "lines", x: x, y: fe,
+          line: { color: PALETTE.meets, width: 2 }, fill: "tozeroy", fillcolor: PALETTE.meets + "22",
+          hovertemplate: "E shape<extra></extra>" },
+        { type: "scatter", mode: "lines", x: x, y: fh,
+          line: { color: PALETTE.above, width: 2 }, fill: "tozeroy", fillcolor: PALETTE.above + "22",
+          hovertemplate: "H shape<extra></extra>" },
+        { type: "scatter", mode: "lines", x: x, y: inter,
+          line: { color: PALETTE.amber, width: 1 }, fill: "tozeroy", fillcolor: PALETTE.amber + "55",
+          hovertemplate: "overlap<extra></extra>" },
+      ], Object.assign({}, baseLayout(), {
+        margin: { l: 56, r: 30, t: 52, b: 56 },
+        xaxis: { type: "log", title: { text: "7-day payment total per paying user (USD, log scale)", font: { size: 12, color: PALETTE.muted } }, gridcolor: PALETTE.line, zeroline: false, linecolor: PALETTE.line, linewidth: 1, mirror: true },
+        yaxis: { showticklabels: false, gridcolor: PALETTE.line, zeroline: false, linecolor: PALETTE.line, linewidth: 1, mirror: true, title: { text: "Distribution shape (density, relative)", font: { size: 12, color: PALETTE.muted } } },
+        annotations: [{ xref: "paper", yref: "paper", x: 0.02, y: 1.11, xanchor: "left", showarrow: false,
+          text: "Shared area: " + pct1(ovlPayers) + " of the payer shapes", font: { size: 13, color: PALETTE.amber } }],
+        showlegend: false,
+        title: { text: "Distribution overlap — campaign E vs H", font: { size: 14 } },
+      }), CFG);
+
+      caption.innerHTML =
+        "<b>The two shapes sit almost on top of each other.</b> Shared area: " + pct1(ovlPayers) + " of the payer distributions. " +
+        "Counting the non-payer majority (" + pct(zeroShare(eVals)) + " of E, " + pct(zeroShare(hVals)) + " of H paid nothing), " + pct1(ovlAll) + " of the full user-level distributions overlaps. " +
+        "The Mann–Whitney p ≈ " + meta.mann_whitney_p + " is a rank test on all " + (meta.E.users + meta.H.users).toLocaleString() + " user totals — with that sample size it registers the small payer-share gap (" + pct1(pe) + " vs " + pct1(ph) + ") even though the shapes overlap heavily. " +
+        "No effect size or confidence interval is reported, and the pair was selected after inspecting the data — significance here is a lead, not separation.";
+    }
+
+    REDRAWS.push(update);
+    update();
+  }
+
+  /* ------------------------------------------------ 5. Exploratory cohort curve */
   async function cohortCumulative() {
     const chart = document.getElementById("cum-chart");
     const caption = document.getElementById("cum-caption");
@@ -331,7 +405,7 @@
     update();
   }
 
-  /* ------------------------------------------------ 5. Sample-size calculator */
+  /* ------------------------------------------------ 6. Sample-size calculator */
   async function sampleCalculator() {
     const liftEl = document.getElementById("calc-lift");
     const dailyEl = document.getElementById("calc-daily");
@@ -371,7 +445,7 @@
       applyChartTheme();
       REDRAWS.forEach((fn) => fn());
     });
-    [cppWidgets, arpuWindows, ehDistribution, cohortCumulative, sampleCalculator].forEach((fn) =>
+    [cppWidgets, arpuWindows, ehDistribution, ehOverlap, cohortCumulative, sampleCalculator].forEach((fn) =>
       fn().catch((e) => console.error(fn.name, e))
     );
   });

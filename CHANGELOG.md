@@ -2,6 +2,29 @@
 
 Notable changes to the portfolio cases. Newest entries first. Dates are commit dates.
 
+## 2026-11-06 — Layout and chart clarity pass, permission confirmed
+
+- Left-aligned layout: text blocks, cards, tables, code and lists now all hang
+  from the same left edge (the alternating "accordion" look is gone).
+- "The four datasets" table is a collapsed spoiler (details/summary) with all
+  rows compact and left-aligned.
+- Funnel card reworked again: the count funnel became a conversion curve —
+  every stage labeled with the cumulative % of the group's impressions still
+  converting ("% conversion from top to bottom"), hover shows pooled counts
+  and stage-to-stage conversion, and the live caption lists all stage
+  conversions for both groups. Share axis is log-scaled and labeled as such.
+- ARPU windows chart: uniform solid lines in the two group colors only (no
+  per-campaign dash variants); end letters and the median trend line kept.
+- New widget "How much do the two distributions overlap?": Gaussian KDE over
+  log10 payer totals for E and H with the shared area shaded. Verified
+  numerically: identical samples overlap 100%, disjoint 0%; on the real data
+  the payer shapes share 90.9% of their area and the full user-level
+  distributions (non-payer mass included) overlap 99.1% — the visual companion
+  to the p ≈ 0.0007 discussion.
+- Publication permission for the assessment CSVs is confirmed (2026-11-06):
+  the caveat is removed from the site and the case README, and the data note
+  now records the permission.
+
 ## 2026-11-06 — Deploy reliability: docs/.nojekyll
 
 - A Pages deployment failed with `Timeout reached, aborting!` (stuck in

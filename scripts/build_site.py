@@ -59,9 +59,10 @@ WIDGETS = {
     </div>
     <div id="cpp-funnel" class="chart"></div>
     <div id="funnel-caption" class="live">Loading…</div>
-    <div class="caption">Assessment data (anonymized). Funnel bars pool counts across the
-      campaigns in their group: bar width uses a log10 scale so the small stages stay visible,
-      and the labels give the exact pooled counts. Descriptive — not a causal comparison.</div>
+    <div class="caption">Assessment data (anonymized). Curves pool counts across the campaigns
+      in their group; each point is labeled with the cumulative share of the group's impressions
+      that still converts at that stage. The share axis is log-scaled so the small stages stay
+      visible. Descriptive — not a causal comparison.</div>
   </div>""",
 
     "arpu_windows": """
@@ -71,7 +72,7 @@ WIDGETS = {
       <span class="item"><span class="line" style="--c: var(--teal)"></span> Meets the $50 screen (B, E, G)</span>
       <span class="item"><span class="line" style="--c: var(--brick)"></span> Above the screen (A, C, D, F, H)</span>
       <span class="item"><span class="line" style="--c: var(--ink)"></span> Median across the eight campaigns</span>
-      <span class="item">letters at the line ends mark the campaign; dashes separate lines of the same color</span>
+      <span class="item">letters at the line ends mark the campaign</span>
     </div>
     <div id="arpu-chart" class="chart"></div>
     <div class="callout"><b>Same metric, two rules:</b> campaign E reads
@@ -94,6 +95,22 @@ WIDGETS = {
     <div class="caption">Assessment data (anonymized). Payments within 168 h of registration,
       summed per user; non-payers kept at 0. The curve is descriptive — the rank test is
       exploratory because the campaign pair was selected after inspecting the data.</div>
+  </div>""",
+
+    "eh_overlap": """
+  <div class="card">
+    <h3>{heading}</h3>
+    <div class="key">
+      <span class="item"><span class="line" style="--c: var(--teal)"></span> Campaign E</span>
+      <span class="item"><span class="line" style="--c: var(--brick)"></span> Campaign H</span>
+      <span class="item"><span class="swatch" style="--c: var(--amber)"></span> Overlap of the two shapes</span>
+    </div>
+    <div id="ov-chart" class="chart"></div>
+    <div id="ov-caption" class="live">Loading…</div>
+    <div class="caption">Assessment data (anonymized). Densities are Gaussian kernel estimates
+      over log10 payment totals of paying users; the overlap is the area shared by the two
+      curves. Descriptive — the rank test is exploratory because the campaign pair was
+      selected after inspecting the data.</div>
   </div>""",
 
     "cohort_cumulative": """
@@ -173,17 +190,25 @@ def render_sections(sections):
             out.append(f'<section class="band"><div class="wrap prose"><h2>{heading}</h2>{body}</div></section>')
         elif stype == "table":
             head = "".join(f"<th>{esc(h)}</th>" for h in section["headers"])
+            left = section.get("left")
             rows = "".join(
                 "<tr>" + "".join(
-                    f'<td class="num">{esc(c)}</td>' if i else f"<td>{esc(c)}</td>"
+                    f'<td class="num">{esc(c)}</td>' if i and not left else f"<td>{esc(c)}</td>"
                     for i, c in enumerate(row)
                 ) + "</tr>"
                 for row in section["rows"]
             )
-            out.append(
-                f'<section class="band"><div class="wrap"><h2 class="prose">{heading}</h2>'
-                f'<table class="data"><thead><tr>{head}</tr></thead><tbody>{rows}</tbody></table></div></section>'
-            )
+            table = f'<table class="data"><thead><tr>{head}</tr></thead><tbody>{rows}</tbody></table>'
+            if section.get("spoiler"):
+                out.append(
+                    f'<section class="band"><div class="wrap">'
+                    f'<details class="spoiler"><summary>{heading}</summary>{table}</details></div></section>'
+                )
+            else:
+                out.append(
+                    f'<section class="band"><div class="wrap"><h2 class="prose">{heading}</h2>'
+                    f"{table}</div></section>"
+                )
         elif stype == "widget":
             intro = "".join(f"<p>{esc(p)}</p>" for p in section.get("paragraphs", []))
             block = WIDGETS[section["widget"]].format(heading=heading)

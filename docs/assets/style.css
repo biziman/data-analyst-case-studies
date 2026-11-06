@@ -141,7 +141,7 @@ html[data-theme="dark"] .theme-toggle .icon-sun { display: block; }
 
 /* ---------- layout ---------- */
 .wrap { max-width: var(--maxfig); margin: 0 auto; padding: 0 20px; }
-.prose { max-width: var(--maxprose); margin-left: auto; margin-right: auto; }
+.prose { max-width: var(--maxprose); margin-left: 0; margin-right: 0; }
 
 section.band { padding: 44px 0; }
 section.band.alt { background: var(--sand); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
@@ -178,7 +178,7 @@ p { margin: 10px 0; text-wrap: pretty; }
   border: 1px solid var(--line);
   border-radius: 14px;
   padding: 20px 20px 14px;
-  margin: 22px auto;
+  margin: 22px 0;
   max-width: var(--maxfig);
   box-shadow: 0 1px 3px var(--shadow);
 }
@@ -232,21 +232,34 @@ p { margin: 10px 0; text-wrap: pretty; }
 
 /* ---------- tables ---------- */
 table.data {
-  width: 100%; max-width: var(--maxfig); border-collapse: collapse;
-  font-size: 15px; margin: 18px auto;
+  width: auto; max-width: var(--maxfig); border-collapse: collapse;
+  font-size: 15px; margin: 18px 0;
 }
+
+details.spoiler { margin: 18px 0; }
+details.spoiler summary {
+  display: flex; align-items: center; gap: 10px; cursor: pointer; list-style: none;
+  font-family: "Noto Serif", Georgia, "Iowan Old Style", "Times New Roman", serif;
+  font-weight: 600; font-size: 22px; line-height: 1.2; letter-spacing: -0.012em;
+}
+details.spoiler summary::-webkit-details-marker { display: none; }
+details.spoiler summary::before {
+  content: "▸"; color: var(--teal); font-size: 15px; transition: transform 0.15s ease;
+}
+details.spoiler[open] summary::before { transform: rotate(90deg); }
+details.spoiler table.data { margin-top: 10px; }
 table.data th, table.data td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--line); }
 table.data th { font-size: 13px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
 table.data td.num { text-align: right; font-variant-numeric: tabular-nums; }
 
 /* ---------- lists, limits ---------- */
-ol.limits { max-width: var(--maxprose); margin: 10px auto; padding-left: 22px; }
+ol.limits { max-width: var(--maxprose); margin: 10px 0; padding-left: 22px; }
 ol.limits li { margin: 8px 0; }
 
 pre.code {
   background: var(--code-bg); border: 1px solid var(--line); border-radius: 8px;
   padding: 12px 14px; overflow-x: auto; font-size: 13.5px; line-height: 1.5;
-  max-width: var(--maxprose); margin: 12px auto;
+  max-width: var(--maxprose); margin: 12px 0;
 }
 code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 0.92em; }
 p code, li code { background: var(--code-bg); padding: 1px 5px; border-radius: 4px; }
