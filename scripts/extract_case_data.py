@@ -82,8 +82,35 @@ WITH cohort AS (
     WHERE r.date BETWEEN '2020-05-10' AND '2020-05-20'
         AND CAST((strftime('%s', t.tut_ts) - strftime('%s', r.reg_ts)) AS REAL) / (60 * 60) <= 168
 )
-SELECT COUNT(DISTINCT id) FROM cohort
+SELECT COUNT(DISTINCT id), MIN(reg_ts), MAX(reg_ts) FROM cohort
 """
+
+
+def mann_whitney_p(a, b):
+    """Two-sided Mann-Whitney U on raw user totals: tie-corrected normal
+    approximation with continuity correction (scipy's asymptotic default).
+    Pins the notebook's reported p ≈ 0.0007 without needing scipy."""
+    n1, n2 = len(a), len(b)
+    allv = sorted([(v, 0) for v in a] + [(v, 1) for v in b])
+    ranks = [0.0] * len(allv)
+    tie_term = 0
+    i = 0
+    while i < len(allv):
+        j = i
+        while j + 1 < len(allv) and allv[j + 1][0] == allv[i][0]:
+            j += 1
+        avg = (i + 1 + j + 1) / 2
+        for k in range(i, j + 1):
+            ranks[k] = avg
+        t = j - i + 1
+        tie_term += t ** 3 - t
+        i = j + 1
+    r1 = sum(r for r, (v, g) in zip(ranks, allv) if g == 0)
+    u1 = r1 - n1 * (n1 + 1) / 2
+    n = n1 + n2
+    var = n1 * n2 / 12 * ((n + 1) - tie_term / (n * (n - 1)))
+    z = (abs(u1 - n1 * n2 / 2) - 0.5) / math.sqrt(var)
+    return 2 * (1 - NormalDist().cdf(z))
 
 
 def read_csv(path):
@@ -192,6 +219,9 @@ def main():
     funnel_meets, funnel_above = pooled(meets), pooled(above)
 
     # Campaign E vs H: rule A (whole-day, 7 d) and rule B (strict 168 h).
+    # The user-level totals written to users_e/users_h use rule B for BOTH
+    # campaigns: that is what the notebook's Mann-Whitney test compares and
+    # what the site captions describe. Rule A is kept only for the ARPU value.
     # Returns unrounded user totals; rounding happens only at write time.
     def arpu_eh(campaign, strict):
         users = reg_by_campaign[campaign]
@@ -211,9 +241,9 @@ def main():
                 zeros += 1
         return revenue / len(users), user_totals, zeros, len(users)
 
-    e_rule_a, e_totals, e_zeros, e_n = arpu_eh("campaign_E", strict=False)
-    e_rule_b, _, _, _ = arpu_eh("campaign_E", strict=True)
-    _, h_totals, h_zeros, h_n = arpu_eh("campaign_H", strict=True)
+    e_rule_a, _, _, _ = arpu_eh("campaign_E", strict=False)
+    e_rule_b, e_totals, e_zeros, e_n = arpu_eh("campaign_E", strict=True)
+    h_rule_b, h_totals, h_zeros, h_n = arpu_eh("campaign_H", strict=True)
 
     # Exact day-3 baseline for campaign E (experiment widget).
     users_e = reg_by_campaign["campaign_E"]
@@ -266,7 +296,7 @@ def main():
         [(int(r["id"]), iso_date(r["date"]), float(r["payment"]), iso_epoch(r["ts"])) for r in pays],
     )
     curve = conn.execute(COHORT_SQL).fetchall()
-    cohort_users = conn.execute(COHORT_COUNT_SQL).fetchone()[0]
+    cohort_users, cohort_first, cohort_last = conn.execute(COHORT_COUNT_SQL).fetchone()
     conn.close()
 
     # ---- Assertions against the verified README numbers -------------------
@@ -285,7 +315,7 @@ def main():
     check("tut rate above = 47.17%", round(funnel_above["tut_rate"], 4), 0.4717, 0.00005)
     check("E ARPU7 rule A = 0.75", round(e_rule_a, 2), 0.75, 0.005)
     check("E ARPU7 rule B = 0.68", round(e_rule_b, 2), 0.68, 0.005)
-    check("H ARPU7 rule B = 0.29", round(sum(h_totals) / h_n, 2), 0.29, 0.005)
+    check("H ARPU7 rule B = 0.29", round(h_rule_b, 2), 0.29, 0.005)
     check("baseline D3 = 4.17%", round(baseline_d3, 4), 0.0417, 0.00005)
     check("n/arm at +20% ~ 7,764", n_at_20, 7764, 15)
 
@@ -297,6 +327,32 @@ def main():
     check("cohort curve rows = 101", len(curve), 101)
     check("cohort curve spans dar 0-100", f"{curve[0][0]}-{curve[-1][0]}", "0-100")
     check("cohort curve final ~ 467.45", curve[-1][1], 467.45, 0.005)
+
+    # ---- Page facts quoted in the site copy, the table, and the captions ----
+    check("registration rows = 43,830", len(regs), 43830)
+    check("payment rows = 29,444", len(pays), 29444)
+    check("tutorial rows = 21,299", len(tuts), 21299)
+    check("ad rows = 41", len(ads), 41)
+    check("no-campaign regs = 6,686", sum(1 for r in regs if not r["campaign"].strip()), 6686)
+    check("payments end 2020-12-31", max(r["date"] for r in pays), "2020-12-31")
+    check("registrations 2020-05-01..05-31",
+          f'{min(r["date"] for r in regs)}..{max(r["date"] for r in regs)}', "2020-05-01..2020-05-31")
+    check("E users = 9,447", e_n, 9447)
+    check("H users = 13,920", h_n, 13920)
+    check("E payer share = 4.90%", round((e_n - e_zeros) / e_n * 100, 2), 4.90, 0.005)
+    check("H payer share = 3.99%", round((h_n - h_zeros) / h_n * 100, 2), 3.99, 0.005)
+    check("cohort users = 5,421", cohort_users, 5421)
+    check("cohort regs 2020-05-10..05-19", f"{cohort_first[:10]}..{cohort_last[:10]}", "2020-05-10..2020-05-19")
+    check("sample ~15.5 days at 1,000/day", round(2 * round(n_at_20) / 1000, 1), 15.5, 0.05)
+    mw_p = mann_whitney_p(e_totals, h_totals)
+    check("MW p ~ 0.0007 (normal approx, raw totals)", round(mw_p, 4), 0.0007, 0.00005)
+    pre_reg_payments = sum(
+        1 for rid, payments in pays_by_id.items()
+        if rid in reg_ts
+        for pt, _ in payments
+        if pt < reg_ts[rid]
+    )
+    check("day-7 filter has no lower bound (0 pre-reg rows in data)", pre_reg_payments, 0)
 
     failed = [c for c in checks if not c[1]]
     for name, ok, got, want in checks:
@@ -326,6 +382,7 @@ def main():
         "dar": [int(r[0]) for r in curve],
         "cumulative_revenue": [round(r[1], 2) for r in curve],
         "cohort_users": cohort_users,
+        "reg_range": [cohort_first[:10], cohort_last[:10]],
         "final_revenue": round(curve[-1][1], 2),
         "exploratory": True,
     }, indent=1))

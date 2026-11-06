@@ -74,7 +74,7 @@ WIDGETS = {
     <div class="key">
       <span class="item"><span class="line" style="--c: var(--teal)"></span> Meets the $50 screen (B, E, G)</span>
       <span class="item"><span class="line" style="--c: var(--brick)"></span> Above the screen (A, C, D, F, H)</span>
-      <span class="item"><span class="line" style="--c: var(--ink)"></span> Median across the eight campaigns</span>
+      <span class="item"><span class="line" style="--c: var(--ink)"></span> Blended ARPU across all eight campaigns (weighted)</span>
       <span class="item">letters at the line ends mark the campaign</span>
     </div>
     <div id="arpu-chart" class="chart"></div>

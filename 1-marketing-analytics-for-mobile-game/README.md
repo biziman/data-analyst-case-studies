@@ -34,7 +34,7 @@ Six figures are embedded in the notebook: CPP by campaign against the $50 thresh
 ## Limits and open review items
 
 1. Campaign comparisons are observational. Nothing here shows that a campaign caused higher-value players.
-2. The day-7 payer filter accepts payments logged before registration, and cost dates are not aligned to registration cohorts.
+2. The day-7 payer filter has no lower bound — it would accept payments logged before registration, though no such rows exist in this data — and cost dates are not aligned to registration cohorts.
 3. The two ARPU window rules disagree (see above), and longer windows include registrants without full follow-up.
 4. The cohort SQL in section 5 does not aggregate daily revenue before its cumulative sum and truncates elapsed days. Its curve is not a validated LTV estimate.
 5. The Campaign E/H test reports a p-value without an effect size or confidence interval, and the pair was selected on the same data.

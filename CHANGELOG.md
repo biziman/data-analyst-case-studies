@@ -2,6 +2,33 @@
 
 Notable changes to the portfolio cases. Newest entries first. Dates are commit dates.
 
+## 2026-11-06 — Fact-proof pass, notebook sync, chart fixes
+
+- ARPU chart: the median line is replaced by blended ARPU across the eight
+  campaigns, weighted by campaign registrations ($0.48 at 7 days → $3.04 at
+  180) — a real portfolio metric instead of a robust center. Overlap chart:
+  the in-plot "Shared area" note is removed (it crossed the density lines);
+  the number stays in the caption.
+- Fact-proof pass over every number on the site: extraction now asserts 38
+  facts (all table rows and dates, payer shares, cohort size and range,
+  sample-size days, and the Mann–Whitney p reproduced independently with a
+  tie-corrected normal approximation on raw totals: 0.00066 ≈ 0.0007, matching
+  the notebook's scipy output).
+- Two issues found and fixed: (1) `users_e.json` held rule-A (whole-day) user
+  totals while its docstring, the site captions and the notebook's
+  Mann–Whitney test all describe strict 168-hour totals — now strict for both
+  campaigns (displayed medians and overlap shift slightly: E median $2.43,
+  payer-shape overlap 92.2%, full overlap 99.1%); (2) the cohort's effective
+  registration range is May 10–19 — the SQL date filter reads May 10–20 but
+  its text comparison excludes May 20 — and the copy now says so.
+- Wording precision: the day-7 payer filter "has no lower bound — it would
+  accept payments logged before registration, though no such rows exist in
+  this data" (verified: 0 pre-registration payments).
+- Notebook synced with the site: four additions in notebook style — funnel
+  conversion figure, blended ARPU figure, the E/H box+strip and overlap
+  figures (same KDE rules and numbers), and a cohort-facts cell. Every figure
+  and number on the site is reproducible from the notebook again.
+
 ## 2026-11-06 — Chart header spacing and label collision fixes
 
 - More breathing room in the heading → legend → chart-title zone: legend row

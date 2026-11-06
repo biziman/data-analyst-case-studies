@@ -189,7 +189,7 @@
 
     function update() {
       // Two group colors only (teal = meets, brick = above), uniform solid
-      // lines; the bold ink line is the median across the eight campaigns.
+      // lines; the bold ink line is blended ARPU across the eight campaigns.
       const traces = rows.map((r) => {
         const color = r.cpp <= 50 ? PALETTE.meets : PALETTE.above;
         return {
@@ -202,18 +202,21 @@
         };
       });
 
-      const medY = windows.map((w) => median(rows.map((r) => r.arpu_rule_a[String(w)])));
+      // Blended ARPU across the eight campaigns, weighted by campaign
+      // registrations: what a single top-line report would show.
+      const totalRegs = rows.reduce((a, r) => a + r.registrations, 0);
+      const blendY = windows.map((w) => rows.reduce((a, r) => a + r.arpu_rule_a[String(w)] * r.registrations, 0) / totalRegs);
       traces.push({
         type: "scatter", mode: "lines",
-        x: windows, y: medY,
+        x: windows, y: blendY,
         line: { color: PALETTE.ink, width: 3.5 },
-        hovertemplate: "Median campaign: %{y:$,.2f} at %{x} days<extra></extra>",
+        hovertemplate: "Blended (all campaigns): %{y:$,.2f} at %{x} days<extra></extra>",
       });
 
-      // End labels at 180 d, dodged apart so close line-ends (F/G/median)
+      // End labels at 180 d, dodged apart so close line-ends (F/G/blended)
       // never collide; each label keeps its line's color.
       const ends = rows.map((r) => ({ text: r.label, y: r.arpu_rule_a["180"], color: r.cpp <= 50 ? PALETTE.meets : PALETTE.above }))
-        .concat([{ text: "median", y: medY[4], color: PALETTE.ink }])
+        .concat([{ text: "blended", y: blendY[4], color: PALETTE.ink }])
         .sort((a, b) => a.y - b.y);
       let prev = -Infinity;
       for (const e of ends) {
@@ -250,7 +253,7 @@
       const byWindow = (w) => rows.slice().sort((a, b) => b.arpu_rule_a[w] - a.arpu_rule_a[w]);
       const top7 = byWindow("7")[0], top180 = byWindow("180")[0], last180 = byWindow("180").slice(-1)[0];
       caption.innerHTML =
-        "<b>The bold line is the median across the eight campaigns</b> (" + usd(medY[0]) + " at 7 days, " + usd(medY[4]) + " at 180). " +
+        "<b>The bold line is blended ARPU across the eight campaigns, weighted by campaign registrations</b> (" + usd(blendY[0]) + " at 7 days, " + usd(blendY[4]) + " at 180) — what one top-line report would show if it ignored the campaign split. " +
         "<b>Ranking is not stable:</b> campaign " + top7.label + " leads at 7 days (" + usd(top7.arpu_rule_a["7"]) + ") but campaign " + top180.label + " leads at 180 days (" + usd(top180.arpu_rule_a["180"]) + "), while campaign " + last180.label + " stays last. " +
         "ARPU = in-window payment revenue / registered users in the campaign; non-payers stay at zero. " +
         "Windows are whole-day truncations, and longer windows include registrants without a full observation window — that understates their ARPU. " +
@@ -380,8 +383,6 @@
         margin: { l: 56, r: 30, t: 64, b: 56 },
         xaxis: { type: "log", title: { text: "7-day payment total per paying user (USD, log scale)", font: { size: 12, color: PALETTE.muted } }, gridcolor: PALETTE.line, zeroline: false, linecolor: PALETTE.line, linewidth: 1, mirror: true },
         yaxis: { showticklabels: false, gridcolor: PALETTE.line, zeroline: false, linecolor: PALETTE.line, linewidth: 1, mirror: true, title: { text: "Distribution shape (density, relative)", font: { size: 12, color: PALETTE.muted } } },
-        annotations: [{ xref: "paper", yref: "paper", x: 0.02, y: 0.95, yanchor: "top", xanchor: "left", showarrow: false,
-          text: "Shared area: " + pct1(ovlPayers) + " of the payer shapes", font: { size: 13, color: PALETTE.amber } }],
         showlegend: false,
         title: { text: "Distribution overlap — campaign E vs H", font: { size: 14 } },
       }), CFG);

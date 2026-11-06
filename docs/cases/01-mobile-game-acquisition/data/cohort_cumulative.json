@@ -206,6 +206,10 @@
   467.45
  ],
  "cohort_users": 5421,
+ "reg_range": [
+  "2020-05-10",
+  "2020-05-19"
+ ],
  "final_revenue": 467.45,
  "exploratory": true
 }

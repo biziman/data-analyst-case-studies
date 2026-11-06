@@ -53,7 +53,7 @@
       "widget": "arpu_windows",
       "heading": "Does the ranking hold across observation windows?",
       "paragraphs": [
-        "ARPU divides in-window payment revenue by registered users in the campaign, with non-payers kept at zero. Each line follows one campaign across the observation windows — the letter at each end marks it — and the bold line is the median across the eight campaigns: values rise, lines cross, and longer windows silently include registrants who never had a full follow-up period, which understates their ARPU.",
+        "ARPU divides in-window payment revenue by registered users in the campaign, with non-payers kept at zero. Each line follows one campaign across the observation windows — the letter at each end marks it — and the bold line is the blended ARPU across the eight campaigns (weighted by registrations): values rise, lines cross, and longer windows silently include registrants who never had a full follow-up period, which understates their ARPU.",
         "There is also a definitional trap in the source notebook: two window rules disagree for the same metric (see the note under the chart). The rule, not the data, explains the difference — so any ARPU number in a report is meaningless without its window contract."
       ]
     },
@@ -80,7 +80,7 @@
       "widget": "cohort_cumulative",
       "heading": "Exploratory cohort revenue curve",
       "paragraphs": [
-        "The notebook's last figure follows 5,421 users who registered between May 10 and May 20 (the query's date filter) and completed the tutorial within 168 hours, then plots their cumulative payment revenue over the first 100 whole-day steps after registration. The curve ends near $467.",
+        "The notebook's last figure follows 5,421 users who registered May 10–19 — the query's date filter reads May 10 to May 20, but its text comparison excludes May 20 itself — and completed the tutorial within 168 hours, then plots their cumulative payment revenue over the first 100 whole-day steps after registration. The curve ends near $467.",
         "It renders the notebook's SQL exactly as written, defects and all: daily revenue is not aggregated before the cumulative sum, and elapsed days are truncated to whole days. Read it as a map of the cohort method and its traps — not as an LTV estimate."
       ]
     },
@@ -98,7 +98,7 @@
       "heading": "What this cannot show",
       "items": [
         "Campaign comparisons are observational. Nothing here shows that a campaign caused higher-value players.",
-        "The day-7 payer filter accepts payments logged before registration, and cost dates are not aligned to registration cohorts.",
+        "The day-7 payer filter has no lower bound — it would accept payments logged before registration, though no such rows exist in this data — and cost dates are not aligned to registration cohorts.",
         "The two ARPU window rules disagree ($0.75 vs $0.68 for campaign E at 7 days), and longer windows include registrants without full follow-up.",
         "The cohort SQL in the notebook does not aggregate daily revenue before its cumulative sum and truncates elapsed days — its curve is not a validated LTV estimate.",
         "The E/H test reports a p-value without an effect size or confidence interval, and the pair was selected on the same data.",
