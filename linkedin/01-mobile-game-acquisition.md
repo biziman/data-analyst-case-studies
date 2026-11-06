@@ -3,7 +3,9 @@
 - **publish:** 2026-11-06 (Fri), 10:00–12:00
 - **image:** `docs/cases/01-mobile-game-acquisition/preview.png` (attach to post)
 - **link (first comment):** https://biziman.github.io/data-analyst-case-studies/cases/01-mobile-game-acquisition/
-- **status:** approved 2026-11-06 — publishing today
+- **status:** approved, NOT yet published — parked 2026-11-06, resume tomorrow (2026-11-07)
+  - Resume steps: post body below + attach `preview.png`, first comment = demo link,
+    then pin to profile **Featured** and fill the tracking row in `LINKEDIN_PLAN.md`.
 
 ## First comment (post immediately after the body)
 

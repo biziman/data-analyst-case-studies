@@ -41,7 +41,7 @@ the post links to numbers that must already be verified.
 
 | # | Date | Case | Review | Demo |
 |---|------|------|--------|------|
-| 1 | Fri 2026-11-06 | 01 mobile-game acquisition | done 11-04 | live — **posted 11-06** |
+| 1 | Fri 2026-11-06 → parked (resume 11-07; **Sat = off the weekend rule**, user call) | 01 mobile-game acquisition | done 11-04 | live — **approved, not yet posted** |
 | 2 | Tue 2026-11-11 | 02 experiment tracking audit | done 11-04 | stub |
 | 3 | Mon 2026-11-17 | 03 player LTV forecast | done 11-04 | stub |
 | 4 | Fri 2026-11-20 | 04 gameplay change evaluation | done 11-04 | stub |
@@ -93,7 +93,7 @@ Judge by profile views and inbound conversations, not likes.
 
 | Date | Case | Impressions | Profile views | Inbound | Notes |
 |------|------|-------------|---------------|---------|-------|
-| 2026-11-06 | 01 mobile-game acquisition | | | | published 11-06; pending pin to Featured |
+| 2026-11-06 | 01 mobile-game acquisition | | | | parked 11-06 without posting; resume 11-07, then pin to Featured |
 
 ## Sales-nav interplay
 

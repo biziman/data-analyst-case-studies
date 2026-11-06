@@ -4,6 +4,20 @@ Proofreading and diagram review of all 11 cases (see `CHANGELOG.md` for the fini
 
 Publishing is gated on this review pass: a case's LinkedIn post goes out only after its review is done. Post dates and todos: `~/projects/job-search/LINKEDIN_PUBLISHING.md`; plan: `LINKEDIN_PLAN.md`.
 
+## Publishing (parked 2026-11-06 — resume tomorrow)
+
+- **Post 1 (case 01, mobile-game acquisition): approved, not yet published.**
+  Draft + first-comment link: `linkedin/01-mobile-game-acquisition.md`.
+  Checks already done: demo live, preview.png verified, review gate passed.
+  To post: attach `docs/cases/01-mobile-game-acquisition/preview.png`, paste the body,
+  post the demo link as the **first comment**, then pin the post to profile **Featured**
+  and fill the tracking row in `LINKEDIN_PLAN.md`.
+  Note: 2026-11-07 is a **Saturday** — the calendar snapped slots off weekends. And any slip
+  pushes case 2: its Tue 11-11 slot assumed post 1 on Fri 11-06 (5-day cadence). Decide
+  tomorrow: post 11-07 as a one-off and shift case 2 (+ the rest of the chain) accordingly,
+  or hold post 1 to Mon 11-09. Either way the downstream dates in the calendar shift too.
+- After post 1: pin case-1 demo to Featured (convention #7 in `LINKEDIN_PLAN.md`).
+
 ## Per-case checklist
 
 1. **Proofread** the README and notebook prose: grammar, terminology consistency, decision-first structure, synthetic/assessment labeling, no causal or fraud overclaiming.
