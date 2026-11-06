@@ -2,6 +2,13 @@
 
 Notable changes to the portfolio cases. Newest entries first. Dates are commit dates.
 
+## 2026-11-06 — Deploy reliability: docs/.nojekyll
+
+- A Pages deployment failed with `Timeout reached, aborting!` (stuck in
+  `updating_pages` on the legacy Jekyll build for ~10 minutes). Added
+  `docs/.nojekyll` so GitHub Pages deploys the static site directly, without
+  the Jekyll build queue.
+
 ## 2026-11-06 — Chart clarity pass (review feedback)
 
 - "Which campaigns clear the $50 screen?" split into two independent cards:
