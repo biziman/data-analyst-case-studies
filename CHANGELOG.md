@@ -2,6 +2,19 @@
 
 Notable changes to the portfolio cases. Newest entries first. Dates are commit dates.
 
+## 2026-11-06 — Session wrap: the interactive site
+
+- The LinkedIn demo site is complete for case 01 after five review rounds:
+  theme switcher, Noto Serif / Inter Tight typography, six interactive widgets
+  (CPP screen chart, funnel bars on a linear scale, historical ARPU with the
+  blended line, E vs H box+strip and overlap views, exploratory cohort curve,
+  sample-size calculator), left-aligned layout, collapsed dataset spoiler, and
+  collision-free labels.
+- Verification is now automated end to end: 38 extraction asserts pin every
+  number the page shows (including an independently reproduced Mann–Whitney
+  p ≈ 0.0007), the notebook carries matching figure cells, and
+  `docs/.nojekyll` keeps Pages deploys fast. Resume points live in `TODO.md`.
+
 ## 2026-11-06 — Funnel chart: bars on a linear scale
 
 - The funnel conversion chart now uses grouped bars (meets vs above) on a

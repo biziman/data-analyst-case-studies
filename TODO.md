@@ -18,6 +18,34 @@ Publishing is gated on this review pass: a case's LinkedIn post goes out only af
   or hold post 1 to Mon 11-09. Either way the downstream dates in the calendar shift too.
 - After post 1: pin case-1 demo to Featured (convention #7 in `LINKEDIN_PLAN.md`).
 
+## Site session (2026-11-06 — wrapped)
+
+The interactive LinkedIn demo site was built out end-to-end on this branch across five
+review rounds (full detail in the `CHANGELOG.md` 2026-11-06 entries): dark theme switcher,
+Noto Serif / Inter Tight typography, chart iterations from review feedback (funnel as bars
+on a linear scale, E vs H box+strip plus the overlap view, historical ARPU with the blended
+line, exploratory cohort curve), left-aligned layout with the collapsed dataset spoiler,
+header spacing and label-collision fixes, and a fact-proof pass —
+`scripts/extract_case_data.py` now asserts **38 page facts** and fails loudly on drift.
+`docs/.nojekyll` keeps Pages deploys fast (two legacy Jekyll builds had timed out on
+2026-11-06). The notebook carries 8 matching sync cells (funnel conversion, blended ARPU,
+E/H overlap, cohort facts) so every site figure reproduces there.
+
+Resume points for the site track:
+
+- **Execute the notebook's new sync cells in the venv** during the next review pass — they
+  were added without a run here (no pandas/matplotlib in the build environment). They should
+  print the site numbers: blended ARPU $0.48 → $3.04, overlap 92.2% (payer shapes) / 99.1%
+  (full), cohort 5,421 users, May 10–19, ends $467.45.
+- The fact-proof pass fixed two content bugs worth knowing about: `users_e.json` mixed
+  window rules (now strict 168 h for both campaigns) and the cohort copy claimed May 10–20
+  (the SQL's text comparison excludes May 20 → May 10–19). Both recorded in `CHANGELOG.md`.
+- Chart options kept open by user request-pending: funnel tail stages are slivers at the
+  linear scale (labels carry the numbers; a stage-conversion row was offered), and E/H
+  overlap alternates (Lorenz curve, two-panel summary) remain available on request.
+- Publishing track unchanged: post 1 approved and parked; the first decision is the date
+  call (Sat 11-07 one-off vs Mon 11-09 hold) — see the Publishing section above.
+
 ## Per-case checklist
 
 1. **Proofread** the README and notebook prose: grammar, terminology consistency, decision-first structure, synthetic/assessment labeling, no causal or fraud overclaiming.
