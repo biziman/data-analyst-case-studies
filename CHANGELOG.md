@@ -2,6 +2,35 @@
 
 Notable changes to the portfolio cases. Newest entries first. Dates are commit dates.
 
+## 2026-11-06 — Interactive charts: redesign pass
+
+- Landing hero: the lede paragraph now shares the title's left edge (it was
+  centered inside the content column). Figure width 980 → 1120 px, taller
+  chart areas.
+- Dark theme: hover popups were dark-on-dark — hoverlabel text now takes the
+  theme's ink color.
+- All charts carry a color key row (teal = meets the $50 screen, brick =
+  above; E/H for the distribution; revenue line for the cohort curve).
+- "Pooled funnel rates" replaced by a two-panel funnel of pooled stage counts
+  (impressions → clicks → registrations → tutorial completers → day-7 payers),
+  one panel per screening group. Bar width is log10 of the count so every
+  stage stays visible; labels carry the exact pooled counts and the hover
+  shows stage-to-stage conversions. Slider-driven repooling kept.
+- "Campaign E vs H" histograms replaced by an empirical survival curve (share
+  of users whose 7-day total reaches $x, both axes log, non-payers in the
+  denominator) — the canonical view for the Mann–Whitney rank test. Unit-checked
+  endpoints against the extracted user-level data.
+- "Observation windows" tab buttons replaced by one historical line chart:
+  ARPU across 7/14/30/90/180 days per campaign, hue = screen group,
+  lightness = campaign, letters label the line ends. The caption now states
+  the verified ranking flip (D leads at 7 days, E at 180).
+- New widget: exploratory cohort cumulative revenue (notebook section 5).
+  `scripts/extract_case_data.py` replicates the notebook's SQLite query
+  verbatim (defects included) and asserts the notebook's printed head(10) plus
+  the 0–100 day span; the page caption keeps the "not a validated LTV
+  estimate" caveat. 24/24 extraction checks pass.
+- Shorter chart titles throughout (long labels were tilting on the old plots).
+
 ## 2026-11-06 — Typography refresh: Noto Serif + Inter Tight
 
 - Headings and the site brand/figure numbers now use Noto Serif; body text

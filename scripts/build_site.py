@@ -39,6 +39,10 @@ WIDGETS = {
     "cpp_explorer": """
   <div class="card">
     <h3>{heading}</h3>
+    <div class="key">
+      <span class="item"><span class="swatch" style="--c: var(--teal)"></span> Meets the $50 screen</span>
+      <span class="item"><span class="swatch" style="--c: var(--brick)"></span> Above the $50 screen</span>
+    </div>
     <div class="controls">
       <label for="cpp-threshold">Screening threshold</label>
       <input type="range" id="cpp-threshold" min="20" max="80" step="1" value="50">
@@ -49,22 +53,19 @@ WIDGETS = {
     <div id="cpp-funnel" class="chart"></div>
     <div class="caption">Assessment data (anonymized): 41 daily cost rows, May 2020;
       registrations 2020-05-01 to 2020-05-31. Cost rows and payer cohorts are not aligned
-      to the same dates. Screening metric only, not a budget result. Each rate pools counts
-      across the campaigns in its group and is not a causal comparison.</div>
+      to the same dates. Screening metric only, not a budget result. Funnel bars pool counts
+      across the campaigns in their group: bar width uses a log10 scale so the small stages
+      stay visible, and the labels give the exact pooled counts. Descriptive — not a causal
+      comparison.</div>
   </div>""",
 
     "arpu_windows": """
   <div class="card">
     <h3>{heading}</h3>
-    <div class="controls">
-      <label>Observation window</label>
-      <div class="btnrow" id="arpu-buttons">
-        <button data-window="7" class="active">7 days</button>
-        <button data-window="14">14 days</button>
-        <button data-window="30">30 days</button>
-        <button data-window="90">90 days</button>
-        <button data-window="180">180 days</button>
-      </div>
+    <div class="key">
+      <span class="item"><span class="line" style="--c: var(--teal)"></span> Meets the $50 screen (B, E, G)</span>
+      <span class="item"><span class="line" style="--c: var(--brick)"></span> Above the screen (A, C, D, F, H)</span>
+      <span class="item">a letter at each line's end marks the campaign</span>
     </div>
     <div id="arpu-chart" class="chart"></div>
     <div class="callout"><b>Same metric, two rules:</b> campaign E reads
@@ -72,24 +73,34 @@ WIDGETS = {
       168-hour window. The window rule — not the data — explains the gap.</div>
     <div id="arpu-caption" class="live">Loading…</div>
     <div class="caption">Assessment data (anonymized). ARPU denominators are registered users
-      per campaign with non-payers at zero; teal = meets the $50 screen, brick = above it.</div>
+      per campaign with non-payers at zero.</div>
   </div>""",
 
     "eh_distribution": """
   <div class="card">
     <h3>{heading}</h3>
-    <div class="controls">
-      <label>Scale</label>
-      <div class="btnrow" id="eh-buttons">
-        <button data-mode="log" class="active">Log-spaced bins</button>
-        <button data-mode="linear">Linear (0–p99)</button>
-      </div>
+    <div class="key">
+      <span class="item"><span class="line" style="--c: var(--teal)"></span> Campaign E</span>
+      <span class="item"><span class="line" style="--c: var(--brick)"></span> Campaign H</span>
     </div>
     <div id="eh-chart" class="chart tall"></div>
     <div id="eh-caption" class="live">Loading…</div>
     <div class="caption">Assessment data (anonymized). Payments within 168 h of registration,
-      summed per user; non-payers kept at 0. Descriptive panels — the rank test is exploratory
-      because the campaign pair was selected after inspecting the data.</div>
+      summed per user; non-payers kept at 0. The curve is descriptive — the rank test is
+      exploratory because the campaign pair was selected after inspecting the data.</div>
+  </div>""",
+
+    "cohort_cumulative": """
+  <div class="card">
+    <h3>{heading}</h3>
+    <div class="key">
+      <span class="item"><span class="line" style="--c: var(--teal)"></span> Cumulative payment revenue (USD)</span>
+    </div>
+    <div id="cum-chart" class="chart"></div>
+    <div id="cum-caption" class="live">Loading…</div>
+    <div class="caption">Renders the notebook's exploratory SQL exactly as written — daily
+      revenue is not aggregated before its cumulative sum and elapsed days are truncated to
+      whole days. Its curve is not a validated LTV estimate. Assessment data (anonymized).</div>
   </div>""",
 
     "sample_calculator": """

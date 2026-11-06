@@ -31,7 +31,7 @@
       margin: { l: 60, r: 20, t: 36, b: 56 },
       paper_bgcolor: PALETTE.paper,
       plot_bgcolor: PALETTE.paper,
-      hoverlabel: { bgcolor: PALETTE.paper, bordercolor: PALETTE.line },
+      hoverlabel: { bgcolor: PALETTE.paper, bordercolor: PALETTE.line, font: { family: FONT, size: 13, color: PALETTE.ink } },
     };
   }
 
@@ -46,6 +46,32 @@
     const el = document.getElementById(id);
     if (el) el.innerHTML = '<div class="caption">Data unavailable: ' + msg + "</div>";
   };
+
+  const fmtCount = (n) => (n >= 1e6 ? (n / 1e6).toFixed(1) + "M" : n >= 1e4 ? Math.round(n / 1e3) + "K" : n.toLocaleString());
+
+  /* Shade families: one hue per screen group (teal = meets, brick = above);
+     lightness varies per campaign so the ARPU lines stay apart in both themes. */
+  function hexToHsl(hex) {
+    const m = hex.replace("#", "");
+    const r = parseInt(m.slice(0, 2), 16) / 255, g = parseInt(m.slice(2, 4), 16) / 255, b = parseInt(m.slice(4, 6), 16) / 255;
+    const max = Math.max(r, g, b), min = Math.min(r, g, b), d = max - min;
+    const l = (max + min) / 2;
+    let h = 0, s = 0;
+    if (d !== 0) {
+      s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+      if (max === r) h = ((g - b) / d + (g < b ? 6 : 0)) * 60;
+      else if (max === g) h = ((b - r) / d + 2) * 60;
+      else h = ((r - g) / d + 4) * 60;
+    }
+    return [h, s * 100, l * 100];
+  }
+  function shadeFamily(baseHex, index, count) {
+    const hsl = hexToHsl(baseHex);
+    const dark = document.documentElement.dataset.theme === "dark";
+    const lo = dark ? 52 : 34, hi = dark ? 88 : 72;
+    const l = count > 1 ? hi - (index * (hi - lo)) / (count - 1) : (hi + lo) / 2;
+    return "hsl(" + hsl[0].toFixed(0) + ", " + hsl[1].toFixed(0) + "%, " + l.toFixed(0) + "%)";
+  }
 
   /* ------------------------------------------------ 1. CPP threshold explorer */
   async function cppExplorer() {
@@ -63,13 +89,54 @@
       .sort((a, b) => a.cpp - b.cpp);
     const labels = rows.map((r) => r.label);
 
-    const funnelX = ["Click-through\n(clicks / impressions)", "Registration\n(registrations / clicks)", "Tutorial completion\n(completers / registered)", "Day-7 payer\n(payers / registered)"];
+    const stages = ["Impressions", "Clicks", "Registrations", "Tutorial completers", "Day-7 payers"];
 
     function pooled(list) {
       const sum = (k) => list.reduce((a, c) => a + c[k], 0);
       const imp = sum("impressions"), clk = sum("clicks"), reg = sum("registrations");
       const tut = sum("tutorial_completers"), p7 = sum("day7_payers");
       return [imp ? clk / imp : 0, reg ? clk / reg : 0, reg ? tut / reg : 0, reg ? p7 / reg : 0];
+    }
+
+    function poolCounts(list) {
+      const sum = (k) => list.reduce((a, c) => a + c[k], 0);
+      return [sum("impressions"), sum("clicks"), sum("registrations"), sum("tutorial_completers"), sum("day7_payers")];
+    }
+
+    // Funnel panel: centered bars whose width is log10 of the pooled count — a
+    // linear scale would hide the small stages. Labels carry the exact counts.
+    function funnelTrace(counts, color, axis) {
+      const widths = counts.map((c) => (c > 0 ? Math.log10(c) : 0));
+      const top = counts[0] || 1;
+      return {
+        type: "bar", orientation: "h", xaxis: axis,
+        y: stages, x: widths, base: widths.map((w) => -w / 2),
+        marker: { color: color },
+        text: counts.map(fmtCount),
+        textposition: "outside", cliponaxis: false,
+        customdata: counts.map((c, i) =>
+          fmtCount(c) + " · " + ((c / top) * 100).toFixed(2) + "% of impressions · " +
+          (i === 0 ? "funnel top" : ((c / (counts[i - 1] || 1)) * 100).toFixed(1) + "% of previous stage")),
+        hovertemplate: "%{y}: %{customdata}<extra></extra>",
+      };
+    }
+
+    function funnelLayout(nMeets, nAbove, threshold) {
+      return Object.assign({}, baseLayout(), {
+        margin: { l: 120, r: 70, t: 64, b: 24 },
+        xaxis: { domain: [0, 0.45], visible: false, showgrid: false, zeroline: false },
+        xaxis2: { domain: [0.55, 1], visible: false, showgrid: false, zeroline: false },
+        yaxis: { autorange: "reversed", showgrid: false, zeroline: false, tickfont: { family: FONT, size: 12, color: PALETTE.muted } },
+        yaxis2: { anchor: "x2", autorange: "reversed", showticklabels: false, showgrid: false, zeroline: false },
+        annotations: [
+          { xref: "paper", yref: "paper", x: 0, y: 1.13, xanchor: "left", showarrow: false,
+            text: "Meets $" + threshold + " screen (" + nMeets + " campaigns)", font: { size: 13, color: PALETTE.meets } },
+          { xref: "paper", yref: "paper", x: 0.55, y: 1.13, xanchor: "left", showarrow: false,
+            text: "Above $" + threshold + " screen (" + nAbove + " campaigns)", font: { size: 13, color: PALETTE.above } },
+        ],
+        showlegend: false,
+        title: { text: "Pooled funnel counts by screening group", font: { size: 14 } },
+      });
     }
 
     function update() {
@@ -97,22 +164,15 @@
         shapes: [{ type: "line", x0: t, x1: t, y0: -0.5, y1: rows.length - 0.5, line: { color: PALETTE.muted, width: 1.8, dash: "dash" } }],
         annotations: [{ x: t, y: rows.length - 0.4, text: "$" + t + " screen", showarrow: false, font: { size: 12, color: PALETTE.muted } }],
         showlegend: false,
-        title: { text: "Cost per day-7 payer by campaign, against the screening threshold", font: { size: 14 } },
+        title: { text: "Cost per day-7 payer vs the $" + t + " screen", font: { size: 14 } },
       });
       Plotly.react(chart, [bar], layout, CFG);
 
       const fm = pooled(meets), fa = pooled(above);
       Plotly.react(funnelEl, [
-        { type: "bar", name: "Meets target", x: funnelX, y: fm, marker: { color: PALETTE.meets },
-          text: fm.map(pct), textposition: "outside", cliponaxis: false, hovertemplate: "%{x}: %{text}<extra></extra>" },
-        { type: "bar", name: "Above target", x: funnelX, y: fa, marker: { color: PALETTE.above },
-          text: fa.map(pct), textposition: "outside", cliponaxis: false, hovertemplate: "%{x}: %{text}<extra></extra>" },
-      ], Object.assign({}, baseLayout(), {
-        barmode: "group",
-        yaxis: { title: { text: "Rate", font: { size: 12, color: PALETTE.muted } }, gridcolor: PALETTE.line, tickformat: ".0%" },
-        legend: { orientation: "h", y: 1.12 },
-        title: { text: "Pooled funnel rates for the two screening groups", font: { size: 14 } },
-      }), CFG);
+        funnelTrace(poolCounts(meets), PALETTE.meets, "x"),
+        funnelTrace(poolCounts(above), PALETTE.above, "x2"),
+      ], funnelLayout(meets.length, above.length, t), CFG);
 
       const names = meets.map((r) => r.label).join(", ") || "none";
       const gap = fm[2] - fa[2];
@@ -128,50 +188,59 @@
     update();
   }
 
-  /* ------------------------------------------------ 2. ARPU windows */
+  /* ------------------------------------------------ 2. ARPU by window */
   async function arpuWindows() {
     const chart = document.getElementById("arpu-chart");
     const caption = document.getElementById("arpu-caption");
-    const row = document.getElementById("arpu-buttons");
     if (!chart) return;
 
     const data = await load("data/campaigns.json").catch((e) => { fail("arpu-caption", e.message); return null; });
     if (!data) return;
     const rows = Object.entries(data.campaigns).map(([key, v]) => Object.assign({ key }, v)).sort((a, b) => a.label.localeCompare(b.label));
     const windows = [7, 14, 30, 90, 180];
-    let window = 7;
 
     function update() {
-      const values = rows.map((r) => r.arpu_rule_a[String(window)]);
-      const colors = rows.map((r) => (r.cpp <= 50 ? PALETTE.meets : PALETTE.above));
-      Plotly.react(chart, [{
-        type: "bar", x: rows.map((r) => r.label), y: values,
-        marker: { color: colors },
-        text: values.map(usd), textposition: "outside", cliponaxis: false,
-        hovertemplate: "Campaign %{x}: %{text}<extra></extra>",
-      }], Object.assign({}, baseLayout(), {
-        yaxis: { title: { text: "Revenue per registered user (USD)", font: { size: 12, color: PALETTE.muted } }, gridcolor: PALETTE.line, rangemode: "tozero" },
-        xaxis: { title: { text: "Campaign (teal = meets $50 screen, brick = above)", font: { size: 12, color: PALETTE.muted } }, gridcolor: PALETTE.line },
+      // Hue = screen group, lightness = campaign within the group.
+      const meetsRows = rows.filter((x) => x.cpp <= 50);
+      const aboveRows = rows.filter((x) => x.cpp > 50);
+      const shade = (r) => {
+        const g = r.cpp <= 50 ? meetsRows : aboveRows;
+        return shadeFamily(r.cpp <= 50 ? PALETTE.meets : PALETTE.above, g.indexOf(r), g.length);
+      };
+
+      const traces = rows.map((r) => ({
+        type: "scatter", mode: "lines+text",
+        x: windows,
+        y: windows.map((w) => r.arpu_rule_a[String(w)]),
+        line: { color: shade(r), width: 2.5 },
+        text: [null, null, null, null, r.label],
+        textposition: "middle right",
+        textfont: { family: FONT, size: 12, color: shade(r) },
+        hovertemplate: "Campaign " + r.label + ": %{y:$,.2f} at %{x} days<extra></extra>",
+      }));
+
+      Plotly.react(chart, traces, Object.assign({}, baseLayout(), {
+        margin: { l: 60, r: 56, t: 36, b: 56 },
+        xaxis: {
+          type: "log", range: [Math.log10(5.5), Math.log10(380)],
+          tickvals: windows, ticktext: windows.map((w) => w + " d"),
+          title: { text: "Observation window (days, log scale)", font: { size: 12, color: PALETTE.muted } },
+          gridcolor: PALETTE.line, zeroline: false,
+        },
+        yaxis: { title: { text: "Revenue per registered user (USD, whole-day rule)", font: { size: 12, color: PALETTE.muted } }, gridcolor: PALETTE.line, rangemode: "tozero" },
         showlegend: false,
-        title: { text: "Revenue per registered user at the " + window + "-day window (whole-day rule)", font: { size: 14 } },
+        title: { text: "ARPU by observation window (whole-day rule)", font: { size: 14 } },
       }), CFG);
 
-      Array.prototype.forEach.call(row.querySelectorAll("button"), (b) => {
-        b.classList.toggle("active", Number(b.dataset.window) === window);
-      });
-
+      const byWindow = (w) => rows.slice().sort((a, b) => b.arpu_rule_a[w] - a.arpu_rule_a[w]);
+      const top7 = byWindow("7")[0], top180 = byWindow("180")[0], last180 = byWindow("180").slice(-1)[0];
       caption.innerHTML =
-        "<b>Window: " + window + " days.</b> ARPU = in-window payment revenue / registered users in the campaign; non-payers stay at zero. " +
+        "<b>Ranking is not stable:</b> campaign " + top7.label + " leads at 7 days (" + usd(top7.arpu_rule_a["7"]) + ") but campaign " + top180.label + " leads at 180 days (" + usd(top180.arpu_rule_a["180"]) + "), while campaign " + last180.label + " stays last. " +
+        "ARPU = in-window payment revenue / registered users in the campaign; non-payers stay at zero. " +
         "Windows are whole-day truncations, and longer windows include registrants without a full observation window — that understates their ARPU. " +
         "The 6,686 registrations without a campaign value are not in any denominator.";
     }
 
-    row.addEventListener("click", (e) => {
-      const btn = e.target.closest("button");
-      if (!btn) return;
-      window = Number(btn.dataset.window);
-      update();
-    });
     REDRAWS.push(update);
     update();
   }
@@ -180,86 +249,82 @@
   async function ehDistribution() {
     const chart = document.getElementById("eh-chart");
     const caption = document.getElementById("eh-caption");
-    const row = document.getElementById("eh-buttons");
     if (!chart) return;
 
     const res = await Promise.all([load("data/users_e.json"), load("data/users_h.json"), load("data/eh.json")])
       .catch((e) => { fail("eh-caption", e.message); return null; });
     if (!res) return;
     const [eVals, hVals, meta] = res;
-    let mode = "log";
 
     const zeroShare = (vals) => vals.filter((v) => v === 0).length / vals.length;
 
-    function logBins() {
-      const edges = [0, 0.1, 0.3, 1, 3, 10, 30, 100, 300, Infinity];
-      const labels = ["0", "< $0.10", "$0.10–0.30", "$0.30–1", "$1–3", "$3–10", "$10–30", "$30–100", "$100–300", "≥ $300"];
-      const bin = (vals) => {
-        const counts = new Array(edges.length - 1).fill(0);
-        for (const v of vals) {
-          if (v === 0) continue;
-          for (let i = 0; i < edges.length - 1; i++) {
-            if (v >= edges[i] && v < edges[i + 1]) { counts[i]++; break; }
-          }
-        }
-        return [vals.filter((v) => v === 0).length].concat(counts);
-      };
-      return { labels, e: bin(eVals), h: bin(hVals) };
-    }
-
-    function linearBins() {
-      const all = eVals.concat(hVals);
-      const sorted = all.slice().sort((a, b) => a - b);
-      const p99 = sorted[Math.floor(sorted.length * 0.99)];
-      const nbins = 50;
-      const step = p99 / nbins;
-      const labels = [], counts = { e: [], h: [] };
-      for (let i = 0; i < nbins; i++) labels.push((i * step).toFixed(1));
-      labels.push("≥ " + p99.toFixed(0));
-      const bin = (vals) => {
-        const c = new Array(nbins + 1).fill(0);
-        for (const v of vals) {
-          const i = v >= p99 ? nbins : Math.min(nbins - 1, Math.floor(v / step));
-          c[i]++;
-        }
-        return c;
-      };
-      counts.e = bin(eVals); counts.h = bin(hVals);
-      return { labels, e: counts.e, h: counts.h };
+    // Empirical survival curve: at each dollar amount x, the share of ALL
+    // campaign users (non-payers included) whose 7-day total reaches x.
+    function survival(vals) {
+      const n = vals.length;
+      const sorted = vals.filter((v) => v > 0).sort((a, b) => a - b);
+      return { xs: sorted, ys: sorted.map((_, i) => (sorted.length - i) / n) };
     }
 
     function update() {
-      const b = mode === "log" ? logBins() : linearBins();
-      const shared = { textposition: "outside", cliponaxis: false, hovertemplate: "%{x}: %{y} users<extra></extra>" };
+      const se = survival(eVals), sh = survival(hVals);
       Plotly.react(chart, [
-        Object.assign({ type: "bar", name: "Campaign E", x: b.labels, y: b.e, marker: { color: PALETTE.meets } }, shared),
-        Object.assign({ type: "bar", name: "Campaign H", x: b.labels, y: b.h, marker: { color: PALETTE.above, opacity: 0.75 } }, shared),
+        { type: "scatter", mode: "lines", x: se.xs, y: se.ys,
+          line: { color: PALETTE.meets, width: 2.5, shape: "hv" },
+          hovertemplate: "E · %{y:.2%} of users reach $%{x:.2f}<extra></extra>" },
+        { type: "scatter", mode: "lines", x: sh.xs, y: sh.ys,
+          line: { color: PALETTE.above, width: 2.5, shape: "hv" },
+          hovertemplate: "H · %{y:.2%} of users reach $%{x:.2f}<extra></extra>" },
       ], Object.assign({}, baseLayout(), {
-        barmode: "group",
-        xaxis: { title: { text: mode === "log" ? "7-day payment total per user (USD, log-spaced bins; non-payers = 0)" : "7-day payment total per user (USD; non-payers = 0)", font: { size: 12, color: PALETTE.muted } }, gridcolor: PALETTE.line, tickangle: -30 },
-        yaxis: { title: { text: "Users", font: { size: 12, color: PALETTE.muted } }, gridcolor: PALETTE.line },
-        legend: { orientation: "h", y: 1.12 },
-        title: { text: "User-level 7-day payment totals: skew and a mass of zeros", font: { size: 14 } },
+        xaxis: { type: "log", title: { text: "7-day payment total per user (USD, log scale; payers only)", font: { size: 12, color: PALETTE.muted } }, gridcolor: PALETTE.line, zeroline: false },
+        yaxis: { type: "log", title: { text: "Share of campaign users reaching $x (log scale)", font: { size: 12, color: PALETTE.muted } }, tickformat: ".2%", gridcolor: PALETTE.line },
+        showlegend: false,
+        title: { text: "Share of users reaching $x — campaign E vs H", font: { size: 14 } },
       }), CFG);
 
-      Array.prototype.forEach.call(row.querySelectorAll("button"), (b2) => b2.classList.toggle("active", b2.dataset.mode === mode));
       caption.innerHTML =
-        "<b>" + meta.E.users.toLocaleString() + " users in E, " + meta.H.users.toLocaleString() + " in H</b>; zeros: " +
-        pct(zeroShare(eVals)) + " vs " + pct(zeroShare(hVals)) + ". Mann–Whitney on the user-level totals: p ≈ " + meta.mann_whitney_p +
+        "<b>Read the curve top-down:</b> at any $x, the share of users whose 7-day total reaches it. The drop at the left edge is the zero mass — non-payers are " +
+        pct(zeroShare(eVals)) + " of campaign E and " + pct(zeroShare(hVals)) + " of campaign H. " +
+        "<b>" + meta.E.users.toLocaleString() + " users in E, " + meta.H.users.toLocaleString() + " in H</b>; Mann–Whitney on the user-level totals: p ≈ " + meta.mann_whitney_p +
         ". The pair (E vs H) was chosen after inspecting the data and no effect size or confidence interval is reported — this comparison is exploratory, not a result to ship on.";
     }
 
-    row.addEventListener("click", (e) => {
-      const btn = e.target.closest("button");
-      if (!btn) return;
-      mode = btn.dataset.mode;
-      update();
-    });
     REDRAWS.push(update);
     update();
   }
 
-  /* ------------------------------------------------ 4. Sample-size calculator */
+  /* ------------------------------------------------ 4. Exploratory cohort curve */
+  async function cohortCumulative() {
+    const chart = document.getElementById("cum-chart");
+    const caption = document.getElementById("cum-caption");
+    if (!chart) return;
+
+    const data = await load("data/cohort_cumulative.json").catch((e) => { fail("cum-caption", e.message); return null; });
+    if (!data) return;
+
+    function update() {
+      Plotly.react(chart, [{
+        type: "scatter", mode: "lines",
+        x: data.dar, y: data.cumulative_revenue,
+        line: { color: PALETTE.meets, width: 2.5 },
+        hovertemplate: "day %{x}: $%{y:.2f}<extra></extra>",
+      }], Object.assign({}, baseLayout(), {
+        xaxis: { title: { text: "Days after registration (whole-day steps)", font: { size: 12, color: PALETTE.muted } }, gridcolor: PALETTE.line, zeroline: false, dtick: 10, range: [0, 100] },
+        yaxis: { title: { text: "Cumulative payment revenue (USD)", font: { size: 12, color: PALETTE.muted } }, gridcolor: PALETTE.line, rangemode: "tozero" },
+        showlegend: false,
+        title: { text: "Exploratory cumulative revenue, tutorial-completer cohort", font: { size: 14 } },
+      }), CFG);
+
+      caption.innerHTML =
+        "<b>" + data.cohort_users.toLocaleString() + " cohort users</b>; the curve reaches " + usd(data.final_revenue) + " after 100 whole-day steps. " +
+        "It replays the notebook's exploratory SQL exactly — including its two known defects: revenue is not aggregated per day before the running sum, and elapsed days are truncated to whole days. Not a validated LTV estimate.";
+    }
+
+    REDRAWS.push(update);
+    update();
+  }
+
+  /* ------------------------------------------------ 5. Sample-size calculator */
   async function sampleCalculator() {
     const liftEl = document.getElementById("calc-lift");
     const dailyEl = document.getElementById("calc-daily");
@@ -299,7 +364,7 @@
       applyChartTheme();
       REDRAWS.forEach((fn) => fn());
     });
-    [cppExplorer, arpuWindows, ehDistribution, sampleCalculator].forEach((fn) =>
+    [cppExplorer, arpuWindows, ehDistribution, cohortCumulative, sampleCalculator].forEach((fn) =>
       fn().catch((e) => console.error(fn.name, e))
     );
   });

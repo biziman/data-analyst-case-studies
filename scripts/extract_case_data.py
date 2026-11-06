@@ -12,6 +12,7 @@ Outputs (docs/cases/01-mobile-game-acquisition/):
   data/users_e.json       user-level 168-hour payment totals, campaign E (non-payers = 0)
   data/users_h.json       same, campaign H
   data/experiment.json    exact day-3 baseline + verified sample-size reference
+  data/cohort_cumulative.json  exploratory cohort cumulative revenue (section 5 SQL)
   data/meta.json          verified headline numbers for page captions
   preview.png             the notebook's CPP figure (post preview image)
 
@@ -19,8 +20,10 @@ Run from the repository root:  python3 scripts/extract_case_data.py
 """
 import base64
 import csv
+import datetime
 import json
 import math
+import sqlite3
 from pathlib import Path
 from statistics import NormalDist
 
@@ -33,6 +36,54 @@ DAY = 86400
 H168 = 168 * 3600
 H72 = 72 * 3600
 WINDOWS = [7, 14, 30, 90, 180]
+
+# Verbatim copy of the notebook's exploratory cohort query (section 5), quirks
+# included: daily revenue is not aggregated before the running sum, and elapsed
+# days are truncated to whole days via strftime('%J'). Not a validated LTV curve.
+COHORT_SQL = """
+WITH cohort AS (
+    SELECT
+        r.id,
+        r.reg_ts,
+        t.tut_ts
+    FROM registration r
+    JOIN tutorial t ON r.id = t.id
+    WHERE r.date BETWEEN '2020-05-10' AND '2020-05-20'
+        AND CAST((strftime('%s', t.tut_ts) - strftime('%s', r.reg_ts)) AS REAL) / (60 * 60) <= 168
+),
+
+payments AS (
+    SELECT
+        p.id,
+        p.date AS date_pay,
+        p.payment,
+        CAST(strftime('%J', p.pay_ts) AS INTEGER) - CAST(strftime('%J', c.reg_ts) AS INTEGER) AS dar
+    FROM payment p
+    JOIN cohort c ON p.id = c.id
+    WHERE CAST((strftime('%s', p.pay_ts) - strftime('%s', c.reg_ts)) AS REAL) / (60 * 60 * 24) <= 100
+)
+
+SELECT
+    dar,
+    SUM(payment) OVER (ORDER BY dar) AS revenue
+FROM payments
+GROUP BY dar
+ORDER BY dar
+"""
+
+COHORT_COUNT_SQL = """
+WITH cohort AS (
+    SELECT
+        r.id,
+        r.reg_ts,
+        t.tut_ts
+    FROM registration r
+    JOIN tutorial t ON r.id = t.id
+    WHERE r.date BETWEEN '2020-05-10' AND '2020-05-20'
+        AND CAST((strftime('%s', t.tut_ts) - strftime('%s', r.reg_ts)) AS REAL) / (60 * 60) <= 168
+)
+SELECT COUNT(DISTINCT id) FROM cohort
+"""
 
 
 def read_csv(path):
@@ -186,6 +237,38 @@ def main():
 
     n_at_20 = n_per_arm(baseline_d3, 0.20)
 
+    # ---- Exploratory cohort cumulative revenue (notebook section 5) --------
+    # The notebook writes the parsed DataFrames to SQLite (timestamps as ISO
+    # text) and runs COHORT_SQL as-is. Replicate the same storage and query so
+    # the site curve equals the notebook figure, defects included.
+    def iso_epoch(value):
+        dt = datetime.datetime.fromtimestamp(to_ts(value), datetime.UTC)
+        return dt.strftime("%Y-%m-%d %H:%M:%S")
+
+    def iso_date(value):
+        dt = datetime.datetime.strptime(value.strip()[:10], "%Y-%m-%d")
+        return dt.strftime("%Y-%m-%d %H:%M:%S")
+
+    conn = sqlite3.connect(":memory:")
+    conn.execute("CREATE TABLE registration (id INTEGER, date TEXT, reg_ts TEXT)")
+    conn.execute("CREATE TABLE tutorial (id INTEGER, tut_ts TEXT)")
+    conn.execute("CREATE TABLE payment (id INTEGER, date TEXT, payment REAL, pay_ts TEXT)")
+    conn.executemany(
+        "INSERT INTO registration VALUES (?,?,?)",
+        [(int(r["id"]), iso_date(r["date"]), iso_epoch(r["ts"])) for r in regs],
+    )
+    conn.executemany(
+        "INSERT INTO tutorial VALUES (?,?)",
+        [(int(r["id"]), iso_epoch(r["ts"])) for r in tuts],
+    )
+    conn.executemany(
+        "INSERT INTO payment VALUES (?,?,?,?)",
+        [(int(r["id"]), iso_date(r["date"]), float(r["payment"]), iso_epoch(r["ts"])) for r in pays],
+    )
+    curve = conn.execute(COHORT_SQL).fetchall()
+    cohort_users = conn.execute(COHORT_COUNT_SQL).fetchone()[0]
+    conn.close()
+
     # ---- Assertions against the verified README numbers -------------------
     checks = []
 
@@ -205,6 +288,15 @@ def main():
     check("H ARPU7 rule B = 0.29", round(sum(h_totals) / h_n, 2), 0.29, 0.005)
     check("baseline D3 = 4.17%", round(baseline_d3, 4), 0.0417, 0.00005)
     check("n/arm at +20% ~ 7,764", n_at_20, 7764, 15)
+
+    # Notebook section 5 output (printed head(10)) pins the SQL replication.
+    notebook_head10 = [0.265862, 0.696989, 1.516430, 1.954045, 2.144192,
+                       2.647320, 3.726996, 4.225959, 5.003428, 5.446836]
+    for i, want in enumerate(notebook_head10):
+        check(f"cohort curve dar={i}", curve[i][1], want, 0.000001)
+    check("cohort curve rows = 101", len(curve), 101)
+    check("cohort curve spans dar 0-100", f"{curve[0][0]}-{curve[-1][0]}", "0-100")
+    check("cohort curve final ~ 467.45", curve[-1][1], 467.45, 0.005)
 
     failed = [c for c in checks if not c[1]]
     for name, ok, got, want in checks:
@@ -229,6 +321,14 @@ def main():
 
     (DATA_OUT / "users_e.json").write_text(json.dumps([round(v, 2) for v in e_totals]))
     (DATA_OUT / "users_h.json").write_text(json.dumps([round(v, 2) for v in h_totals]))
+
+    (DATA_OUT / "cohort_cumulative.json").write_text(json.dumps({
+        "dar": [int(r[0]) for r in curve],
+        "cumulative_revenue": [round(r[1], 2) for r in curve],
+        "cohort_users": cohort_users,
+        "final_revenue": round(curve[-1][1], 2),
+        "exploratory": True,
+    }, indent=1))
 
     (DATA_OUT / "experiment.json").write_text(json.dumps({
         "baseline_d3": baseline_d3,

@@ -52,7 +52,7 @@
   --on-teal: #ffffff;
   --shadow: rgba(32, 36, 42, 0.05);
   --maxprose: 760px;
-  --maxfig: 980px;
+  --maxfig: 1120px;
 }
 
 /* Dark theme: set on <html data-theme="dark"> by the head snippet in the
@@ -151,6 +151,8 @@ section h3 { font-size: 19px; margin: 24px 0 8px; }
 
 p { margin: 10px 0; text-wrap: pretty; }
 .lede { font-size: 19px; line-height: 1.6; color: var(--muted); }
+/* The hero title sits at the wrap edge; keep the lede on the same line. */
+.hero .prose { margin-left: 0; margin-right: 0; }
 
 /* ---------- hero ---------- */
 .hero { padding: 56px 0 40px; background: var(--sand); border-bottom: 1px solid var(--line); }
@@ -181,8 +183,17 @@ p { margin: 10px 0; text-wrap: pretty; }
   box-shadow: 0 1px 3px var(--shadow);
 }
 .card h3 { margin-top: 0; }
-.chart { width: 100%; min-height: 340px; }
-.chart.tall { min-height: 420px; }
+
+/* ---------- chart color keys ---------- */
+.key {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 6px 22px;
+  font-size: 13px; color: var(--muted); margin: 2px 0 4px;
+}
+.key .item { display: inline-flex; align-items: center; gap: 7px; }
+.key .swatch { width: 12px; height: 12px; border-radius: 3px; background: var(--c); }
+.key .line { width: 20px; height: 0; border-top: 3px solid var(--c); border-radius: 2px; }
+.chart { width: 100%; min-height: 380px; }
+.chart.tall { min-height: 460px; }
 .caption {
   font-size: 13.5px; color: var(--muted); line-height: 1.55;
   border-top: 1px dashed var(--line); padding-top: 10px; margin-top: 8px;

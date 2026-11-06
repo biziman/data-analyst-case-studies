@@ -34,7 +34,7 @@
       "heading": "Which campaigns clear the $50 screen?",
       "paragraphs": [
         "CPP divides a campaign's May cost by its day-7 payers — a payer is a registered user with at least one payment within 168 hours of registration. The screen labels CPP ≤ $50 as meets target and CPP > $50 as above target.",
-        "Drag the threshold. Campaign membership, both pooled funnel charts, and the caption recompute together. At the default $50, three campaigns meet the screen: B at $40.00, E at $43.70, G at $44.80. The pooled gap in tutorial completion (53.85% vs 47.17%) describes the groups; it does not show that cheap campaigns produce better players."
+        "Drag the threshold. Campaign membership, the funnel below, and the caption recompute together. At the default $50, three campaigns meet the screen: B at $40.00, E at $43.70, G at $44.80. The pooled gap in tutorial completion (53.85% vs 47.17%) describes the groups; it does not show that cheap campaigns produce better players."
       ]
     },
     {
@@ -42,7 +42,7 @@
       "widget": "arpu_windows",
       "heading": "Does the ranking hold across observation windows?",
       "paragraphs": [
-        "ARPU divides in-window payment revenue by registered users in the campaign, with non-payers kept at zero. Switch the window from 7 to 180 days: values move, and longer windows silently include registrants who never had a full follow-up period — which understates their ARPU.",
+        "ARPU divides in-window payment revenue by registered users in the campaign, with non-payers kept at zero. Each line follows one campaign across the observation windows: values rise, lines cross, and longer windows silently include registrants who never had a full follow-up period — which understates their ARPU.",
         "There is also a definitional trap in the source notebook: two window rules disagree for the same metric (see the note under the chart). The rule, not the data, explains the difference — so any ARPU number in a report is meaningless without its window contract."
       ]
     },
@@ -51,8 +51,17 @@
       "widget": "eh_distribution",
       "heading": "Campaign E vs H: what the test actually saw",
       "paragraphs": [
-        "Campaign E's strict 168-hour ARPU is $0.68; campaign H's is $0.29. A Mann–Whitney U test on user-level payment totals reports p ≈ 0.0007. Both distributions are skewed with a large mass of zeros — switch the scale and look at them before believing any single number.",
+        "Campaign E's strict 168-hour ARPU is $0.68; campaign H's is $0.29. A Mann–Whitney U test on user-level payment totals reports p ≈ 0.0007. Both distributions are skewed with a large mass of zeros — the curve below shows the full distribution at once: at any $x, the share of users whose 7-day total reaches it.",
         "Two caveats travel with that p-value: no effect size or confidence interval is reported, and the E/H pair was selected after inspecting the data. Treat it as a lead worth a clean experiment, not as a finding."
+      ]
+    },
+    {
+      "type": "widget",
+      "widget": "cohort_cumulative",
+      "heading": "Exploratory cohort revenue curve",
+      "paragraphs": [
+        "The notebook's last figure follows 5,421 users who registered between May 10 and May 20 (the query's date filter) and completed the tutorial within 168 hours, then plots their cumulative payment revenue over the first 100 whole-day steps after registration. The curve ends near $467.",
+        "It renders the notebook's SQL exactly as written, defects and all: daily revenue is not aggregated before the cumulative sum, and elapsed days are truncated to whole days. Read it as a map of the cohort method and its traps — not as an LTV estimate."
       ]
     },
     {

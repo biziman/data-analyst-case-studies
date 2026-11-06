@@ -45,9 +45,13 @@
   </div>
 <section class="band"><div class="wrap prose"><h2>What this page shows</h2><p>The notebook compares eight acquisition campaigns on cost per day-7 payer, funnel rates, and revenue per registered player, then sizes a follow-up experiment. Every number below is computed from the four files in the repository — drag the controls and the answers change with them.</p><p>The data is real: records from a mobile-game hiring assessment, employer and game anonymized. This is a portfolio demonstration, not a client outcome.</p></div></section>
 <section class="band"><div class="wrap"><h2 class="prose">The four datasets</h2><table class="data"><thead><tr><th>File</th><th>One row per</th><th>Size and coverage</th></tr></thead><tbody><tr><td>registration.csv</td><td class="num">registration</td><td class="num">43,830 rows; 6,686 without a campaign value</td></tr><tr><td>payment.csv</td><td class="num">payment</td><td class="num">29,444 rows; through 2020-12-31</td></tr><tr><td>tutorial.csv</td><td class="num">tutorial completion</td><td class="num">21,299 rows</td></tr><tr><td>ad_data.csv</td><td class="num">campaign-day</td><td class="num">41 rows; May 2020</td></tr></tbody></table></div></section>
-<section class="band alt"><div class="wrap"><div class="prose"><h2>Which campaigns clear the $50 screen?</h2><p>CPP divides a campaign&#x27;s May cost by its day-7 payers — a payer is a registered user with at least one payment within 168 hours of registration. The screen labels CPP ≤ $50 as meets target and CPP &gt; $50 as above target.</p><p>Drag the threshold. Campaign membership, both pooled funnel charts, and the caption recompute together. At the default $50, three campaigns meet the screen: B at $40.00, E at $43.70, G at $44.80. The pooled gap in tutorial completion (53.85% vs 47.17%) describes the groups; it does not show that cheap campaigns produce better players.</p></div>
+<section class="band alt"><div class="wrap"><div class="prose"><h2>Which campaigns clear the $50 screen?</h2><p>CPP divides a campaign&#x27;s May cost by its day-7 payers — a payer is a registered user with at least one payment within 168 hours of registration. The screen labels CPP ≤ $50 as meets target and CPP &gt; $50 as above target.</p><p>Drag the threshold. Campaign membership, the funnel below, and the caption recompute together. At the default $50, three campaigns meet the screen: B at $40.00, E at $43.70, G at $44.80. The pooled gap in tutorial completion (53.85% vs 47.17%) describes the groups; it does not show that cheap campaigns produce better players.</p></div>
   <div class="card">
     <h3>Which campaigns clear the $50 screen?</h3>
+    <div class="key">
+      <span class="item"><span class="swatch" style="--c: var(--teal)"></span> Meets the $50 screen</span>
+      <span class="item"><span class="swatch" style="--c: var(--brick)"></span> Above the $50 screen</span>
+    </div>
     <div class="controls">
       <label for="cpp-threshold">Screening threshold</label>
       <input type="range" id="cpp-threshold" min="20" max="80" step="1" value="50">
@@ -58,21 +62,18 @@
     <div id="cpp-funnel" class="chart"></div>
     <div class="caption">Assessment data (anonymized): 41 daily cost rows, May 2020;
       registrations 2020-05-01 to 2020-05-31. Cost rows and payer cohorts are not aligned
-      to the same dates. Screening metric only, not a budget result. Each rate pools counts
-      across the campaigns in its group and is not a causal comparison.</div>
+      to the same dates. Screening metric only, not a budget result. Funnel bars pool counts
+      across the campaigns in their group: bar width uses a log10 scale so the small stages
+      stay visible, and the labels give the exact pooled counts. Descriptive — not a causal
+      comparison.</div>
   </div></div></section>
-<section class="band alt"><div class="wrap"><div class="prose"><h2>Does the ranking hold across observation windows?</h2><p>ARPU divides in-window payment revenue by registered users in the campaign, with non-payers kept at zero. Switch the window from 7 to 180 days: values move, and longer windows silently include registrants who never had a full follow-up period — which understates their ARPU.</p><p>There is also a definitional trap in the source notebook: two window rules disagree for the same metric (see the note under the chart). The rule, not the data, explains the difference — so any ARPU number in a report is meaningless without its window contract.</p></div>
+<section class="band alt"><div class="wrap"><div class="prose"><h2>Does the ranking hold across observation windows?</h2><p>ARPU divides in-window payment revenue by registered users in the campaign, with non-payers kept at zero. Each line follows one campaign across the observation windows: values rise, lines cross, and longer windows silently include registrants who never had a full follow-up period — which understates their ARPU.</p><p>There is also a definitional trap in the source notebook: two window rules disagree for the same metric (see the note under the chart). The rule, not the data, explains the difference — so any ARPU number in a report is meaningless without its window contract.</p></div>
   <div class="card">
     <h3>Does the ranking hold across observation windows?</h3>
-    <div class="controls">
-      <label>Observation window</label>
-      <div class="btnrow" id="arpu-buttons">
-        <button data-window="7" class="active">7 days</button>
-        <button data-window="14">14 days</button>
-        <button data-window="30">30 days</button>
-        <button data-window="90">90 days</button>
-        <button data-window="180">180 days</button>
-      </div>
+    <div class="key">
+      <span class="item"><span class="line" style="--c: var(--teal)"></span> Meets the $50 screen (B, E, G)</span>
+      <span class="item"><span class="line" style="--c: var(--brick)"></span> Above the screen (A, C, D, F, H)</span>
+      <span class="item">a letter at each line's end marks the campaign</span>
     </div>
     <div id="arpu-chart" class="chart"></div>
     <div class="callout"><b>Same metric, two rules:</b> campaign E reads
@@ -80,23 +81,32 @@
       168-hour window. The window rule — not the data — explains the gap.</div>
     <div id="arpu-caption" class="live">Loading…</div>
     <div class="caption">Assessment data (anonymized). ARPU denominators are registered users
-      per campaign with non-payers at zero; teal = meets the $50 screen, brick = above it.</div>
+      per campaign with non-payers at zero.</div>
   </div></div></section>
-<section class="band alt"><div class="wrap"><div class="prose"><h2>Campaign E vs H: what the test actually saw</h2><p>Campaign E&#x27;s strict 168-hour ARPU is $0.68; campaign H&#x27;s is $0.29. A Mann–Whitney U test on user-level payment totals reports p ≈ 0.0007. Both distributions are skewed with a large mass of zeros — switch the scale and look at them before believing any single number.</p><p>Two caveats travel with that p-value: no effect size or confidence interval is reported, and the E/H pair was selected after inspecting the data. Treat it as a lead worth a clean experiment, not as a finding.</p></div>
+<section class="band alt"><div class="wrap"><div class="prose"><h2>Campaign E vs H: what the test actually saw</h2><p>Campaign E&#x27;s strict 168-hour ARPU is $0.68; campaign H&#x27;s is $0.29. A Mann–Whitney U test on user-level payment totals reports p ≈ 0.0007. Both distributions are skewed with a large mass of zeros — the curve below shows the full distribution at once: at any $x, the share of users whose 7-day total reaches it.</p><p>Two caveats travel with that p-value: no effect size or confidence interval is reported, and the E/H pair was selected after inspecting the data. Treat it as a lead worth a clean experiment, not as a finding.</p></div>
   <div class="card">
     <h3>Campaign E vs H: what the test actually saw</h3>
-    <div class="controls">
-      <label>Scale</label>
-      <div class="btnrow" id="eh-buttons">
-        <button data-mode="log" class="active">Log-spaced bins</button>
-        <button data-mode="linear">Linear (0–p99)</button>
-      </div>
+    <div class="key">
+      <span class="item"><span class="line" style="--c: var(--teal)"></span> Campaign E</span>
+      <span class="item"><span class="line" style="--c: var(--brick)"></span> Campaign H</span>
     </div>
     <div id="eh-chart" class="chart tall"></div>
     <div id="eh-caption" class="live">Loading…</div>
     <div class="caption">Assessment data (anonymized). Payments within 168 h of registration,
-      summed per user; non-payers kept at 0. Descriptive panels — the rank test is exploratory
-      because the campaign pair was selected after inspecting the data.</div>
+      summed per user; non-payers kept at 0. The curve is descriptive — the rank test is
+      exploratory because the campaign pair was selected after inspecting the data.</div>
+  </div></div></section>
+<section class="band alt"><div class="wrap"><div class="prose"><h2>Exploratory cohort revenue curve</h2><p>The notebook&#x27;s last figure follows 5,421 users who registered between May 10 and May 20 (the query&#x27;s date filter) and completed the tutorial within 168 hours, then plots their cumulative payment revenue over the first 100 whole-day steps after registration. The curve ends near $467.</p><p>It renders the notebook&#x27;s SQL exactly as written, defects and all: daily revenue is not aggregated before the cumulative sum, and elapsed days are truncated to whole days. Read it as a map of the cohort method and its traps — not as an LTV estimate.</p></div>
+  <div class="card">
+    <h3>Exploratory cohort revenue curve</h3>
+    <div class="key">
+      <span class="item"><span class="line" style="--c: var(--teal)"></span> Cumulative payment revenue (USD)</span>
+    </div>
+    <div id="cum-chart" class="chart"></div>
+    <div id="cum-caption" class="live">Loading…</div>
+    <div class="caption">Renders the notebook's exploratory SQL exactly as written — daily
+      revenue is not aggregated before its cumulative sum and elapsed days are truncated to
+      whole days. Its curve is not a validated LTV estimate. Assessment data (anonymized).</div>
   </div></div></section>
 <section class="band alt"><div class="wrap"><div class="prose"><h2>Design the next test</h2><p>Campaign E&#x27;s baseline day-3 payer conversion is 4.17%. The notebook sizes a follow-up experiment for a 20% relative improvement: about 7,764 users per arm for a one-sided test at α = 0.05 with 80% power — roughly 15.5 days at 1,000 daily registrations.</p><p>Move the sliders to price other targets. The formula behind the readout is the one the notebook uses; eligibility rules, exposure logging, guardrails and a stopping rule still have to be defined before this becomes a real test.</p></div>
   <div class="card">
