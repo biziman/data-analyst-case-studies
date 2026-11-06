@@ -5,9 +5,23 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Case 01: Mobile Game A: acquisition analytics — interactive case study</title>
   <meta name="description" content="A mobile-game team must decide whether to shift acquisition spend across its eight campaigns (A–H) after one month of cost and player-activity data.">
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem("theme");
+        if (t !== "light" && t !== "dark") {
+          t = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+        }
+        document.documentElement.dataset.theme = t;
+      } catch (e) {
+        document.documentElement.dataset.theme = "light";
+      }
+    })();
+  </script>
   <link rel="stylesheet" href="../../assets/style.css">
   <script src="../../assets/plotly.min.js"></script>
   <script src="../../assets/widgets.js" defer></script>
+  <script src="../../assets/theme.js" defer></script>
 </head>
 <body>
 <header class="topbar">
@@ -15,6 +29,10 @@
   <nav>
     <a href="../../index.html">All cases</a>
     <a href="https://github.com/biziman/data-analyst-case-studies">Code on GitHub</a>
+    <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch to dark theme" title="Switch to dark theme" aria-pressed="false">
+      <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+    </button>
   </nav>
 </header>
   <div class="hero">

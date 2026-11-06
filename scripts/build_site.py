@@ -5,8 +5,8 @@ Reads one JSON config per case from scripts/cases/*.json and writes:
   docs/index.html                     landing page (all configured cases)
   docs/cases/<slug>/index.html        narrative + widget page (cases with sections)
 
-Assets (style.css, widgets.js, plotly.min.js) live in docs/assets/ and are not
-touched here. Run from the repository root:  python3 scripts/build_site.py
+Assets (style.css, widgets.js, theme.js, plotly.min.js) live in docs/assets/
+and are not touched here. Run from the repository root:  python3 scripts/build_site.py
 """
 import html
 import json
@@ -18,6 +18,22 @@ CASES_DIR = ROOT / "scripts" / "cases"
 DOCS = ROOT / "docs"
 REPO_URL = "https://github.com/biziman/data-analyst-case-studies"
 SITE_TITLE = "Product & marketing analytics — interactive case studies"
+
+# Runs in <head> before first paint: pick the saved theme, else the system
+# preference. The toggle itself lives in TOPBAR and is wired by assets/theme.js.
+THEME_INIT = """  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem("theme");
+        if (t !== "light" && t !== "dark") {
+          t = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+        }
+        document.documentElement.dataset.theme = t;
+      } catch (e) {
+        document.documentElement.dataset.theme = "light";
+      }
+    })();
+  </script>"""
 
 WIDGETS = {
     "cpp_explorer": """
@@ -104,6 +120,10 @@ TOPBAR = """<header class="topbar">
   <nav>
     <a href="{home}">All cases</a>
     <a href="{repo}">Code on GitHub</a>
+    <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch to dark theme" title="Switch to dark theme" aria-pressed="false">
+      <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+    </button>
   </nav>
 </header>"""
 
@@ -173,9 +193,11 @@ def render_case(cfg):
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Case {number:02d}: {esc(cfg["title"])} — interactive case study</title>
   <meta name="description" content="{esc(cfg["decision"])}">
+{THEME_INIT}
   <link rel="stylesheet" href="../../assets/style.css">
   <script src="../../assets/plotly.min.js"></script>
   <script src="../../assets/widgets.js" defer></script>
+  <script src="../../assets/theme.js" defer></script>
 </head>
 <body>
 {TOPBAR.format(home="../../index.html", repo=REPO_URL)}
@@ -221,7 +243,9 @@ def render_index(configs):
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{esc(SITE_TITLE)}</title>
   <meta name="description" content="Interactive walkthroughs of product and marketing analytics case studies: the decision, the data, the verified numbers, and what the analysis cannot show.">
+{THEME_INIT}
   <link rel="stylesheet" href="assets/style.css">
+  <script src="assets/theme.js" defer></script>
 </head>
 <body>
 {TOPBAR.format(home="index.html", repo=REPO_URL)}

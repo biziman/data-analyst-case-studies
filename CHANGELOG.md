@@ -2,6 +2,22 @@
 
 Notable changes to the portfolio cases. Newest entries first. Dates are commit dates.
 
+## 2026-11-06 — Dark theme switcher for the interactive site
+
+- Top-bar toggle (moon/sun) on the landing page and every case page of the
+  GitHub Pages site. The choice persists in `localStorage`, follows the system
+  preference until the visitor picks, and is applied before first paint by a
+  head snippet so there is no light flash on dark systems.
+- Dark palette added to `docs/assets/style.css` as `[data-theme="dark"]`
+  variable overrides (paper/sand/line surfaces, lighter teal/brick/amber
+  accents, `color-scheme: dark` for native controls).
+- `docs/assets/widgets.js` now reads chart colors from the CSS variables and
+  rebuilds every Plotly chart on a `themechange` event, so the interactive
+  figures match the page theme.
+- `docs/assets/theme.js` (new) wires the toggle; `scripts/build_site.py` emits
+  the button and the pre-paint snippet. Site rebuilt with
+  `python3 scripts/build_site.py`.
+
 ## 2026-11-05 — Case review pass, cases 5–8
 
 ### Case 8 — `8-mobile-sdk-metric-drop`

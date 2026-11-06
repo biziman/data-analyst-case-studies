@@ -1,19 +1,39 @@
 /* Interactive widgets for case pages.
    Data is fetched relative to the page (data/*.json), produced by
-   scripts/extract_case_data.py. Palette follows PORTFOLIO_GUIDE.md. */
+   scripts/extract_case_data.py. Palette follows PORTFOLIO_GUIDE.md and
+   tracks the light/dark theme in style.css (see assets/theme.js). */
 
 (function () {
   "use strict";
 
-  const PALETTE = { meets: "#176b8c", above: "#b14632", amber: "#dda944", ink: "#20242a", muted: "#5c6570", line: "#e5e1d8" };
+  const PALETTE = { meets: "#176b8c", above: "#b14632", amber: "#dda944", ink: "#20242a", muted: "#5c6570", line: "#e5e1d8", paper: "#ffffff" };
   const CFG = { displayModeBar: false, responsive: true };
-  const BASE = {
-    font: { family: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', size: 13, color: PALETTE.ink },
-    margin: { l: 60, r: 20, t: 36, b: 56 },
-    paper_bgcolor: "#ffffff",
-    plot_bgcolor: "#ffffff",
-    hoverlabel: { bgcolor: "#ffffff", bordercolor: PALETTE.line },
-  };
+  const FONT = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+
+  /* Chart colors are read from the style.css variables so charts follow the
+     light/dark switcher. REDRAWS collects each widget's update() so a theme
+     change can rebuild every chart with the new colors. */
+  const REDRAWS = [];
+  function applyChartTheme() {
+    const css = getComputedStyle(document.documentElement);
+    const get = (name, fallback) => css.getPropertyValue(name).trim() || fallback;
+    PALETTE.meets = get("--teal", PALETTE.meets);
+    PALETTE.above = get("--brick", PALETTE.above);
+    PALETTE.amber = get("--amber", PALETTE.amber);
+    PALETTE.ink = get("--ink", PALETTE.ink);
+    PALETTE.muted = get("--muted", PALETTE.muted);
+    PALETTE.line = get("--line", PALETTE.line);
+    PALETTE.paper = get("--paper", PALETTE.paper);
+  }
+  function baseLayout() {
+    return {
+      font: { family: FONT, size: 13, color: PALETTE.ink },
+      margin: { l: 60, r: 20, t: 36, b: 56 },
+      paper_bgcolor: PALETTE.paper,
+      plot_bgcolor: PALETTE.paper,
+      hoverlabel: { bgcolor: PALETTE.paper, bordercolor: PALETTE.line },
+    };
+  }
 
   const usd = (v) => "$" + Number(v).toFixed(2);
   const pct = (v) => (v * 100).toFixed(2) + "%";
@@ -43,12 +63,6 @@
       .sort((a, b) => a.cpp - b.cpp);
     const labels = rows.map((r) => r.label);
 
-    const xaxis = Object.assign({}, BASE.xaxis, {
-      title: { text: "Campaign cost / day-7 payers (USD; payer = payment within 168 h of registration)", font: { size: 12, color: PALETTE.muted } },
-      gridcolor: PALETTE.line, zeroline: false,
-    });
-    const yaxis = Object.assign({}, BASE.yaxis, { title: { text: "Campaign", font: { size: 12, color: PALETTE.muted } }, gridcolor: PALETTE.line });
-
     const funnelX = ["Click-through\n(clicks / impressions)", "Registration\n(registrations / clicks)", "Tutorial completion\n(completers / registered)", "Day-7 payer\n(payers / registered)"];
 
     function pooled(list) {
@@ -60,6 +74,11 @@
 
     function update() {
       const t = Number(slider.value);
+      const xaxis = {
+        title: { text: "Campaign cost / day-7 payers (USD; payer = payment within 168 h of registration)", font: { size: 12, color: PALETTE.muted } },
+        gridcolor: PALETTE.line, zeroline: false,
+      };
+      const yaxis = { title: { text: "Campaign", font: { size: 12, color: PALETTE.muted } }, gridcolor: PALETTE.line };
       valueEl.textContent = "$" + t;
       const meets = rows.filter((r) => r.cpp <= t);
       const above = rows.filter((r) => r.cpp > t);
@@ -72,11 +91,11 @@
         marker: { color: rows.map((r) => (r.cpp <= t ? PALETTE.meets : PALETTE.above)) },
         hovertemplate: "%{y}: %{text}<extra></extra>",
       };
-      const layout = Object.assign({}, BASE, {
+      const layout = Object.assign({}, baseLayout(), {
         xaxis: Object.assign({}, xaxis, { range: [0, Math.max.apply(null, rows.map((r) => r.cpp)) * 1.18] }),
         yaxis: yaxis,
-        shapes: [{ type: "line", x0: t, x1: t, y0: -0.5, y1: rows.length - 0.5, line: { color: "#555555", width: 1.8, dash: "dash" } }],
-        annotations: [{ x: t, y: rows.length - 0.4, text: "$" + t + " screen", showarrow: false, font: { size: 12, color: "#555555" } }],
+        shapes: [{ type: "line", x0: t, x1: t, y0: -0.5, y1: rows.length - 0.5, line: { color: PALETTE.muted, width: 1.8, dash: "dash" } }],
+        annotations: [{ x: t, y: rows.length - 0.4, text: "$" + t + " screen", showarrow: false, font: { size: 12, color: PALETTE.muted } }],
         showlegend: false,
         title: { text: "Cost per day-7 payer by campaign, against the screening threshold", font: { size: 14 } },
       });
@@ -88,7 +107,7 @@
           text: fm.map(pct), textposition: "outside", cliponaxis: false, hovertemplate: "%{x}: %{text}<extra></extra>" },
         { type: "bar", name: "Above target", x: funnelX, y: fa, marker: { color: PALETTE.above },
           text: fa.map(pct), textposition: "outside", cliponaxis: false, hovertemplate: "%{x}: %{text}<extra></extra>" },
-      ], Object.assign({}, BASE, {
+      ], Object.assign({}, baseLayout(), {
         barmode: "group",
         yaxis: { title: { text: "Rate", font: { size: 12, color: PALETTE.muted } }, gridcolor: PALETTE.line, tickformat: ".0%" },
         legend: { orientation: "h", y: 1.12 },
@@ -105,6 +124,7 @@
     }
 
     slider.addEventListener("input", update);
+    REDRAWS.push(update);
     update();
   }
 
@@ -129,7 +149,7 @@
         marker: { color: colors },
         text: values.map(usd), textposition: "outside", cliponaxis: false,
         hovertemplate: "Campaign %{x}: %{text}<extra></extra>",
-      }], Object.assign({}, BASE, {
+      }], Object.assign({}, baseLayout(), {
         yaxis: { title: { text: "Revenue per registered user (USD)", font: { size: 12, color: PALETTE.muted } }, gridcolor: PALETTE.line, rangemode: "tozero" },
         xaxis: { title: { text: "Campaign (teal = meets $50 screen, brick = above)", font: { size: 12, color: PALETTE.muted } }, gridcolor: PALETTE.line },
         showlegend: false,
@@ -152,6 +172,7 @@
       window = Number(btn.dataset.window);
       update();
     });
+    REDRAWS.push(update);
     update();
   }
 
@@ -213,7 +234,7 @@
       Plotly.react(chart, [
         Object.assign({ type: "bar", name: "Campaign E", x: b.labels, y: b.e, marker: { color: PALETTE.meets } }, shared),
         Object.assign({ type: "bar", name: "Campaign H", x: b.labels, y: b.h, marker: { color: PALETTE.above, opacity: 0.75 } }, shared),
-      ], Object.assign({}, BASE, {
+      ], Object.assign({}, baseLayout(), {
         barmode: "group",
         xaxis: { title: { text: mode === "log" ? "7-day payment total per user (USD, log-spaced bins; non-payers = 0)" : "7-day payment total per user (USD; non-payers = 0)", font: { size: 12, color: PALETTE.muted } }, gridcolor: PALETTE.line, tickangle: -30 },
         yaxis: { title: { text: "Users", font: { size: 12, color: PALETTE.muted } }, gridcolor: PALETTE.line },
@@ -234,6 +255,7 @@
       mode = btn.dataset.mode;
       update();
     });
+    REDRAWS.push(update);
     update();
   }
 
@@ -272,6 +294,11 @@
   }
 
   document.addEventListener("DOMContentLoaded", function () {
+    applyChartTheme();
+    window.addEventListener("themechange", function () {
+      applyChartTheme();
+      REDRAWS.forEach((fn) => fn());
+    });
     [cppExplorer, arpuWindows, ehDistribution, sampleCalculator].forEach((fn) =>
       fn().catch((e) => console.error(fn.name, e))
     );

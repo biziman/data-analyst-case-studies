@@ -2,6 +2,7 @@
    Palette matches PORTFOLIO_GUIDE.md figures: #176b8c / #b14632 / #dda944 */
 
 :root {
+  color-scheme: light;
   --ink: #20242a;
   --muted: #5c6570;
   --teal: #176b8c;
@@ -11,8 +12,31 @@
   --sand: #f7f5f0;
   --line: #e5e1d8;
   --code-bg: #f0ede6;
+  --callout-bg: #fdf6e7;
+  --topbar-bg: rgba(255, 255, 255, 0.94);
+  --on-teal: #ffffff;
+  --shadow: rgba(32, 36, 42, 0.05);
   --maxprose: 760px;
   --maxfig: 980px;
+}
+
+/* Dark theme: set on <html data-theme="dark"> by the head snippet in the
+   built pages, driven by the top-bar switch (or the system preference). */
+html[data-theme="dark"] {
+  color-scheme: dark;
+  --ink: #e7eaee;
+  --muted: #a7b0bb;
+  --teal: #5db7d6;
+  --brick: #e07a63;
+  --amber: #e6c06a;
+  --paper: #171a20;
+  --sand: #1e232b;
+  --line: #333a44;
+  --code-bg: #232830;
+  --callout-bg: #2c2617;
+  --topbar-bg: rgba(23, 26, 32, 0.94);
+  --on-teal: #10161c;
+  --shadow: rgba(0, 0, 0, 0.35);
 }
 
 * { box-sizing: border-box; }
@@ -23,6 +47,7 @@ body {
   margin: 0;
   color: var(--ink);
   background: var(--paper);
+  transition: background-color 0.2s ease, color 0.2s ease;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   font-size: 17px;
   line-height: 1.65;
@@ -47,7 +72,7 @@ a:hover { color: var(--brick); }
   justify-content: space-between;
   gap: 16px;
   padding: 10px 20px;
-  background: rgba(255, 255, 255, 0.94);
+  background: var(--topbar-bg);
   border-bottom: 1px solid var(--line);
   backdrop-filter: blur(6px);
   font-size: 14px;
@@ -55,6 +80,25 @@ a:hover { color: var(--brick); }
 .topbar .brand { font-family: Georgia, serif; font-weight: 600; color: var(--ink); text-decoration: none; }
 .topbar nav a { margin-left: 18px; color: var(--muted); text-decoration: none; }
 .topbar nav a:hover { color: var(--teal); }
+
+/* ---------- theme switcher ---------- */
+.theme-toggle {
+  margin-left: 18px; width: 34px; height: 34px; padding: 0;
+  display: inline-flex; align-items: center; justify-content: center;
+  border: 1px solid var(--line); border-radius: 999px;
+  background: var(--paper); color: var(--muted); cursor: pointer;
+  transition: color 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
+}
+.theme-toggle:hover { color: var(--teal); border-color: var(--teal); }
+.theme-toggle:focus-visible { outline: 2px solid var(--teal); outline-offset: 2px; }
+.theme-toggle svg {
+  width: 17px; height: 17px; display: block;
+  fill: none; stroke: currentColor; stroke-width: 2;
+  stroke-linecap: round; stroke-linejoin: round;
+}
+.theme-toggle .icon-sun { display: none; }
+html[data-theme="dark"] .theme-toggle .icon-moon { display: none; }
+html[data-theme="dark"] .theme-toggle .icon-sun { display: block; }
 
 /* ---------- layout ---------- */
 .wrap { max-width: var(--maxfig); margin: 0 auto; padding: 0 20px; }
@@ -95,7 +139,7 @@ p { margin: 10px 0; }
   padding: 20px 20px 14px;
   margin: 22px auto;
   max-width: var(--maxfig);
-  box-shadow: 0 1px 3px rgba(32, 36, 42, 0.05);
+  box-shadow: 0 1px 3px var(--shadow);
 }
 .card h3 { margin-top: 0; }
 .chart { width: 100%; min-height: 340px; }
@@ -110,7 +154,7 @@ p { margin: 10px 0; }
 }
 .live b { color: var(--teal); }
 .callout {
-  font-size: 14.5px; background: #fdf6e7; border-left: 4px solid var(--amber);
+  font-size: 14.5px; background: var(--callout-bg); border-left: 4px solid var(--amber);
   padding: 10px 14px; border-radius: 0 8px 8px 0; margin: 12px 0 4px;
 }
 
@@ -129,7 +173,7 @@ p { margin: 10px 0; }
   cursor: pointer;
 }
 .btnrow button:hover { border-color: var(--teal); color: var(--teal); }
-.btnrow button.active { background: var(--teal); border-color: var(--teal); color: #fff; }
+.btnrow button.active { background: var(--teal); border-color: var(--teal); color: var(--on-teal); }
 
 .readout { display: flex; flex-wrap: wrap; gap: 26px; margin: 14px 0 4px; }
 .readout .stat { min-width: 130px; }
