@@ -190,7 +190,7 @@ p { margin: 10px 0; text-wrap: pretty; }
 /* ---------- chart color keys ---------- */
 .key {
   display: flex; flex-wrap: wrap; align-items: center; gap: 6px 22px;
-  font-size: 13px; color: var(--muted); margin: 2px 0 4px;
+  font-size: 13px; color: var(--muted); margin: 10px 0 16px;
 }
 .key .item { display: inline-flex; align-items: center; gap: 7px; }
 .key .swatch { width: 12px; height: 12px; border-radius: 3px; background: var(--c); }

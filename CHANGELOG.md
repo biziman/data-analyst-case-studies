@@ -2,6 +2,18 @@
 
 Notable changes to the portfolio cases. Newest entries first. Dates are commit dates.
 
+## 2026-11-06 — Chart header spacing and label collision fixes
+
+- More breathing room in the heading → legend → chart-title zone: legend row
+  margins up (10/16px) and every chart's top margin raised.
+- Shortened the long vertical axis titles: funnel y is now "% of impressions
+  (log scale)", ARPU y is "ARPU (USD)" (definitions live in the captions).
+- Label collisions fixed: the funnel's two % label sets now ride slightly
+  above/below their own curve, and the ARPU end labels (letters + "median")
+  are dodged apart at 180 d so close line-ends like F/G/median never overlap.
+- The overlap chart's "Shared area" note moved inside the plot, away from the
+  chart title.
+
 ## 2026-11-06 — Layout tune: title wrapping, prose indent, smaller canvas
 
 - Landing title no longer breaks awkwardly: non-breaking spaces bind

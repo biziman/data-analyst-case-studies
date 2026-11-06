@@ -28,7 +28,7 @@
   function baseLayout() {
     return {
       font: { family: FONT, size: 13, color: PALETTE.ink },
-      margin: { l: 60, r: 20, t: 36, b: 56 },
+      margin: { l: 60, r: 20, t: 52, b: 56 },
       paper_bgcolor: PALETTE.paper,
       plot_bgcolor: PALETTE.paper,
       hoverlabel: { bgcolor: PALETTE.paper, bordercolor: PALETTE.line, font: { family: FONT, size: 13, color: PALETTE.ink } },
@@ -125,27 +125,37 @@
 
       const fm = pooled(meets), fa = pooled(above);
       const cm = funnelCurve(poolCounts(meets)), ca = funnelCurve(poolCounts(above));
-      const mk = (pts, color, pos) => ({
-        type: "scatter", mode: "lines+markers+text",
+      const mk = (pts, color) => ({
+        type: "scatter", mode: "lines+markers",
         x: stages,
         y: pts.map((p) => p.share),
         line: { color: color, width: 2.5 },
         marker: { color: color, size: 7 },
-        text: pts.map((p) => pct1(p.share)),
-        textposition: pos,
-        textfont: { family: FONT, size: 11, color: color },
         customdata: pts.map((p) =>
           pct1(p.share) + " of impressions · " + fmtCount(p.count) + " · " +
           (p.step === 1 ? "funnel top" : pct1(p.step) + " of previous stage")),
         hovertemplate: "%{x}: %{customdata}<extra></extra>",
       });
+      // Value labels ride slightly above/below their own curve so the two
+      // label sets never collide where the groups convert almost the same.
+      const lbl = (pts, color, up) => ({
+        type: "scatter", mode: "text",
+        x: stages,
+        y: pts.map((p) => (up ? p.share * 1.2 : p.share / 1.2)),
+        text: pts.map((p) => pct1(p.share)),
+        textposition: "middle center",
+        textfont: { family: FONT, size: 11, color: color },
+        hoverinfo: "skip",
+      });
       Plotly.react(funnelEl, [
-        mk(cm, PALETTE.meets, "top center"),
-        mk(ca, PALETTE.above, "bottom center"),
+        mk(cm, PALETTE.meets),
+        mk(ca, PALETTE.above),
+        lbl(cm, PALETTE.meets, true),
+        lbl(ca, PALETTE.above, false),
       ], Object.assign({}, baseLayout(), {
-        margin: { l: 66, r: 30, t: 52, b: 44 },
+        margin: { l: 66, r: 30, t: 64, b: 44 },
         xaxis: { title: { text: "Funnel stage", font: { size: 12, color: PALETTE.muted } }, gridcolor: PALETTE.line, zeroline: false, linecolor: PALETTE.line, linewidth: 1, mirror: true },
-        yaxis: { type: "log", title: { text: "Share of the group's impressions still converting (log scale)", font: { size: 12, color: PALETTE.muted } }, tickformat: ".2%", gridcolor: PALETTE.line, zeroline: false, linecolor: PALETTE.line, linewidth: 1, mirror: true },
+        yaxis: { type: "log", title: { text: "% of impressions (log scale)", font: { size: 12, color: PALETTE.muted } }, tickformat: ".2%", gridcolor: PALETTE.line, zeroline: false, linecolor: PALETTE.line, linewidth: 1, mirror: true },
         showlegend: false,
         title: { text: "Pooled funnel conversion, top to bottom", font: { size: 14 } },
       }), CFG);
@@ -183,31 +193,44 @@
       const traces = rows.map((r) => {
         const color = r.cpp <= 50 ? PALETTE.meets : PALETTE.above;
         return {
-          type: "scatter", mode: "lines+markers+text",
+          type: "scatter", mode: "lines+markers",
           x: windows,
           y: windows.map((w) => r.arpu_rule_a[String(w)]),
           line: { color: color, width: 2 },
           marker: { color: color, size: 5 },
-          text: [r.label, null, null, null, r.label],
-          textposition: ["middle left", "top center", "top center", "top center", "middle right"],
-          textfont: { family: FONT, size: 12, color: color },
           hovertemplate: "Campaign " + r.label + ": %{y:$,.2f} at %{x} days<extra></extra>",
         };
       });
 
       const medY = windows.map((w) => median(rows.map((r) => r.arpu_rule_a[String(w)])));
       traces.push({
-        type: "scatter", mode: "lines+text",
+        type: "scatter", mode: "lines",
         x: windows, y: medY,
         line: { color: PALETTE.ink, width: 3.5 },
-        text: [null, null, null, null, "median"],
-        textposition: "middle right",
-        textfont: { family: FONT, size: 12, color: PALETTE.ink },
         hovertemplate: "Median campaign: %{y:$,.2f} at %{x} days<extra></extra>",
       });
 
+      // End labels at 180 d, dodged apart so close line-ends (F/G/median)
+      // never collide; each label keeps its line's color.
+      const ends = rows.map((r) => ({ text: r.label, y: r.arpu_rule_a["180"], color: r.cpp <= 50 ? PALETTE.meets : PALETTE.above }))
+        .concat([{ text: "median", y: medY[4], color: PALETTE.ink }])
+        .sort((a, b) => a.y - b.y);
+      let prev = -Infinity;
+      for (const e of ends) {
+        e.ly = Math.max(e.y, prev + 0.2);
+        prev = e.ly;
+      }
+      traces.push({
+        type: "scatter", mode: "text",
+        x: ends.map((e) => 180), y: ends.map((e) => e.ly),
+        text: ends.map((e) => e.text),
+        textposition: "middle right",
+        textfont: { family: FONT, size: 12, color: ends.map((e) => e.color) },
+        hoverinfo: "skip",
+      });
+
       Plotly.react(chart, traces, Object.assign({}, baseLayout(), {
-        margin: { l: 60, r: 66, t: 36, b: 56 },
+        margin: { l: 60, r: 74, t: 56, b: 56 },
         xaxis: {
           type: "log", range: [Math.log10(5.5), Math.log10(380)],
           tickvals: windows, ticktext: windows.map((w) => w + " d"),
@@ -216,7 +239,7 @@
           linecolor: PALETTE.line, linewidth: 1, mirror: true,
         },
         yaxis: {
-          title: { text: "Revenue per registered user (USD, whole-day rule)", font: { size: 12, color: PALETTE.muted } },
+          title: { text: "ARPU (USD)", font: { size: 12, color: PALETTE.muted } },
           gridcolor: PALETTE.line, rangemode: "tozero",
           linecolor: PALETTE.line, linewidth: 1, mirror: true,
         },
@@ -271,7 +294,7 @@
         make(ePay, "Campaign E", PALETTE.meets),
         make(hPay, "Campaign H", PALETTE.above),
       ], Object.assign({}, baseLayout(), {
-        margin: { l: 110, r: 30, t: 44, b: 56 },
+        margin: { l: 110, r: 30, t: 56, b: 56 },
         xaxis: { type: "log", title: { text: "7-day payment total per paying user (USD, log scale)", font: { size: 12, color: PALETTE.muted } }, gridcolor: PALETTE.line, zeroline: false, linecolor: PALETTE.line, linewidth: 1, mirror: true },
         yaxis: { title: { text: "Campaign", font: { size: 12, color: PALETTE.muted } }, gridcolor: PALETTE.line, linecolor: PALETTE.line, linewidth: 1, mirror: true },
         annotations: [
@@ -354,10 +377,10 @@
           line: { color: PALETTE.amber, width: 1 }, fill: "tozeroy", fillcolor: PALETTE.amber + "55",
           hovertemplate: "overlap<extra></extra>" },
       ], Object.assign({}, baseLayout(), {
-        margin: { l: 56, r: 30, t: 52, b: 56 },
+        margin: { l: 56, r: 30, t: 64, b: 56 },
         xaxis: { type: "log", title: { text: "7-day payment total per paying user (USD, log scale)", font: { size: 12, color: PALETTE.muted } }, gridcolor: PALETTE.line, zeroline: false, linecolor: PALETTE.line, linewidth: 1, mirror: true },
         yaxis: { showticklabels: false, gridcolor: PALETTE.line, zeroline: false, linecolor: PALETTE.line, linewidth: 1, mirror: true, title: { text: "Distribution shape (density, relative)", font: { size: 12, color: PALETTE.muted } } },
-        annotations: [{ xref: "paper", yref: "paper", x: 0.02, y: 1.11, xanchor: "left", showarrow: false,
+        annotations: [{ xref: "paper", yref: "paper", x: 0.02, y: 0.95, yanchor: "top", xanchor: "left", showarrow: false,
           text: "Shared area: " + pct1(ovlPayers) + " of the payer shapes", font: { size: 13, color: PALETTE.amber } }],
         showlegend: false,
         title: { text: "Distribution overlap — campaign E vs H", font: { size: 14 } },
