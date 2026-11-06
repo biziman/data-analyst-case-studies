@@ -3,7 +3,12 @@
 - **publish:** 2026-11-06 (Fri), 10:00–12:00
 - **image:** `docs/cases/01-mobile-game-acquisition/preview.png` (attach to post)
 - **link (first comment):** https://biziman.github.io/data-analyst-case-studies/cases/01-mobile-game-acquisition/
-- **status:** draft — awaiting approval
+- **status:** approved 2026-11-06 — publishing today
+
+## First comment (post immediately after the body)
+
+Interactive demo + code: https://biziman.github.io/data-analyst-case-studies/cases/01-mobile-game-acquisition/
+(Notebook + CSVs are in the repo link on the page.)
 
 ---
 
