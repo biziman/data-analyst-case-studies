@@ -4,7 +4,7 @@ Proofreading and diagram review of all 11 cases (see `CHANGELOG.md` for the fini
 
 Publishing is gated on this review pass: a case's LinkedIn post goes out only after its review is done. Post dates and todos: `~/projects/job-search/LINKEDIN_PUBLISHING.md`; plan: `LINKEDIN_PLAN.md`.
 
-## Publishing (parked 2026-11-06 — resume tomorrow)
+## Publishing (parked 2026-11-06 — date call still open 2026-11-08)
 
 - **Post 1 (case 01, mobile-game acquisition): approved, not yet published.**
   Draft + first-comment link: `linkedin/01-mobile-game-acquisition.md`.
@@ -12,10 +12,10 @@ Publishing is gated on this review pass: a case's LinkedIn post goes out only af
   To post: attach `docs/cases/01-mobile-game-acquisition/preview.png`, paste the body,
   post the demo link as the **first comment**, then pin the post to profile **Featured**
   and fill the tracking row in `LINKEDIN_PLAN.md`.
-  Note: 2026-11-07 is a **Saturday** — the calendar snapped slots off weekends. And any slip
-  pushes case 2: its Tue 11-11 slot assumed post 1 on Fri 11-06 (5-day cadence). Decide
-  tomorrow: post 11-07 as a one-off and shift case 2 (+ the rest of the chain) accordingly,
-  or hold post 1 to Mon 11-09. Either way the downstream dates in the calendar shift too.
+  Note: 2026-11-07 was a **Saturday** — the calendar snapped slots off weekends. Status
+  2026-11-08 (Sun): the 11-07 one-off window passed with **no post**, so the date call is
+  now **Mon 11-09 or later** (the user's call). Any slip pushes case 2: its Tue 11-11 slot
+  assumed post 1 on Fri 11-06 (5-day cadence), and the downstream dates shift too.
 - After post 1: pin case-1 demo to Featured (convention #7 in `LINKEDIN_PLAN.md`).
 
 ## Site session (2026-11-06 — wrapped)
@@ -33,18 +33,20 @@ E/H overlap, cohort facts) so every site figure reproduces there.
 
 Resume points for the site track:
 
-- **Execute the notebook's new sync cells in the venv** during the next review pass — they
-  were added without a run here (no pandas/matplotlib in the build environment). They should
-  print the site numbers: blended ARPU $0.48 → $3.04, overlap 92.2% (payer shapes) / 99.1%
-  (full), cohort 5,421 users, May 10–19, ends $467.45.
+- ~~Execute the notebook's new sync cells in the venv~~ **done 2026-11-08**: the four
+  site-sync cells ran in a recreated venv (pandas/scipy/statsmodels/seaborn added) and now
+  carry stored outputs. All site numbers reproduce: blended ARPU $0.48 → $3.04, overlap
+  92.2% (payer shapes) / 99.1% (full), cohort 5,421 users, May 10–19, ends $467.45.
+  Gate re-run clean; site rebuilds with no drift.
 - The fact-proof pass fixed two content bugs worth knowing about: `users_e.json` mixed
   window rules (now strict 168 h for both campaigns) and the cohort copy claimed May 10–20
   (the SQL's text comparison excludes May 20 → May 10–19). Both recorded in `CHANGELOG.md`.
 - Chart options kept open by user request-pending: funnel tail stages are slivers at the
   linear scale (labels carry the numbers; a stage-conversion row was offered), and E/H
   overlap alternates (Lorenz curve, two-panel summary) remain available on request.
-- Publishing track unchanged: post 1 approved and parked; the first decision is the date
-  call (Sat 11-07 one-off vs Mon 11-09 hold) — see the Publishing section above.
+- Publishing track unchanged: post 1 approved and parked; the date call is now
+  **Mon 11-09 or later** (the Sat 11-07 one-off window passed) — see the Publishing
+  section above.
 
 ## Per-case checklist
 

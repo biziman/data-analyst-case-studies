@@ -2,6 +2,18 @@
 
 Notable changes to the portfolio cases. Newest entries first. Dates are commit dates.
 
+## 2026-11-08 — Notebook sync cells executed and verified
+
+- The case-1 notebook's four site-sync cells (funnel conversion, blended ARPU,
+  E/H box+strip + overlap, cohort facts) were added unexecuted on 2026-11-06;
+  they now run in a recreated venv and carry stored outputs. Every number the
+  site quotes reproduces: blended ARPU $0.48 (7 d) → $3.04 (180 d), payer-shape
+  overlap 92.2% / full overlap 99.1%, cohort 5,421 users registered May 10–19,
+  final cumulative revenue $467.45.
+- Gate re-run clean (all extraction asserts pass) and the site rebuilds with no
+  drift. Correction to the earlier note: the gate runs **40** asserts, not 38 —
+  "38/38" undercounted; the preview render is a separate PASS line.
+
 ## 2026-11-06 — Session wrap: the interactive site
 
 - The LinkedIn demo site is complete for case 01 after five review rounds:
