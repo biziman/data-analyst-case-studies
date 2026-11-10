@@ -1,0 +1,15 @@
+
+# hk:harness-begin (managed by harness-kit — local agent harness, not published)
+AGENTS.md
+feature_list.json
+progress.md
+Makefile
+init.sh
+BOUNDARIES.md
+PREREQUISITES.md
+docs/constraints.md
+docs/verification.md
+scripts/clean-state-check.sh
+scripts/vcr.sh
+scripts/verify-feature.sh
+# hk:harness-end
