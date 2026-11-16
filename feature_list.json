@@ -1,0 +1,22 @@
+{
+  "features": [
+    {
+      "id": "feat-001",
+      "name": "cases 9-11 review pass",
+      "description": "Run the case review gate over cases 9 (CTV geo uplift), 10 (marketing mix modeling), and 11 (payment fraud investigation): verify evidence gates pass, fix any drift found, and record evidence. Publishing stays blocked until the review pass is complete.",
+      "dependencies": [],
+      "status": "planned",
+      "verification": "make check",
+      "evidence": ""
+    },
+    {
+      "id": "feat-002",
+      "name": "metric-contract simulator",
+      "description": "Build the static eight-step metric-contract simulator with deterministic generated data and evidence gate.",
+      "dependencies": [],
+      "status": "done",
+      "verification": "make check && python3 scripts/sim/verify_metric_contract.py",
+      "evidence": "2026-11-16T21:43:38+03:00: make check && python3 scripts/sim/verify_metric_contract.py passed"
+    }
+  ]
+}

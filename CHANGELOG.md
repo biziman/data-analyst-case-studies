@@ -2,6 +2,11 @@
 
 Notable changes to the portfolio cases. Newest entries first. Dates are commit dates.
 
+## 2026-11-16 — Metric-contract simulator
+
+- Added an eight-step static donation-test simulator, responsive SVG timeline, theme support, and sandbox controls.
+- Added seeded replay data and a deterministic evidence gate wired into `make check`.
+
 ## 2026-11-08 — Notebook sync cells executed and verified
 
 - The case-1 notebook's four site-sync cells (funnel conversion, blended ARPU,
