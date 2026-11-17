@@ -1,4 +1,99 @@
 <!doctype html>
-<html lang="en" data-theme="light"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Metric contract simulator</title><link rel="icon" href="data:,"><link rel="stylesheet" href="../../assets/style.css"><link rel="stylesheet" href="page.css"><script>(function(){try{let t=localStorage.getItem('theme');document.documentElement.dataset.theme=t==='dark'?'dark':'light'}catch(e){}})();</script><script src="../../assets/theme.js" defer></script><script src="page.js" defer></script></head>
-<body><header class="topbar"><a class="brand" href="../../index.html">Case studies</a><nav><a href="../../index.html">All cases</a><button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch theme">◐</button></nav></header><main class="layout"><section class="story"><p class="eyebrow">Interactive measurement lab · synthetic data</p><h1>One checkout test.<br>Opposite answers.</h1><p>A donation team removes preset gift amounts. The treatment gets more donors, but each gift is smaller. Explore how a metric contract can change the decision.</p><div class="progress" id="progress" aria-label="Step progress"></div><p class="stepcount" id="stepcount"></p><h2 id="title"></h2><p id="narrative"></p><div id="gate"></div><p class="keep"><b>Keep:</b> <span id="idea"></span></p><p class="try"><b>Try this:</b> <span id="try"></span></p><button id="next" disabled>Next step <span id="nextlabel">Press play first</span> →</button></section>
-<section class="sim"><div class="simhead"><div><b id="day">Day 1</b><span id="week">Week 1 of 6</span></div><p id="state"></p><div class="player"><button id="play" aria-label="Play or pause">▶ Play</button><button id="speed">1×</button></div></div><div class="chartwrap"><svg id="chart" viewBox="0 0 720 300" role="img" aria-label="Control and treatment outcomes over six weeks"></svg></div><label class="scrub">Timeline <input id="timeline" type="range" min="1" max="42" value="1"><span id="daylabel">1 / 42</span></label><div class="legend"><span>Control</span><span>Treatment</span><span class="bandkey">Not yet due</span></div><div id="readout" class="readout"></div><aside id="sandbox" hidden><h2>Price your contract</h2><p>Expected dollars lost per 100,000 visitors across 20 replays, compared with the true effect.</p><label>Denominator <select data-dial="denom"><option>visitor</option><option>session</option><option>donor</option></select></label><label>Window <select data-dial="window"><option>1 day</option><option>7 days</option></select></label><label>Maturity <select data-dial="maturity"><option>all enrolled</option><option>mature only</option></select></label><label>Stopping rule <select data-dial="stop"><option>daily</option><option>fixed 28 days</option><option>always-valid</option></select></label><label>Ship threshold <input data-dial="threshold" type="range" min="0" max="20" value="5"> <span id="thresholdval">5%</span></label><p class="score" id="score"></p><p id="challenge"></p></aside></section></main><footer class="site">All observations are seeded synthetic data. No network requests. Figures are generated and checked by the repository evidence gate.</footer></body></html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Metric contract simulator: one test, opposite answers</title>
+<meta name="description" content="An interactive simulator of how metric definitions change a decision: the same checkout test read by denominator, window, cohort maturity, stopping rule and multiplicity.">
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="../../assets/style.css">
+<link rel="stylesheet" href="page.css">
+<script>
+(function () {
+  try {
+    var t = localStorage.getItem("theme");
+    document.documentElement.dataset.theme = t === "dark" ? "dark" : "light";
+  } catch (e) {
+    document.documentElement.dataset.theme = "light";
+  }
+})();
+</script>
+<script src="../../assets/theme.js" defer></script>
+<script src="page.js" defer></script>
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="../../index.html">Case studies</a>
+  <nav>
+    <a href="../../index.html">All cases</a>
+    <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch theme">◐</button>
+  </nav>
+</header>
+
+<main class="layout">
+  <section class="story">
+    <p class="eyebrow">Interactive measurement lab · synthetic data</p>
+    <h1>One checkout test. <em>Opposite answers.</em></h1>
+    <p class="intro">A donation team removes the preset gift amounts. The treatment gets more donors and smaller gifts. Six weeks of one experiment, read through different metric contracts.</p>
+
+    <ol class="progress" id="progress" aria-label="Step progress"></ol>
+    <p class="stepcount" id="stepcount"></p>
+    <h2 id="title"></h2>
+    <p id="narrative"></p>
+
+    <div class="gate" id="gate"></div>
+    <div class="reveal" id="reveal" aria-live="polite" hidden></div>
+
+    <div class="keep"><b>The idea to keep</b><span id="idea"></span></div>
+    <div class="try"><b>Try this</b><span id="try"></span></div>
+
+    <div class="nav">
+      <button id="back" type="button">← Back</button>
+      <button id="next" type="button" disabled><span id="nextlabel">Press play first</span> →</button>
+    </div>
+  </section>
+
+  <section class="sim" aria-label="Simulation">
+    <div class="simhead">
+      <div class="clock"><b id="day">Day 1</b><span id="week">Week 1 of 6</span></div>
+      <p id="state"></p>
+      <div class="player"><button id="play" type="button">▶ Play</button><button id="speed" type="button">1×</button></div>
+    </div>
+
+    <div class="chartwrap">
+      <svg id="chart" viewBox="0 0 720 330" role="img" aria-labelledby="chartnote"></svg>
+      <p class="chartnote" id="chartnote"></p>
+    </div>
+
+    <label class="scrub">Timeline <input id="timeline" type="range" min="1" max="42" value="1"><span id="daylabel">1 / 42</span></label>
+    <div class="legend" id="legend"></div>
+    <div class="verdict" id="readout" aria-live="polite"></div>
+    <div class="controls" id="controls"></div>
+
+    <aside class="sandbox" id="sandbox" hidden>
+      <h2>Price your contract</h2>
+      <p class="cap">Expected dollars lost per 100,000 visitors against the true effect. The score updates when a dial moves.</p>
+      <div class="dials">
+        <label>Denominator
+          <select id="sb-denom"><option value="visitor">per visitor</option><option value="session">per session</option><option value="donor">per donor</option></select>
+        </label>
+        <label>Window
+          <select id="sb-window"><option value="1h">1 hour</option><option value="24h">24 hours</option><option value="7d" selected>7 days</option></select>
+        </label>
+        <label>Stopping rule
+          <select id="sb-stop"><option value="fixed">fixed 28 days</option><option value="daily">daily peek</option></select>
+        </label>
+        <label>Ship if lift &gt; <input id="sb-th" type="range" min="0" max="20" value="5"><output id="sb-thv">5%</output></label>
+      </div>
+      <p class="score" id="score"></p>
+      <p class="cap" id="truth"></p>
+      <p class="cap" id="challenge"></p>
+    </aside>
+  </section>
+</main>
+
+<footer class="site">
+  Seeded synthetic data. Figures are recomputed from the simulation by the repository evidence gate.
+</footer>
+</body>
+</html>

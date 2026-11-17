@@ -2,6 +2,19 @@
 
 Notable changes to the portfolio cases. Newest entries first. Dates are commit dates.
 
+## 2026-11-17 — Simulator rebuilt on a real simulation
+
+- Replaced the quiz-style first pass with eight steps where one dial changes the
+  rendered metric: denominator, window, cohort maturity, stopping rule,
+  multiplicity, holdout, then a scored sandbox. Hand-built responsive SVG chart,
+  theme-aware, keyboard scrubbing, reduced-motion start.
+- Data now comes from a visitor-level simulation (sessions, donation delay, gift,
+  repeat donation), 400 null-test replays, 400 guardrail replays and a
+  200-replay day-bootstrap for the sandbox score. No injected p-values.
+- The evidence gate recomputes the page's facts from the aggregates and asserts
+  the file is byte-identical. `scripts/sim/acceptance.mjs` clicks all eight
+  steps, checks every dial changes the readout, and fails on console errors.
+
 ## 2026-11-16 — Metric-contract simulator
 
 - Added an eight-step static donation-test simulator, responsive SVG timeline, theme support, and sandbox controls.

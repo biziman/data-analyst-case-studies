@@ -12,11 +12,11 @@
     {
       "id": "feat-002",
       "name": "metric-contract simulator",
-      "description": "Build the static eight-step metric-contract simulator with deterministic generated data and evidence gate.",
+      "description": "Build the static eight-step metric-contract simulator from a visitor-level simulation, with a hand-built SVG chart, live dials, a scored sandbox, and an evidence gate wired into make check.",
       "dependencies": [],
       "status": "done",
       "verification": "make check && python3 scripts/sim/verify_metric_contract.py",
-      "evidence": "2026-11-16T21:43:38+03:00: make check && python3 scripts/sim/verify_metric_contract.py passed"
+      "evidence": "2026-11-17T19:30:00+03:00: make check (28 simulator assertions) and node scripts/sim/acceptance.mjs (18 checks) passed"
     }
   ]
 }
