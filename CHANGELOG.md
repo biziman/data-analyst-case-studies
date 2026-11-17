@@ -14,6 +14,9 @@ Notable changes to the portfolio cases. Newest entries first. Dates are commit d
 - The evidence gate recomputes the page's facts from the aggregates and asserts
   the file is byte-identical. `scripts/sim/acceptance.mjs` clicks all eight
   steps, checks every dial changes the readout, and fails on console errors.
+- Step 4 wording now matches the chart: the drop is confined to the unfinished
+  cohort week. The all-cohorts legend swatch follows the amber series, and the
+  band label stays inside the chart at mobile width.
 
 ## 2026-11-16 — Metric-contract simulator
 

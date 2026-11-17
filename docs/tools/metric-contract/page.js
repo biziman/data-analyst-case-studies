@@ -180,7 +180,7 @@
       narrative: "Repeat donation needs a week to happen. The last cohorts have not had a week yet. Switch the cohort rule and watch a decline appear or disappear.",
       idea: "You cannot compare a cohort that has not had time to happen.",
       try: "Look at the last day of the chart with all cohorts included.",
-      gate: { q: "Repeat donation falls over the test. Is that real?", options: ["Yes, later donors repeat less", "No, they are unfinished cohorts"] },
+      gate: { q: "Repeat donation drops in the final week. Is that real?", options: ["Yes, later donors repeat less", "No, they are unfinished cohorts"] },
     },
     {
       title: "Peeking invents winners",
@@ -270,13 +270,13 @@
     const f = frame(1, 42, 0, 0.3, (v) => pct(v, 0));
     let s = f.top;
     s += `<rect class="band" x="${f.sx(36)}" y="${f.T}" width="${f.sx(42) - f.sx(36)}" height="${f.H - f.T - f.B}"/>`;
-    s += `<text class="band-label" x="${f.sx(39)}" y="${f.T - 6}" text-anchor="middle">not a full week yet</text>`;
+    s += `<text class="band-label" x="${f.sx(42) - 4}" y="${f.T - 6}" text-anchor="end">not mature yet</text>`;
     s += xLabels(f, f.W < 520 ? [1, 14, 28, 42] : [1, 7, 14, 21, 28, 35, 42]);
     if (S.maturity === "all") s += line(all.map((p) => [p.x, p.v]), f, "series amber");
     s += line(mature.map((p) => [p.x, p.v]), f, "series control");
     s += axisTitles(f, "Arrival cohort (day)", "Repeat within 7 days");
     chart(s, f.W, f.H);
-    $("legend").innerHTML = "<span class='key control'>Mature cohorts</span>" + (S.maturity === "all" ? "<span class='key treatment'>All cohorts</span>" : "");
+    $("legend").innerHTML = "<span class='key control'>Mature cohorts</span>" + (S.maturity === "all" ? "<span class='key amber'>All cohorts</span>" : "");
 
     const pooled = (rows) => rows.reduce((o, r) => ({ d: o.d + r.donors, r: o.r + r.repeats }), { d: 0, r: 0 });
     const pm = pooled(matureRows), pa = pooled(m);
@@ -501,7 +501,7 @@
       const mature = m.filter((x) => x.observed_days === 7);
       const pr = (rows) => rows.reduce((o, x) => ({ d: o.d + x.donors, r: o.r + x.repeats }), { d: 0, r: 0 });
       const pm = pr(mature), pa = pr(m), last = m[m.length - 1];
-      text = `Mature cohorts: <b>${pct(pm.r / pm.d)}</b>. All cohorts: <b>${pct(pa.r / pa.d)}</b>. Last cohort: <b>${pct(last.repeats / last.donors)}</b> with one day of follow-up.`;
+      text = `Mature cohorts: <b>${pct(pm.r / pm.d)}</b>. All cohorts: <b>${pct(pa.r / pa.d)}</b>. Last cohort: <b>${pct(last.repeats / last.donors)}</b> with one day of follow-up. The drop lives in the unfinished week; the mature rate is flat.`;
     } else if (S.step === 4) {
       const r0 = nullRates();
       text = `Daily checking: <b>${pct(r0.daily)}</b> of null tests produce a false winner. One look: <b>${pct(r0.fixed)}</b>. Sequential boundary: <b>${pct(r0.seq)}</b>.`;

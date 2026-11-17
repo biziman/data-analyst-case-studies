@@ -108,6 +108,7 @@ svg { width: 100%; height: auto; display: block; }
 .key::before { content: ""; display: inline-block; width: 18px; height: 3px; vertical-align: middle; margin-right: 6px; background: var(--muted); }
 .key.control::before { background: var(--teal); }
 .key.treatment::before { background: var(--brick); }
+.key.amber::before { background: var(--amber); }
 .key.bandkey::before { height: 10px; background: var(--line); }
 .key.refkey::before { height: 0; border-top: 2px dashed var(--muted); background: none; }
 .key.flagkey::before { height: 10px; background: var(--brick); }

@@ -65,7 +65,7 @@ happens (`Press play first`, `Pick an answer first`, `Make your guess first`).
 | 1 | Two numbers, one decision | none (play only) | "Is a higher donation rate the same as more money?" | A conversion win is not a money win. Read the metric the decision needs. |
 | 2 | The denominator decides | per visitor / session / donor | "Which denominator makes the treatment look best?" | A metric is a contract: numerator, denominator, window, population. State it before the test. |
 | 3 | The window decides | 1h / 24h / 7d | "Does the revenue lift survive a 7-day window?" | A win that decays with the window was timing, not money. |
-| 4 | Mature cohorts only | all cohorts / mature only | "Repeat rate looks down. Is that real?" | You cannot compare a cohort that has not had time to happen. |
+| 4 | Mature cohorts only | all cohorts / mature only | "Repeat rate drops in the final week. Is that real?" | You cannot compare a cohort that has not had time to happen. |
 | 5 | Peeking invents winners | daily / fixed 28 days / always-valid | "With no true effect, how often does daily checking declare a winner?" | The stopping rule is part of the design, not an operational detail. |
 | 6 | Twelve metrics, one "win" | 1 primary / 12 guardrails | "With 12 null metrics, what is the chance at least one flags?" | Pre-register the primary metric. Everything else is exploratory. |
 | 7 | A new sample is the judge | four contract presets | "Which of these contracts will still hold?" | A contract that works once is a coincidence. A holdout tests the test. |
