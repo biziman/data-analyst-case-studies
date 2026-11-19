@@ -28,6 +28,18 @@ for bar,value in zip(bars,values[::-1]):ax.text(value+.7,bar.get_y()+bar.get_hei
 ax.set(xlim=(0,max(values)*1.2),xlabel='Synthetic payment attempts',title='Review rules find 38 injected fraud attempts and miss 50')
 fig.text(.02,.02,f'Post-analysis hidden-label check only. Precision {r["precision"]:.1%}; recall {r["recall"]:.1%}. Not real merchant performance.',fontsize=9)
 fig.tight_layout(rect=(0,.07,1,1));fig.savefig(ROOT/'11-payment-fraud-investigation/outputs/rule_validation.png',dpi=160);plt.close(fig)
+# Case 10: the inconclusive matched-geo TikTok test, built from case_results.json.
+r=json.loads((ROOT/'10-marketing-mix-modeling/outputs/case_results.json').read_text())
+exp=r['experiment'];est=exp['estimated_lift_per_treated_geo_week'];lo,hi=exp['paired_t_95_percent_interval'];pad=.18*(hi-lo)
+fmt=lambda v:f'{v:+.2f}'.replace('-','\u2212')
+fig,ax=plt.subplots(figsize=(8,3.1))
+ax.errorbar(est,0,xerr=[[est-lo],[hi-est]],fmt='o',color='#176b8c',capsize=6,markersize=8)
+ax.axvline(0,color='#b14632',linestyle='--',label='No effect: 0 new subscribers per market-week')
+ax.set(xlim=(lo-pad,hi+pad),ylim=(-.6,.6),yticks=[],xlabel='Change in new paid subscribers per treated market-week (8-week test vs prior 8 weeks)',title='Synthetic TikTok test cannot separate lift from zero')
+ax.text(est,.16,f'{fmt(est)} (95% interval {fmt(lo)} to {fmt(hi)})',ha='center')
+ax.legend(loc='lower right',frameon=False)
+fig.text(.02,.02,f'Synthetic matched-geo test; {exp["matched_pair_count"]} pairs of {r["geographies"]} markets. Sign-flip p = {exp["sign_flip_randomization_p_value"]:.3f} ({exp["randomization_draws"]:,} draws).\nSynthetic/assessment data; not a client outcome.',fontsize=9)
+fig.tight_layout(rect=(0,.11,1,1));fig.savefig(ROOT/'10-marketing-mix-modeling/outputs/tiktok_test_interval.png',dpi=160);plt.close(fig)
 # Case 2: run the notebook's code cells to keep one source of truth for the simulation.
 nb=json.loads((ROOT/'2-product-experiment-tracking-audit/2-product-experiment-tracking-audit.ipynb').read_text())
 ns={}

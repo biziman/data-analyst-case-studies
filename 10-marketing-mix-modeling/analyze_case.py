@@ -120,7 +120,7 @@ result = {
     "observed_pretest_budget_per_month_usd": monthly_budget,
     "primary_kpi": "new paid subscribers per geo-week",
     "model": {
-        "type": "OLS benchmark with geography fixed effects, annual seasonality, promotion, and geometric adstock plus log saturation",
+        "type": "OLS benchmark with geography fixed effects, annual seasonality, linear trend, promotion, and geometric adstock plus log saturation",
         "r_squared_in_sample": r2,
         "design_matrix_rank": int(rank),
         "design_matrix_columns": int(X.shape[1]),

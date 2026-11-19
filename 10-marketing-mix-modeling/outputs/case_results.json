@@ -7,15 +7,15 @@
   "observed_pretest_budget_per_month_usd": 121360.38509375,
   "primary_kpi": "new paid subscribers per geo-week",
   "model": {
-    "type": "OLS benchmark with geography fixed effects, annual seasonality, promotion, and geometric adstock plus log saturation",
+    "type": "OLS benchmark with geography fixed effects, annual seasonality, linear trend, promotion, and geometric adstock plus log saturation",
     "r_squared_in_sample": 0.30912163780437973,
     "design_matrix_rank": 48,
     "design_matrix_columns": 48,
     "channel_coefficients_new_subscribers_per_transformed_spend": {
-      "google_ads": 3.1038576347661215,
-      "meta_ads": 2.021608387765502,
-      "tiktok_ads": 1.4889834161731854,
-      "affiliate": 0.8627064683727566
+      "google_ads": 3.10385763476617,
+      "meta_ads": 2.0216083877655504,
+      "tiktok_ads": 1.4889834161732265,
+      "affiliate": 0.8627064683728899
     },
     "interpretation": "Associational model estimates on synthetic data; not causal proof or a production Meridian fit."
   },

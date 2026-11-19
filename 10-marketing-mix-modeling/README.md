@@ -18,7 +18,7 @@ For this simulation, affiliate means fixed-fee educational content and course-re
 
 ## Analyst approach
 
-The analyst completed a pre-research plan, data checks, a simple MMM benchmark, and a synthetic matched-market experiment. The primary KPI is new paid subscribers per market-week. The MMM benchmark uses geography fixed effects, seasonality, promotions, adstock, and a log response curve. It is an ordinary least squares model built for transparency. It is not Meridian or Robyn and does not provide Bayesian credible intervals.
+The analyst completed a pre-research plan, data checks, a simple MMM benchmark, and a synthetic matched-market experiment. The primary KPI is new paid subscribers per market-week. The MMM benchmark uses geography fixed effects, a linear trend, seasonality, promotions, adstock, and a log response curve. It is an ordinary least squares model built for transparency. It is not Meridian or Robyn and does not provide Bayesian credible intervals.
 
 The simulated test randomized one market in each of 20 matched pairs to a 50% TikTok spend increase for eight weeks. The analyst compared treatment and control changes from the preceding eight weeks. The treatment estimate is an intention-to-treat difference in differences.
 
@@ -35,6 +35,10 @@ The simulated test randomized one market in each of 20 matched pairs to a 50% Ti
 | Estimated incremental starts | 10 across the test | Too uncertain to support an efficiency claim |
 
 The test does not show that TikTok is ineffective. It is too imprecise to distinguish a small positive effect from no effect or a small negative effect. The estimated incremental customer acquisition cost is not decision-ready because the interval for incremental subscribers crosses zero.
+
+![Synthetic TikTok test estimate with 95% interval against the no-effect line](outputs/tiktok_test_interval.png)
+
+The point estimate (+0.06) and its 95% interval (−1.22 to +1.34) both sit around the dashed no-effect line. Synthetic/assessment data; not a client outcome.
 
 The MMM channel coefficients are not channel ROI. The model has no validated subscriber lifetime value, churn, refund, or gross-margin data. The available synthetic model also does not include confidence intervals for the channel coefficients. It does not support a precise budget ranking.
 
@@ -73,6 +77,17 @@ python 10-marketing-mix-modeling/analyze_case.py
 ```
 
 The generator uses a fixed seed. It writes `data/synthetic_edtech_geo_week.csv`. The analysis writes `outputs/case_results.json`.
+
+The stored results were regenerated on 2026-11-19 (Python 3.12.13, NumPy 2.5.5). Expected outputs: 6,240 observations (40 markets × 156 weeks), in-sample R-squared 0.31, TikTok lift +0.06 new paid subscribers per treated market-week (95% interval −1.22 to +1.34), sign-flip p = 0.927, and 10 estimated incremental subscribers.
+
+The published figure is generated from the repository root with:
+
+```bash
+python -m pip install matplotlib==3.10.8
+python render_portfolio_figures.py
+```
+
+The renderer reads `outputs/case_results.json` and writes `outputs/tiktok_test_interval.png`, so the plotted estimate and interval cannot drift from the stored results.
 
 ## Research basis
 

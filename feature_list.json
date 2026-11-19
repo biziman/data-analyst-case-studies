@@ -36,9 +36,9 @@
       "dependencies": [
         "feat-005"
       ],
-      "status": "planned",
+      "status": "done",
       "verification": ".venv/bin/python 10-marketing-mix-modeling/analyze_case.py && make check",
-      "evidence": ""
+      "evidence": "2026-11-19: verification passed — analyze_case.py re-run in the pinned venv (Python 3.12.13, NumPy 2.5.5); make check passed (28 assertions). New figure 10-marketing-mix-modeling/outputs/tiktok_test_interval.png built from outputs/case_results.json through render_portfolio_figures.py (point +0.06, 95% interval −1.22 to +1.34 against a zero no-effect line; footnote 20 pairs of 40 markets, sign-flip p = 0.927 from 20,000 draws, provenance line) and embedded with a caption in the README; the first render's footnote overflowed the canvas and was wrapped to two lines before committing. README numbers reproduce from case_results.json: 6,240 observations, R-squared 0.309 → 0.31, lift 0.0625 → +0.06, interval [−1.217, 1.342] → −1.22 to +1.34, p 0.9268 → 0.927, incremental starts 10, planned $130,000 vs observed pre-test $121,360. OLS-benchmark wording kept exact (not Meridian or Robyn) in README, review_log and JSON; analyze_case.py model.type now also lists the linear trend the code fits, matching README and review_log. Reproduce gained run date, expected outputs and the figure command. Regenerating simulate_case.py rewrites the data CSV line endings only (CRLF vs stored LF; restored, not committed); OLS coefficients drift in last digits under the pinned BLAS while r-squared, lift, interval and p-value are unchanged."
     },
     {
       "id": "feat-004",
