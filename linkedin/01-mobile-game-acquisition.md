@@ -1,11 +1,13 @@
 # LinkedIn post — Case 01
 
-- **publish:** 2026-11-06 (Fri), 10:00–12:00
+- **publish:** awaiting manual post — ready since 2026-11-19 (owner's date)
 - **image:** `docs/cases/01-mobile-game-acquisition/preview.png` (attach to post)
 - **link (first comment):** https://biziman.github.io/data-analyst-case-studies/cases/01-mobile-game-acquisition/
-- **status:** approved, NOT yet published — parked 2026-11-06, resume tomorrow (2026-11-07)
-  - Resume steps: post body below + attach `preview.png`, first comment = demo link,
+- **status:** approved 2026-11-04; review gate passed 2026-11-19; not yet published
+  - Post manually: body below + attach `preview.png`, first comment = demo link,
     then pin to profile **Featured** and fill the tracking row in `LINKEDIN_PLAN.md`.
+  - Checked 2026-11-19: demo page and case page return 200, preview.png is the
+    current evidence-gate render, body says "link in first comment".
 
 ## First comment (post immediately after the body)
 

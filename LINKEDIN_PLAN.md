@@ -41,8 +41,8 @@ the post links to numbers that must already be verified.
 
 | # | Date | Case | Review | Demo |
 |---|------|------|--------|------|
-| 1 | Fri 2026-11-06 → parked (resume 11-07; **Sat = off the weekend rule**, user call) | 01 mobile-game acquisition | done 11-04 | live — **approved, not yet posted** |
-| 2 | Tue 2026-11-11 | 02 experiment tracking audit | done 11-04 | stub |
+| 1 | ready — manual post pending (approved 11-04, review done 11-19; owner's date) | 01 mobile-game acquisition | done 11-19 | live |
+| 2 | recompute after post 1 | 02 experiment tracking audit | done 11-04 | stub |
 | 3 | Mon 2026-11-17 | 03 player LTV forecast | done 11-04 | stub |
 | 4 | Fri 2026-11-20 | 04 gameplay change evaluation | done 11-04 | stub |
 | 5 | Wed 2026-11-25 | 05 donation checkout A/B | pending | stub |
@@ -56,6 +56,12 @@ the post links to numbers that must already be verified.
 Slots snapped off weekends/US holidays from a strict 5-day chain
 (Nov 16 Sun → Mon 17, Nov 21 Sat → Fri 20, Nov 26 Thanksgiving → Wed 25,
 Dec 6 Sun → Mon 7, Dec 26 Sat → Mon 28).
+
+**Schedule slip (2026-11-19):** post 1 missed its 11-06 slot, so rows 2–11
+below are the original grid and are no longer the plan. Recompute them from
+the actual post-1 date with the same rule (5-day grid from post 1, snapped off
+weekends and US holidays) when post 1 goes out. The review gate is now passed
+for all 11 cases.
 
 ## Publishing conventions (anti-bullshit rules)
 
@@ -93,7 +99,7 @@ Judge by profile views and inbound conversations, not likes.
 
 | Date | Case | Impressions | Profile views | Inbound | Notes |
 |------|------|-------------|---------------|---------|-------|
-| 2026-11-06 | 01 mobile-game acquisition | | | | parked 11-06 without posting; resume 11-07, then pin to Featured |
+| 2026-11-19 | 01 mobile-game acquisition | | | | approved 11-04; review gate passed 11-19; ready to post manually, then pin to Featured |
 
 ## Sales-nav interplay
 
