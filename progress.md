@@ -3,25 +3,32 @@
 ## Current State
 
 - Harness aligned with `~/projects/harness-kit` (hk:core refreshed) and
-  `~/fedorka-soul` (context-budget rule, master/worker routing added as perks).
-- `make check` now runs the case evidence gate (`make evidence`): every case-1
-  site fact is asserted against `docs/cases/01-mobile-game-acquisition/data/`,
-  and `preview.png` regenerates byte-identically. It passes.
-- `feature_list.json` is reorganized in delivery order with dependencies.
-  Last completed: feat-009 (harness), feat-002 (simulator).
-- Environment: repo-local `.venv` (CPython 3.12, `make setup`) with numpy,
-  pandas 2.x, scipy, matplotlib 3.10.8, nbformat and nbclient. Cases 9-10 run
-  through `.venv/bin/python`; see PREREQUISITES.md. System Python 3.15 still
-  runs the stdlib cases and the evidence gate.
-- Branch: `main` is the delivery branch, ahead of `origin/main`. `TODO.md`
-  still says work happens on `linkedin-site` — stale, fix in feat-004.
+  `~/fedorka-soul` (context-budget rule, master/worker routing, shared
+  resources, branch contract).
+- `make check` runs the case-1 evidence gate (`make evidence`) plus the
+  simulator gate; both pass.
+- Repo-local analysis environment exists: `make setup` creates `.venv`
+  (CPython 3.12, numpy, pandas 2.x, scipy, matplotlib 3.10.8 pinned, nbformat,
+  nbclient). `.venv/` is ignored.
+- Review pass is complete for all 11 cases. Cases 9–11 were reviewed on
+  2026-11-19 and committed (case 11 `89088a9`, case 9 `ed28c22`, case 10
+  `98358e5`; case-10 figure polished after).
+- Case 10 gained its missing figure: `outputs/tiktok_test_interval.png`.
+- Close-out (feat-004) is done locally: `TODO.md` is now a review record,
+  the stale `linkedin-site` branch note is fixed, root README and CHANGELOG
+  are updated. **The push is not done** — it waits on owner confirmation
+  (BOUNDARIES.md: confirm before `git push`).
 
 ## Blockers
 
-- feat-007 (publish post 1) waits on the owner's date call and on feat-004.
+- feat-004: `git push` needs the owner's go-ahead. `main` is ahead of
+  `origin/main` by the review commits.
+- feat-007 (publish post 1): owner's date call. Post 1 is approved and
+  unpublished; the review gate that blocked it is now passed.
 
 ## Next Action
 
-- A worker takes feat-006 (case 11 review), then feat-001 (case 9), then
-  feat-003 (case 10). The master does not start another feature while one is
-  in-progress.
+- On owner approval: push `main`, then run `make verify-feature F=feat-004` to
+  record it done.
+- Then feat-008 (simulator copy and dial review) or feat-007 (publish post 1),
+  one at a time (WIP=1).

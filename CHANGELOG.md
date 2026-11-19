@@ -2,7 +2,7 @@
 
 Notable changes to the portfolio cases. Newest entries first. Dates are commit dates.
 
-## 2026-11-19 — Review plan and evidence gate wired
+## 2026-11-19 — Cases 9–11 reviewed, evidence gate and environment
 
 - `make check` now runs the case evidence gate: every case-1 site fact is
   asserted against the page source data, and the preview regenerates
@@ -15,6 +15,21 @@ Notable changes to the portfolio cases. Newest entries first. Dates are commit d
   2.x, scipy, matplotlib 3.10.8 (pinned for byte-identical figures), nbformat
   and nbclient. `.venv/` is ignored; the run commands are in
   `PREREQUISITES.md`. Cases 9-10 can now run.
+- Review pass, cases 9–11 (one commit each, evidence in `feature_list.json`):
+  - Case 11: fraud-rule proofread; `rule_validation.png` re-rendered
+    byte-identical (TP 38 / FP 7 / FN 50, precision 84.4% / recall 43.2%);
+    README Reproduce gained the run date, expected outputs, the unittest
+    command and the figure step.
+  - Case 9: outputs regenerated (last-digit float drift only); iROAS 0.2326
+    (95% interval 0.1609–0.3043) verified in `iroas_decision.png`; README
+    gained dated expected outputs and the renderer step.
+  - Case 10: new `tiktok_test_interval.png` from `case_results.json` (+0.06,
+    95% interval −1.22 to +1.34, sign-flip p = 0.927, no-effect line at 0);
+    model wording now lists the linear trend the code fits; README and
+    `review_log.md` reconciled.
+- `TODO.md` is now a review record: cases 9–11 marked done, the stale
+  `linkedin-site` branch note replaced with `main`, and the environment notes
+  moved to the repo-local venv (`make setup`, pinned matplotlib 3.10.8).
 
 ## 2026-11-17 — Simulator rebuilt on a real simulation
 

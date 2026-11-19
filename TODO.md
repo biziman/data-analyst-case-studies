@@ -1,10 +1,10 @@
-# Review TODO — cases 4–11
+# Review record — cases 1–11
 
-Proofreading and diagram review of all 11 cases (see `CHANGELOG.md` for the finished work). Cases 1–8 are done (2026-11-04 to 2026-11-05). Process: one case per run or a user-approved batch (last batch: cases 5–8 on 2026-11-05), with wrap-off committing and pushing at day end. **Resume point: cases 9–11 below.**
+Proofreading and diagram review of all 11 cases (see `CHANGELOG.md` for the finished work). Cases 1–8 are done (2026-11-04 to 2026-11-05); cases 9–11 are done (2026-11-19). Process: one case per run or a user-approved batch, with wrap-off committing and pushing at day end. **Resume point: publishing.**
 
-Publishing is gated on this review pass: a case's LinkedIn post goes out only after its review is done. Post dates and todos: `~/projects/job-search/LINKEDIN_PUBLISHING.md`; plan: `LINKEDIN_PLAN.md`.
+Publishing is gated on this review pass: a case's LinkedIn post goes out only after its review is done. All 11 case reviews are now complete, so publishing is unblocked. Post dates and todos: `~/projects/job-search/LINKEDIN_PUBLISHING.md`; plan: `LINKEDIN_PLAN.md`.
 
-## Publishing (parked 2026-11-06 — date call still open 2026-11-08)
+## Publishing (post 1 approved — date call still open as of 2026-11-19)
 
 - **Post 1 (case 01, mobile-game acquisition): approved, not yet published.**
   Draft + first-comment link: `linkedin/01-mobile-game-acquisition.md`.
@@ -13,9 +13,9 @@ Publishing is gated on this review pass: a case's LinkedIn post goes out only af
   post the demo link as the **first comment**, then pin the post to profile **Featured**
   and fill the tracking row in `LINKEDIN_PLAN.md`.
   Note: 2026-11-07 was a **Saturday** — the calendar snapped slots off weekends. Status
-  2026-11-08 (Sun): the 11-07 one-off window passed with **no post**, so the date call is
-  now **Mon 11-09 or later** (the user's call). Any slip pushes case 2: its Tue 11-11 slot
-  assumed post 1 on Fri 11-06 (5-day cadence), and the downstream dates shift too.
+  2026-11-19: post 1 is still unpublished; the 11-07 window and the 11-09 target both
+  passed with no post, so the date is now the user's call. Any slip shifts case 2 and the
+  downstream cadence, so re-check `LINKEDIN_PLAN.md` before posting.
 - After post 1: pin case-1 demo to Featured (convention #7 in `LINKEDIN_PLAN.md`).
 
 ## Site session (2026-11-06 — wrapped)
@@ -26,7 +26,7 @@ Noto Serif / Inter Tight typography, chart iterations from review feedback (funn
 on a linear scale, E vs H box+strip plus the overlap view, historical ARPU with the blended
 line, exploratory cohort curve), left-aligned layout with the collapsed dataset spoiler,
 header spacing and label-collision fixes, and a fact-proof pass —
-`scripts/extract_case_data.py` now asserts **38 page facts** and fails loudly on drift.
+`scripts/extract_case_data.py` now asserts every page fact and self-reports the count; it fails loudly on drift.
 `docs/.nojekyll` keeps Pages deploys fast (two legacy Jekyll builds had timed out on
 2026-11-06). The notebook carries 8 matching sync cells (funnel conversion, blended ARPU,
 E/H overlap, cohort facts) so every site figure reproduces there.
@@ -73,29 +73,32 @@ Executed and stored outputs; the synthetic curve factors verified against the ge
 ### Case 8 — `8-mobile-sdk-metric-drop` — done 2026-11-05
 Executed and stored outputs; the three chart cells restyled to the figure rules (house palette, finding titles, units, provenance footnotes) and now save `outputs/observed_vs_true_dau.png`, `outputs/event_quality_diagnostics.png`, `outputs/observed_dau_by_platform.png`. Verified findings: coverage 100% → 92.1% after rollout while true DAU stays near baseline; 8.0% missing-ID share and p95 delay 5.0–5.2h on version 4.8.0; retries (855 rows) do not change distinct-user DAU. **Fixed an overclaim:** the 24-hour snapshot is complete on every day in this sample (max delay 9.0h) — the notebook and README now report the honest latency result (day-end counts short on 27 of 45 days, 40 user-days, worst day 5) and note the freshness risk at shorter horizons. Generator determinism verified (byte-identical regeneration). Simulation-truth oracle kept separate from the operational diagnosis, which remains an extension.
 
-### Case 9 — `9-ctv-geo-uplift`
-- Has `outputs/iroas_decision.png` (referenced in the README).
-- Verify the figure against `outputs/primary_results.csv` (incremental ROAS about 0.23 with its 95% interval) and proofread `analyze.py`/README claims; keep causal-lift-versus-financial-sufficiency language.
+### Case 9 — `9-ctv-geo-uplift` — done 2026-11-19
+- Outputs regenerated in the repo venv; the stored revenue row moved only in last-digit floats (numpy 2.5.5 vs the original run).
+- `iroas_decision.png` verified byte-identical from `outputs/primary_results.csv` under matplotlib 3.10.8: iROAS 0.2326 (95% interval 0.1609–0.3043), threshold line 1.0.
+- README proofread and extended: dated expected outputs (1,120 rows, 20 pairs, spend $586,093.56, install +9.4%, revenue +12.1%) and the missing renderer step. Causal lift stays separate from financial sufficiency — the whole interval is below the 1.0 payback rule.
 
-### Case 10 — `10-marketing-mix-modeling`
-- No figure. Add a descriptive graph from `outputs/case_results.json` (MMM benchmark fit and/or the inconclusive geo test).
-- Proofread; keep "OLS benchmark, not Meridian or Robyn" claims exact; check `review_log.md` consistency with the README.
+### Case 10 — `10-marketing-mix-modeling` — done 2026-11-19
+- New figure `outputs/tiktok_test_interval.png` from `outputs/case_results.json`: point +0.06, 95% interval −1.22 to +1.34, no-effect line at 0, sign-flip p = 0.927 (20,000 draws), synthetic provenance footnote. Embedded in the README with a caption.
+- Model wording aligned: `model.type` in `analyze_case.py` now lists the linear trend the code already fits, matching the README and `review_log.md`. OLS-benchmark wording stays exact (not Meridian or Robyn).
+- README Reproduce extended with the run date, expected outputs (6,240 obs, R² 0.31, lift +0.06) and the figure step. `review_log.md` and README agree on every decision fact.
+- Hygiene note: `simulate_case.py` writes the CSV with CRLF while the stored file is LF, so a re-run shows a line-ending-only diff; restore it. OLS coefficients also drift in last digits under the pinned BLAS; no reported number moves.
 
-### Case 11 — `11-payment-fraud-investigation`
-- Has `outputs/rule_validation.png` (referenced in the README).
-- Verify the figure against `outputs/rule_validation.json` (38 injected fraud attempts found, 50 missed; precision/recall footnoted).
-- Proofread README/SQL against the fraud rules in `.agents/skills/analyst-case-study/SKILL.md`: suspected vs confirmed, separate suspected exposure from confirmed net loss, no double-counted refunds/chargebacks, rules are review leads not verdicts.
-- Run the boundary tests: `python -m unittest discover -s 11-payment-fraud-investigation -p test_time_windows.py -v`.
+### Case 11 — `11-payment-fraud-investigation` — done 2026-11-19
+- `rule_validation.png` re-rendered byte-identical from `outputs/rule_validation.json`: bars 38 found / 7 false alarms / 50 missed, precision 84.4% / recall 43.2% footnoted as a post-analysis hidden-label check.
+- README/SQL proofread against the fraud rules: confirmed net loss $12,057.75 kept separate from pending exposure $25,281.20, no refund/chargeback double-count, rules framed as review leads not verdicts.
+- README Reproduce extended with the run date (Python 3.15.2, SQLite 3.53.4), expected outputs, the unittest command and the figure step. `generate_data.py` reproduces byte-identically (seed 20251027; 88 injected labels = 38 found + 50 missed).
+- Boundary tests: `python -m unittest discover -s 11-payment-fraud-investigation -p test_time_windows.py -v` (4 tests, pass).
 
 ## Environment notes
 
-- Venv (recreate if `/tmp` is cleared):
+- Analysis environment (repo-local venv, created once per checkout):
   ```bash
-  python3 -m venv /tmp/portfolio-venv
-  /tmp/portfolio-venv/bin/pip install matplotlib nbclient nbformat ipykernel
-  /tmp/portfolio-venv/bin/python -m ipykernel install --user --name portfolio-venv
+  make setup
+  .venv/bin/python 9-ctv-geo-uplift/analyze.py
   ```
-  numpy and pillow arrive as matplotlib dependencies. The renderer pins `matplotlib==3.10.8` in the docs; 3.11.2 is what was tested for the new figures.
+  CPython 3.12 with numpy, pandas 2.x (pinned below 3 to keep the original groupby behavior), scipy, matplotlib 3.10.8 (pinned for byte-identical figures), nbformat and nbclient. `.venv/` is ignored by git. System `python3` (3.15) runs the stdlib-only cases (2–8, 11) and `make check`.
+- Notebook execution needs a kernel inside the venv: `uv pip install --python .venv ipykernel`, then register it and run nbclient as below.
 - Execute a notebook and write outputs back (`/tmp/run_nb.py`, recreate if missing):
   ```python
   import sys, json
@@ -110,7 +113,7 @@ Executed and stored outputs; the three chart cells restyled to the figure rules 
   client.execute()
   path.write_text(json.dumps(nb, indent=2, ensure_ascii=False))
   ```
-- Figures: `/tmp/portfolio-venv/bin/python render_portfolio_figures.py` from the repository root, then restore `5-*/outputs/revenue_per_visitor.png`, `9-*/outputs/iroas_decision.png`, `11-*/outputs/rule_validation.png` with `git checkout --` unless intentionally changed.
-- System `python3` (3.14) runs the stdlib-only notebooks (cases 2–7) for quick number checks without the venv.
-- Case 8 needs pandas in the venv (`/tmp/portfolio-venv/bin/pip install pandas`; its `requirements.txt` also lists matplotlib). Its charts save themselves to `8-mobile-sdk-metric-drop/outputs/` when the notebook runs; the renderer does not touch case 8.
-- Work happens on the `linkedin-site` branch (user decision, 2026-11-05); `main` is behind it.
+- Figures: `.venv/bin/python render_portfolio_figures.py` from the repository root. The renderer churns cases 2–7 PNGs under matplotlib 3.10.8, so restore those with `git checkout --` unless intentionally changed; cases 9 and 11 reproduce byte-identically. Case 10's `tiktok_test_interval.png` is part of the renderer now.
+- System `python3` (3.15) runs the stdlib-only notebooks (cases 2–7) for quick number checks without the venv.
+- Case 8 needs pandas in the venv (already in `make setup`; its `requirements.txt` also lists matplotlib). Its charts save themselves to `8-mobile-sdk-metric-drop/outputs/` when the notebook runs; the renderer does not touch case 8.
+- Work happens on `main` (the delivery branch). `linkedin-site` is history and stays behind; do not switch back to it.

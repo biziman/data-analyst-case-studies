@@ -45,7 +45,7 @@ The synthetic ledger separates payment attempts, captures, refunds, pending disp
 
 Each case README identifies its inputs, method, limitations, and available run steps. Cases 2–7 generate their examples inside the notebook with Python's standard library; a notebook environment is still required. Cases 8–10 list their additional packages. Case 11 runs with Python and SQLite.
 
-Read the [analysis and writing conventions](PORTFOLIO_GUIDE.md). A forecast is not a profitability result, attributed revenue is not incremental revenue, and synthetic outcomes are not client impact. Case revisions are recorded in [CHANGELOG.md](CHANGELOG.md), and the remaining review plan lives in [TODO.md](TODO.md).
+Read the [analysis and writing conventions](PORTFOLIO_GUIDE.md). A forecast is not a profitability result, attributed revenue is not incremental revenue, and synthetic outcomes are not client impact. Case revisions and review dates are recorded in [CHANGELOG.md](CHANGELOG.md); the review record is [TODO.md](TODO.md), and the publishing plan is [LINKEDIN_PLAN.md](LINKEDIN_PLAN.md).
 
 The optional published figures can be regenerated after producing the case 9 and case 11 result files. The case 2, 3, 4, and 5 figures run those notebooks' code cells directly:
 

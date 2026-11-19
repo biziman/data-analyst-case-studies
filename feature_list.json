@@ -49,7 +49,7 @@
         "feat-003",
         "feat-006"
       ],
-      "status": "planned",
+      "status": "in-progress",
       "verification": "make check",
       "evidence": ""
     },
