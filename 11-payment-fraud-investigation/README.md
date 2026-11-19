@@ -69,6 +69,17 @@ python 11-payment-fraud-investigation/validate_rules.py
 
 The generator writes `data/payments.csv` and `data/simulation_truth.csv`. The analysis creates `outputs/payments.sqlite` and `outputs/analysis_results.json`. The validation script writes `outputs/rule_validation.json`. The SQLite database and JSON files are generated outputs. `analysis.sql` contains the investigation queries and can also be run against a SQLite table named `payments`.
 
+The stored outputs were regenerated on 2026-11-19 (Python 3.15.2, SQLite 3.53.4) and were byte-identical. Expected outputs: 5,024 attempts from seed 20251027 over 2025-01-01 to 2025-03-31; 45 flagged attempts (12 rapid-burst, 11 cross-border, 22 high-amount); confirmed net loss $12,057.75; confirmed plus pending exposure $25,281.20; and 38 true positives, 7 false positives, and 50 false negatives against the hidden labels. The time-window boundary tests run with `python -m unittest discover -s 11-payment-fraud-investigation -p test_time_windows.py`.
+
+The published figure is generated from the repository root with:
+
+```bash
+python -m pip install matplotlib==3.10.8
+python render_portfolio_figures.py
+```
+
+The renderer rebuilds `outputs/rule_validation.png` from `outputs/rule_validation.json`, so the bars and the precision/recall footnote cannot drift from the validation output. The figure was verified byte-identical with matplotlib 3.10.8 on 2026-11-19.
+
 ## Research basis
 
 - [Stripe: How disputes work](https://docs.stripe.com/disputes/how-disputes-work) describes dispute events, evidence review, and possible outcomes. This case uses a simplified `pending` or `lost` outcome field.

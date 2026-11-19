@@ -14,9 +14,9 @@
       "name": "case 11 review: payment fraud investigation",
       "description": "Run the per-case checklist on case 11: proofread README/SQL against the fraud rules (suspected vs confirmed, exposure vs net loss, no double-counted refunds, rules are review leads), verify rule_validation.png against outputs/rule_validation.json (38 found / 50 missed, precision and recall footnoted), and keep the boundary tests green.",
       "dependencies": [],
-      "status": "planned",
+      "status": "done",
       "verification": "python3 -m unittest discover -s 11-payment-fraud-investigation -p test_time_windows.py -v && python3 11-payment-fraud-investigation/validate_rules.py && make check",
-      "evidence": ""
+      "evidence": "2026-11-19: verification passed (4 time-window boundary tests OK; validate_rules.py reproduces true_positive 38 / false_positive 7 / false_negative 50, precision 0.8444, recall 0.4318; make check 28 assertions). README/SQL proofread against the fraud rules: confirmed net loss ($12,057.75, 32 lost disputes) kept separate from pending exposure ($25,281.20 with 16 pending), loss = MIN(chargeback, captured-refund)+fee so no refund/chargeback double-count, flags labeled review leads not verdicts. rule_validation.png re-rendered byte-identically from outputs/rule_validation.json (bars 38/7/50; footnote precision 84.4%, recall 43.2%). generate_data.py byte-identical (seed 20251027, 5,024 attempts, 88 injected-fraud labels, 48 fraud disputes); README Reproduce extended with run date 2026-11-19 (Python 3.15.2, SQLite 3.53.4), expected outputs, test and figure commands"
     },
     {
       "id": "feat-001",
