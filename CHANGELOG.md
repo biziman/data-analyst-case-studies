@@ -11,6 +11,10 @@ Notable changes to the portfolio cases. Newest entries first. Dates are commit d
   cases 11, 9 and 10 review, review close-out, publishing, simulator copy pass.
 - Recorded the environment gap: the analysis venv was `/tmp`-only and is gone,
   so cases 9-10 need a repo-local venv before their review can run.
+- Added `make setup`: a repo-local `.venv` on CPython 3.12 with numpy, pandas
+  2.x, scipy, matplotlib 3.10.8 (pinned for byte-identical figures), nbformat
+  and nbclient. `.venv/` is ignored; the run commands are in
+  `PREREQUISITES.md`. Cases 9-10 can now run.
 
 ## 2026-11-17 — Simulator rebuilt on a real simulation
 
