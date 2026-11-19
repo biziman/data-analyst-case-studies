@@ -13,3 +13,4 @@ scripts/clean-state-check.sh
 scripts/vcr.sh
 scripts/verify-feature.sh
 # hk:harness-end
+.venv/
