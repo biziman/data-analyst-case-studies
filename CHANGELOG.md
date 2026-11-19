@@ -2,6 +2,16 @@
 
 Notable changes to the portfolio cases. Newest entries first. Dates are commit dates.
 
+## 2026-11-19 — Review plan and evidence gate wired
+
+- `make check` now runs the case evidence gate: every case-1 site fact is
+  asserted against the page source data, and the preview regenerates
+  byte-identically. A page fact that drifts blocks the commit.
+- Reorganized the tracked feature list in dependency order: environment setup,
+  cases 11, 9 and 10 review, review close-out, publishing, simulator copy pass.
+- Recorded the environment gap: the analysis venv was `/tmp`-only and is gone,
+  so cases 9-10 need a repo-local venv before their review can run.
+
 ## 2026-11-17 — Simulator rebuilt on a real simulation
 
 - Replaced the quiz-style first pass with eight steps where one dial changes the

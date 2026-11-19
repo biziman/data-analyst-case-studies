@@ -1,13 +1,76 @@
 {
   "features": [
     {
+      "id": "feat-005",
+      "name": "reproducible analysis environment",
+      "description": "The venv was /tmp-only and is gone, so cases 9-10 cannot run. Add a `make setup` target that creates .venv with uv (managed Python 3.12), installs the case dependencies (numpy, pandas, scipy, matplotlib, nbformat, nbclient), ignores .venv, and records the run command in PREREQUISITES.md. All later case work runs through .venv/bin/python.",
+      "dependencies": [],
+      "status": "planned",
+      "verification": ".venv/bin/python -c \"import numpy, pandas, scipy, matplotlib, nbformat, nbclient\" && make check",
+      "evidence": ""
+    },
+    {
+      "id": "feat-006",
+      "name": "case 11 review: payment fraud investigation",
+      "description": "Run the per-case checklist on case 11: proofread README/SQL against the fraud rules (suspected vs confirmed, exposure vs net loss, no double-counted refunds, rules are review leads), verify rule_validation.png against outputs/rule_validation.json (38 found / 50 missed, precision and recall footnoted), and keep the boundary tests green.",
+      "dependencies": [],
+      "status": "planned",
+      "verification": "python3 -m unittest discover -s 11-payment-fraud-investigation -p test_time_windows.py -v && python3 11-payment-fraud-investigation/validate_rules.py && make check",
+      "evidence": ""
+    },
+    {
       "id": "feat-001",
-      "name": "cases 9-11 review pass",
-      "description": "Run the case review gate over cases 9 (CTV geo uplift), 10 (marketing mix modeling), and 11 (payment fraud investigation): verify evidence gates pass, fix any drift found, and record evidence. Publishing stays blocked until the review pass is complete.",
+      "name": "case 9 review: CTV geo uplift",
+      "description": "Run the per-case checklist on case 9: regenerate outputs, verify iroas_decision.png against outputs/primary_results.csv (incremental ROAS about 0.23 with its 95% interval), proofread README and analyze.py claims, and keep causal lift separate from financial sufficiency.",
+      "dependencies": ["feat-005"],
+      "status": "planned",
+      "verification": ".venv/bin/python 9-ctv-geo-uplift/analyze.py && make check",
+      "evidence": ""
+    },
+    {
+      "id": "feat-003",
+      "name": "case 10 review: marketing mix modeling",
+      "description": "Case 10 has no figure. Add one descriptive figure built from outputs/case_results.json through render_portfolio_figures.py (MMM benchmark fit and/or the inconclusive geo test), then proofread: keep OLS-benchmark wording exact (not Meridian or Robyn) and make review_log.md consistent with the README.",
+      "dependencies": ["feat-005"],
+      "status": "planned",
+      "verification": ".venv/bin/python 10-marketing-mix-modeling/analyze_case.py && make check",
+      "evidence": ""
+    },
+    {
+      "id": "feat-004",
+      "name": "review close-out: TODO, README, push",
+      "description": "After cases 9-11 pass review: mark them done in TODO.md, fix the stale branch note (main is the delivery branch, not linkedin-site), re-check root README case status text, update progress.md and CHANGELOG.md, and push main (it is 3 commits ahead of origin).",
+      "dependencies": ["feat-001", "feat-003", "feat-006"],
+      "status": "planned",
+      "verification": "make check",
+      "evidence": ""
+    },
+    {
+      "id": "feat-007",
+      "name": "publish post 1: mobile-game acquisition",
+      "description": "Post 1 is approved but unpublished; the date is the owner's call. On the chosen date: attach docs/cases/01-mobile-game-acquisition/preview.png, paste the body from linkedin/01-mobile-game-acquisition.md, put the demo link in the first comment, pin the post to Featured, and fill the tracking row in LINKEDIN_PLAN.md.",
+      "dependencies": ["feat-004"],
+      "status": "planned",
+      "verification": "make check",
+      "evidence": ""
+    },
+    {
+      "id": "feat-008",
+      "name": "simulator copy and dial review",
+      "description": "Review the metric-contract simulator's step copy and sandbox dial set before linking it from LinkedIn: check the eight steps read cleanly, each dial changes its readout, and the stored preview matches the page. Publishing the link waits on this pass.",
       "dependencies": [],
       "status": "planned",
       "verification": "make check",
       "evidence": ""
+    },
+    {
+      "id": "feat-009",
+      "name": "harness alignment and gate wiring",
+      "description": "Sync the hk:core block from harness-kit, harvest the context-budget rule and master/worker routing into the perk block, wire scripts/extract_case_data.py into make check as `make evidence`, document it, and reorganize feature_list.json in dependency order.",
+      "dependencies": [],
+      "status": "done",
+      "verification": "make check",
+      "evidence": "2026-11-19: harness-update refreshed hk:core; make check passes with the case evidence gate wired (extract_case_data.py self-reports its assertions, preview.png byte-identical, clean tree)"
     },
     {
       "id": "feat-002",
