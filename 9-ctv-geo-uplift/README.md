@@ -61,6 +61,17 @@ python 9-ctv-geo-uplift/analyze.py
 
 The analysis writes `outputs/data_checks.json`, `outputs/platform_results.csv`, and `outputs/primary_results.csv`.
 
+The stored outputs were regenerated on 2026-11-19 (Python 3.12.13 with numpy 2.5.5, pandas 2.3.3, and scipy 1.18.1). Expected outputs: 1,120 rows, 40 markets, 20 matched pairs, 8 pre weeks, 6 test weeks, test spend $586,093.56, install lift +9.4%, revenue lift +12.1%, and iROAS 0.23 (95% interval 0.16–0.30).
+
+The published figure is generated from the repository root with:
+
+```bash
+python -m pip install matplotlib==3.10.8
+python render_portfolio_figures.py
+```
+
+The renderer reads `outputs/primary_results.csv` and writes `outputs/iroas_decision.png`, so the plotted estimate and interval cannot drift from the stored results. The figure was verified byte-identical with matplotlib 3.10.8 on 2026-11-19.
+
 ## Research basis
 
 - [Google Research: Measuring Ad Effectiveness Using Geo Experiments](https://research.google/pubs/measuring-ad-effectiveness-using-geo-experiments/)
