@@ -1,6 +1,15 @@
 {
   "features": [
     {
+      "id": "feat-010",
+      "name": "bug hunt: reproducible paths",
+      "description": "Find and fix defects in the reproducible paths. Run each case's reproduction command and the simulator browser acceptance pass; fix what fails or makes outputs nondeterministic. Known leads: case-10 simulate_case.py writes CRLF while the stored CSV is LF (line-ending-only churn on re-run); OLS coefficients drift in last digits under the pinned BLAS. Every fix needs a before/after check, must not change a published number, and no refactors or new features.",
+      "dependencies": [],
+      "status": "done",
+      "verification": "make check && python3 -m unittest discover -s 11-payment-fraud-investigation -p test_time_windows.py -v",
+      "evidence": "2026-11-22: ran all 11 case reproduction commands and the site builder (byte-identical; no published number drifted). Fixed 10-marketing-mix-modeling/simulate_case.py to pass lineterminator=\"\\n\" to csv.DictWriter (csv defaults to CRLF; the stored data/synthetic_edtech_geo_week.csv is LF, so a re-run churned every line). After fix a fresh run regenerates the CSV byte-identically, git status clean for that path; commit 5930e47. Simulator acceptance on a scratch server (port 8766; 8765 is AnkiConnect): SIM_URL=http://localhost:8766/tools/metric-contract/ node scripts/sim/acceptance.mjs passed 18 checks and preview.png stayed md5 ce0577e4610e329085d96d71e82595db (byte-identical). python3 -m unittest discover -s 11-payment-fraud-investigation -p test_time_windows.py -v: 4 tests OK. make check passed (28 assertions, evidence gate incl.). Known-unfixable drift (reported, not fixed): OLS coefficients drift in the last digits under the pinned BLAS; no reproduction command fails on it and no published number changes, so left alone per no-refactor rule. Reverted a predecessor edit to 8-mobile-sdk-metric-drop/8-mobile-sdk-metric-drop.ipynb (pd.Timedelta days=1 -> unit=\"D\") that had no failing check behind it. 2026-11-22T00:39:17+03:00: make check && python3 -m unittest discover -s 11-payment-fraud-investigation -p test_time_windows.py -v passed"
+    },
+    {
       "id": "feat-005",
       "name": "reproducible analysis environment",
       "description": "The venv was /tmp-only and is gone, so cases 9-10 cannot run. Add a `make setup` target that creates .venv with uv (managed Python 3.12), installs the case dependencies (numpy, pandas, scipy, matplotlib, nbformat, nbclient), ignores .venv, and records the run command in PREREQUISITES.md. All later case work runs through .venv/bin/python.",
