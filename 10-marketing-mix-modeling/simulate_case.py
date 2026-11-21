@@ -79,7 +79,8 @@ for week in range(weeks):
 
 OUT.parent.mkdir(parents=True, exist_ok=True)
 with OUT.open("w", newline="", encoding="utf-8") as target:
-    writer = csv.DictWriter(target, fieldnames=rows[0].keys())
+    # lineterminator=\n keeps the stored file LF (csv defaults to CRLF).
+    writer = csv.DictWriter(target, fieldnames=rows[0].keys(), lineterminator="\n")
     writer.writeheader()
     writer.writerows(rows)
 
