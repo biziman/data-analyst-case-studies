@@ -281,6 +281,16 @@ def render_index(configs):
             f"{status}{link}</div>"
         )
 
+    # The simulator is a tool, not a case config. Keep its card here so an
+    # index rebuild cannot drop it (it was hand-added once and lost on rebuild).
+    cards.append(
+        '<div class="case-card"><div class="n">Interactive tool</div>'
+        "<h3>Metric contract simulator</h3>"
+        '<div class="q">How can one donation checkout test produce opposite answers?</div>'
+        '<span class="status"><span class="live-dot">● Live</span> · measurement simulator</span>'
+        '<a class="more" href="tools/metric-contract/">Try the simulator →</a></div>'
+    )
+
     return f"""<!DOCTYPE html>
 <html lang="en">
 <head>

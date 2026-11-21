@@ -38,6 +38,10 @@ Notable changes to the portfolio cases. Newest entries first. Dates are commit d
   about the guardrail that flips on the holdout (+1.4% → −1.2%) instead of an
   ambiguous "which contract holds". Browser acceptance passed all 18 checks and
   the stored preview reproduced byte-identically.
+- Pages now serves `main/docs` (was `linkedin-site`, ten commits behind). Fixed
+  a rebuild trap on the way: the simulator card had been hand-added to
+  `docs/index.html`, so `build_site.py` dropped it on the schedule rebuild; the
+  builder emits the card now and a rebuild no longer loses it.
 
 ## 2026-11-17 — Simulator rebuilt on a real simulation
 
