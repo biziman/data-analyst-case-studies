@@ -1,6 +1,6 @@
 # LinkedIn post — Case 01
 
-- **publish:** awaiting manual post — ready since 2026-11-19 (owner's date)
+- **publish:** Fri 2026-11-20 (scheduled 2026-11-19; owner re-plan)
 - **image:** `docs/cases/01-mobile-game-acquisition/preview.png` (attach to post)
 - **link (first comment):** https://biziman.github.io/data-analyst-case-studies/cases/01-mobile-game-acquisition/
 - **status:** approved 2026-11-04; review gate passed 2026-11-19; not yet published

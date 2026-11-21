@@ -41,27 +41,30 @@ the post links to numbers that must already be verified.
 
 | # | Date | Case | Review | Demo |
 |---|------|------|--------|------|
-| 1 | ready — manual post pending (approved 11-04, review done 11-19; owner's date) | 01 mobile-game acquisition | done 11-19 | live |
-| 2 | recompute after post 1 | 02 experiment tracking audit | done 11-04 | stub |
-| 3 | Mon 2026-11-17 | 03 player LTV forecast | done 11-04 | stub |
-| 4 | Fri 2026-11-20 | 04 gameplay change evaluation | done 11-04 | stub |
-| 5 | Wed 2026-11-25 | 05 donation checkout A/B | pending | stub |
-| 6 | Tue 2026-12-01 | 06 funnel attribution | pending | stub |
-| 7 | Mon 2026-12-07 | 07 cohort LTV roll-forward | pending | stub |
-| 8 | Fri 2026-12-11 | 08 mobile SDK metric drop | pending | stub |
-| 9 | Wed 2026-12-16 | 09 CTV geo uplift | pending | stub |
-| 10 | Mon 2026-12-21 | 10 marketing mix modeling | pending | stub |
-| 11 | Mon 2026-12-28 | 11 payment fraud SQL | pending | stub |
+| 1 | Fri 2026-11-20 | 01 mobile-game acquisition | done 11-19 | live |
+| 2 | Tue 2026-11-24 | 02 experiment tracking audit | done 11-04 | stub |
+| 3 | Fri 2026-11-27 (Black Friday — low B2B attention) | 03 player LTV forecast | done 11-04 | stub |
+| 4 | Tue 2026-12-01 | 04 gameplay change evaluation | done 11-04 | stub |
+| 5 | Fri 2026-12-04 | 05 donation checkout A/B | done 11-19 | stub |
+| 6 | Tue 2026-12-08 | 06 funnel attribution | done 11-19 | stub |
+| 7 | Fri 2026-12-11 | 07 cohort LTV roll-forward | done 11-19 | stub |
+| 8 | Tue 2026-12-15 | 08 mobile SDK metric drop | done 11-19 | stub |
+| 9 | Fri 2026-12-18 | 09 CTV geo uplift | done 11-19 | stub |
+| 10 | Tue 2026-12-22 | 10 marketing mix modeling | done 11-19 | stub |
+| 11 | Tue 2027-01-05 | 11 payment fraud SQL | done 11-19 | stub |
 
 Slots snapped off weekends/US holidays from a strict 5-day chain
 (Nov 16 Sun → Mon 17, Nov 21 Sat → Fri 20, Nov 26 Thanksgiving → Wed 25,
 Dec 6 Sun → Mon 7, Dec 26 Sat → Mon 28).
 
-**Schedule slip (2026-11-19):** post 1 missed its 11-06 slot, so rows 2–11
-below are the original grid and are no longer the plan. Recompute them from
-the actual post-1 date with the same rule (5-day grid from post 1, snapped off
-weekends and US holidays) when post 1 goes out. The review gate is now passed
-for all 11 cases.
+**Re-planned 2026-11-19 (owner decision):** post 1 slipped past its 11-06 slot
+and the whole chain moved. New rule: Tue/Fri, two posts a week, 3–4 day gaps,
+no posts on Thanksgiving or Christmas Day, and the tail may spill into January.
+The result is 10 posts in 2026 and the last on Tue 2027-01-05; post 3 lands on
+Black Friday, the cost of keeping even spacing without a dead-week post.
+Dates above are mirrored in `scripts/cases/*.json` (`publish_date`) and in
+`docs/index.html` via `python3 scripts/build_site.py`. The review gate is
+passed for all 11 cases (column "Review" above).
 
 ## Publishing conventions (anti-bullshit rules)
 
@@ -99,7 +102,7 @@ Judge by profile views and inbound conversations, not likes.
 
 | Date | Case | Impressions | Profile views | Inbound | Notes |
 |------|------|-------------|---------------|---------|-------|
-| 2026-11-19 | 01 mobile-game acquisition | | | | approved 11-04; review gate passed 11-19; ready to post manually, then pin to Featured |
+| 2026-11-20 | 01 mobile-game acquisition | | | | scheduled; review gate passed 11-19; pin to Featured after posting |
 
 ## Sales-nav interplay
 

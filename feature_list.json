@@ -60,16 +60,16 @@
       "dependencies": [
         "feat-004"
       ],
-      "status": "in-progress",
+      "status": "blocked",
       "verification": "make check",
-      "evidence": ""
+      "evidence": "2026-11-19: post prepared and scheduled for Fri 2026-11-20; demo page and case page return 200, preview.png is the current evidence-gate render, body says link in first comment. Awaiting the manual post; blocked on the owner, not on repo work."
     },
     {
       "id": "feat-008",
       "name": "simulator copy and dial review",
       "description": "Review the metric-contract simulator's step copy and sandbox dial set before linking it from LinkedIn: check the eight steps read cleanly, each dial changes its readout, and the stored preview matches the page. Publishing the link waits on this pass.",
       "dependencies": [],
-      "status": "planned",
+      "status": "in-progress",
       "verification": "make check",
       "evidence": ""
     },
