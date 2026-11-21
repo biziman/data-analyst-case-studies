@@ -3,32 +3,32 @@
 ## Current State
 
 - Harness aligned with `~/projects/harness-kit` (hk:core refreshed) and
-  `~/fedorka-soul` (context-budget rule, master/worker routing, shared
-  resources, branch contract).
+  `~/fedorka-soul` (context budget, master/worker routing, shared resources).
+  Feature statuses now include `blocked` (prepared work waiting on an external
+  actor, counted as started but not occupying the WIP slot).
 - `make check` runs the case-1 evidence gate (`make evidence`) plus the
   simulator gate; both pass.
-- Repo-local analysis environment exists: `make setup` creates `.venv`
-  (CPython 3.12, numpy, pandas 2.x, scipy, matplotlib 3.10.8 pinned, nbformat,
-  nbclient). `.venv/` is ignored.
-- Review pass is complete for all 11 cases. Cases 9–11 were reviewed on
-  2026-11-19 and committed (case 11 `89088a9`, case 9 `ed28c22`, case 10
-  `98358e5`; case-10 figure polished after).
-- Case 10 gained its missing figure: `outputs/tiktok_test_interval.png`.
-- Close-out (feat-004) is done locally: `TODO.md` is now a review record,
-  the stale `linkedin-site` branch note is fixed, root README and CHANGELOG
-  are updated. **The push is not done** — it waits on owner confirmation
-  (BOUNDARIES.md: confirm before `git push`).
+- Environment: `make setup` builds `.venv` (CPython 3.12, numpy, pandas 2.x,
+  scipy, matplotlib 3.10.8 pinned, nbformat, nbclient). `.venv/` is ignored.
+- All 11 case reviews are done. Cases 9–11 were reviewed on 2026-11-19
+  (commits `89088a9`, `ed28c22`, `98358e5`); case 10 gained its missing figure.
+- Simulator copy/dial review is done (feat-008): 18 browser acceptance checks
+  passed, preview byte-identical, two copy fixes (step 3 window wording,
+  ambiguous step 7 gate).
+- Publishing calendar re-planned: post 1 Fri 2026-11-20, then Tue/Fri through
+  Tue 2027-01-05. Ten posts in 2026. Dates live in `LINKEDIN_PLAN.md`,
+  `scripts/cases/*.json` and `docs/index.html`.
+- `main` is pushed and level with `origin/main`.
 
 ## Blockers
 
-- feat-004: `git push` needs the owner's go-ahead. `main` is ahead of
-  `origin/main` by the review commits.
-- feat-007 (publish post 1): owner's date call. Post 1 is approved and
-  unpublished; the review gate that blocked it is now passed.
+- feat-007 (publish post 1): prepared and scheduled for 2026-11-20; waits on
+  the owner's manual post, then the tracking row and Featured pin.
+- GitHub Pages still serves `linkedin-site`; flipping it to `main/docs` waits on
+  the owner's approval after feat-008 (now passed).
 
 ## Next Action
 
-- On owner approval: push `main`, then run `make verify-feature F=feat-004` to
-  record it done.
-- Then feat-008 (simulator copy and dial review) or feat-007 (publish post 1),
-  one at a time (WIP=1).
+- After the post: record the URL, pin to Featured, run
+  `make verify-feature F=feat-007`.
+- Then flip Pages to `main/docs` and verify the simulator page loads.

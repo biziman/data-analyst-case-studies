@@ -69,9 +69,9 @@
       "name": "simulator copy and dial review",
       "description": "Review the metric-contract simulator's step copy and sandbox dial set before linking it from LinkedIn: check the eight steps read cleanly, each dial changes its readout, and the stored preview matches the page. Publishing the link waits on this pass.",
       "dependencies": [],
-      "status": "in-progress",
+      "status": "done",
       "verification": "make check",
-      "evidence": ""
+      "evidence": "2026-11-19: copy and dial review of all eight steps. node scripts/sim/acceptance.mjs passed 18 checks (every step loads, each dial changes its readout, the sandbox score reacts, no console errors) and regenerated docs/tools/metric-contract/preview.png byte-identically (md5 ce0577e4…). Two copy fixes in page.js: step 3 now says \"watch the gap cross zero\" because per-visitor revenue is +40.4% at 1h and −3.0% at 7d; step 7 gate was ambiguous (both RPV 7d −3.0%→−3.6% and RPV 1h +40.4%→+31.8% keep their sign on the holdout), so it now asks about the guardrail, which flips from +1.4% to −1.2%. make check passed (28 simulator assertions)."
     },
     {
       "id": "feat-009",

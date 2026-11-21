@@ -30,6 +30,14 @@ Notable changes to the portfolio cases. Newest entries first. Dates are commit d
 - `TODO.md` is now a review record: cases 9–11 marked done, the stale
   `linkedin-site` branch note replaced with `main`, and the environment notes
   moved to the repo-local venv (`make setup`, pinned matplotlib 3.10.8).
+- Publishing calendar re-planned (owner decision): post 1 on Fri 2026-11-20,
+  then Tue/Fri through Tue 2027-01-05. Ten posts in 2026, the last in January;
+  dates mirrored in `scripts/cases/*.json` and rebuilt into `docs/index.html`.
+- Simulator copy pass before it goes public: step 3 now says the window gap
+  crosses zero (1h +40.4% vs 7d −3.0% per visitor) and the step 7 gate now asks
+  about the guardrail that flips on the holdout (+1.4% → −1.2%) instead of an
+  ambiguous "which contract holds". Browser acceptance passed all 18 checks and
+  the stored preview reproduced byte-identically.
 
 ## 2026-11-17 — Simulator rebuilt on a real simulation
 

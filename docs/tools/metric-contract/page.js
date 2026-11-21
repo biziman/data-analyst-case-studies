@@ -170,7 +170,7 @@
     },
     {
       title: "The window decides",
-      narrative: "Revenue only counts gifts seen inside the window. The treatment converts sooner, so a short window flatters it. Change the window and watch the gap close.",
+      narrative: "Revenue only counts gifts seen inside the window. The treatment converts sooner, so a short window flatters it. Change the window and watch the gap cross zero.",
       idea: "A win that decays with the window was timing, not money.",
       try: "Compare the 1-hour answer with the 7-day answer.",
       gate: { q: "Does the revenue lift survive a 7-day window?", options: ["Yes, it stays positive", "No, it turns negative"] },
@@ -201,7 +201,7 @@
       narrative: "The same contracts, replayed on two fresh weeks. Pick one and compare the test with the holdout.",
       idea: "A contract that works once is a coincidence. A holdout tests the test.",
       try: "Choose the guardrail that looked best at day 14.",
-      gate: { q: "Which contract still holds on a fresh sample?", options: ["Revenue per visitor, 7 days", "The best guardrail at day 14", "Revenue per visitor, 1 hour"] },
+      gate: { q: "The best guardrail led at day 14. What does the fresh sample say?", options: ["It repeats the win", "It flips sign", "It cannot be tested"] },
     },
     {
       title: "Sandbox: price your contract",
