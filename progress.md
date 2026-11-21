@@ -18,17 +18,18 @@
 - Publishing calendar re-planned: post 1 Fri 2026-11-20, then Tue/Fri through
   Tue 2027-01-05. Ten posts in 2026. Dates live in `LINKEDIN_PLAN.md`,
   `scripts/cases/*.json` and `docs/index.html`.
+- GitHub Pages now serves `main/docs` (was `linkedin-site`, ten commits behind),
+  and the generated index keeps the simulator card through a builder change.
 - `main` is pushed and level with `origin/main`.
 
 ## Blockers
 
 - feat-007 (publish post 1): prepared and scheduled for 2026-11-20; waits on
   the owner's manual post, then the tracking row and Featured pin.
-- GitHub Pages still serves `linkedin-site`; flipping it to `main/docs` waits on
-  the owner's approval after feat-008 (now passed).
 
 ## Next Action
 
 - After the post: record the URL, pin to Featured, run
   `make verify-feature F=feat-007`.
-- Then flip Pages to `main/docs` and verify the simulator page loads.
+- Post 1 on Fri 2026-11-20 (body and first comment in
+  `linkedin/01-mobile-game-acquisition.md`); then record the URL and pin it.
